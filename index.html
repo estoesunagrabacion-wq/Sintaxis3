@@ -1,0 +1,1219 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Sintaxis de tercer año</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@700&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap">
+<style>
+:root{
+  --bg:#f5f8fc; --grid:#d3e3f3; --surface:#fffffe; --surface2:#eaf1f9; --ink:#17213a; --muted:#566178; --line:#c9d6e6;
+  --blue:#1c3f9c; --margin:#e0705f; --link:#1c3f9c;
+  --u:#1c3f9c; --u-ink:#ffffff;
+  --u-rep:#5f6f91; --u-coo:#b8700f; --u-pia:#1f8664; --u-pis:#2456b8; --u-pro:#9a43ad; --u-adv:#c23f35;
+  --hl:#ffe45c; --hl-ink:#2e2600;
+  --ok:#17673f; --ok-bg:#e1f3e8; --bad:#b3261e; --bad-bg:#fde8e5; --warn:#7a4e00; --warn-bg:#fff3d1;
+  --p0:#1c3f9c; --p1:#c8402f; --p2:#1f8664; --p3:#8f3fa4;
+  --shadow:0 1px 0 rgba(23,33,58,.06),0 6px 18px -8px rgba(23,33,58,.25);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1727; --grid:#1b2a44; --surface:#16213a; --surface2:#1d2b48; --ink:#e9eefb; --muted:#a3afc8; --line:#2f4066;
+    --blue:#9db9ff; --margin:#a8493e; --link:#9db9ff; --u:#9db9ff; --u-ink:#0f1727;
+    --u-rep:#9fb0d4; --u-coo:#f0b25a; --u-pia:#62d2a8; --u-pis:#86aaff; --u-pro:#d9a0ea; --u-adv:#ff8f84;
+    --hl:#7a6700; --hl-ink:#fff6c2;
+    --ok:#7fe0aa; --ok-bg:#12382a; --bad:#ff9d94; --bad-bg:#44201a; --warn:#ffd27a; --warn-bg:#3d2d0a;
+    --p0:#8db4ff; --p1:#ff9a85; --p2:#6fe0b8; --p3:#e2a2f2;
+    --shadow:0 1px 0 rgba(0,0,0,.4),0 6px 18px -8px rgba(0,0,0,.6); color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1727; --grid:#1b2a44; --surface:#16213a; --surface2:#1d2b48; --ink:#e9eefb; --muted:#a3afc8; --line:#2f4066;
+  --blue:#9db9ff; --margin:#a8493e; --link:#9db9ff; --u:#9db9ff; --u-ink:#0f1727;
+  --u-rep:#9fb0d4; --u-coo:#f0b25a; --u-pia:#62d2a8; --u-pis:#86aaff; --u-pro:#d9a0ea; --u-adv:#ff8f84;
+  --hl:#7a6700; --hl-ink:#fff6c2;
+  --ok:#7fe0aa; --ok-bg:#12382a; --bad:#ff9d94; --bad-bg:#44201a; --warn:#ffd27a; --warn-bg:#3d2d0a;
+  --p0:#8db4ff; --p1:#ff9a85; --p2:#6fe0b8; --p3:#e2a2f2;
+  --shadow:0 1px 0 rgba(0,0,0,.4),0 6px 18px -8px rgba(0,0,0,.6); color-scheme:dark;
+}
+#app[data-u="rep"]{--u:var(--u-rep)} #app[data-u="coo"]{--u:var(--u-coo)} #app[data-u="pia"]{--u:var(--u-pia)}
+#app[data-u="pis"]{--u:var(--u-pis)} #app[data-u="pro"]{--u:var(--u-pro)} #app[data-u="adv"]{--u:var(--u-adv)}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background-color:var(--bg);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:26px 26px;background-attachment:fixed;color:var(--ink);font-family:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.5;-webkit-text-size-adjust:100%}
+#app{max-width:820px;margin:0 auto;padding-inline:16px;padding-block:0 56px}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--hl);outline-offset:2px}
+h1,h2,h3,h4{font-family:Literata,Georgia,"Times New Roman",serif;line-height:1.2;text-wrap:balance;margin:0;font-weight:600}
+.mono{font-weight:700;letter-spacing:.02em}
+.pen{font-family:Caveat,"Segoe Print","Bradley Hand",cursive;font-weight:700}
+a,.linkbtn{color:var(--link)}
+
+/* cabecera: lomo y pestañas de cuaderno */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;margin-inline:-16px;padding:8px 16px 0;background:var(--bg);border-bottom:2px solid var(--u)}
+.bar{display:flex;align-items:center;gap:8px;justify-content:space-between;flex-wrap:nowrap}
+.brand{font-family:Literata,Georgia,serif;font-weight:700;font-size:1.2rem;display:flex;align-items:baseline;gap:8px;letter-spacing:-.01em}
+.brand small{font-family:Caveat,cursive;font-weight:700;color:var(--margin);font-size:1.25rem}
+.tools{display:flex;gap:4px}
+.tbtn{border:0;background:none;border-radius:6px;padding:4px 8px;font-size:.84rem;min-height:34px;color:var(--ink);text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:4px;text-decoration-thickness:2px}
+.tbtn:hover{text-decoration-color:var(--u)}
+.tabs{display:flex;gap:3px;overflow-x:auto;margin-top:6px;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-top:4px}
+.tabs::-webkit-scrollbar{display:none}
+.tab{--tc:var(--blue);flex:0 0 auto;background:var(--surface2);border:1px solid var(--line);border-top:5px solid var(--tc);border-bottom:0;border-radius:8px 8px 0 0;padding:3px 11px 4px;color:var(--muted);font-weight:700;white-space:nowrap;display:flex;flex-direction:column;align-items:flex-start;min-height:46px;position:relative;top:2px}
+.tab[data-tab="rep"]{--tc:var(--u-rep)}.tab[data-tab="coo"]{--tc:var(--u-coo)}.tab[data-tab="pia"]{--tc:var(--u-pia)}.tab[data-tab="pis"]{--tc:var(--u-pis)}.tab[data-tab="pro"]{--tc:var(--u-pro)}.tab[data-tab="adv"]{--tc:var(--u-adv)}
+.tab span.n{font-weight:400;font-size:.72rem;font-variant-numeric:tabular-nums}
+.tab[aria-selected="true"]{background:var(--bg);color:var(--ink);top:2px;padding-bottom:6px;border-color:var(--tc);border-top-width:7px;box-shadow:0 2px 0 var(--bg)}
+.crumbs{font-size:.8rem;color:var(--muted);padding:6px 0 6px;display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.crumbs b{color:var(--ink)}
+.crumbs .sep{opacity:.5}
+
+main{padding-top:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;box-shadow:var(--shadow)}
+.card+.card{margin-top:14px}
+/* hoja con margen rojo */
+.card.sheetp,.card.teo,[data-ex]{padding-left:30px;background-image:linear-gradient(90deg,transparent 15px,var(--margin) 15px,var(--margin) 16.5px,transparent 16.5px,transparent 19px,var(--margin) 19px,var(--margin) 20.5px,transparent 20.5px);}
+h2{font-size:1.55rem;letter-spacing:-.01em}
+h3{font-size:1.2rem}
+h4{font-size:1.05rem;margin:20px 0 6px}
+.muted{color:var(--muted)}
+.sub{display:flex;gap:6px;margin:12px 0 14px}
+.seg{border:1.5px solid var(--ink);background:var(--surface);padding:6px 16px;border-radius:6px;font-weight:700;min-height:42px}
+.seg[aria-pressed="true"]{background:var(--u);color:var(--u-ink);border-color:var(--u)}
+
+/* teoría */
+.teo p,.teo li{max-width:66ch}
+.teo .lead{font-family:Literata,Georgia,serif;font-size:1.1rem}
+.teo .ex{font-family:Literata,Georgia,serif;background:linear-gradient(transparent 0,transparent 100%);padding:6px 12px;border-left:4px solid var(--u);background:var(--surface2)}
+.teo ul{padding-left:1.2em}
+.tbl{overflow-x:auto;margin:10px 0}
+.tbl table{border-collapse:collapse;min-width:100%;font-size:.92rem}
+.tbl th,.tbl td{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+.tbl th{background:var(--surface2)}
+s{color:var(--bad);text-decoration-thickness:2px}
+
+/* inicio */
+.hero h2{font-size:2.2rem;line-height:1.05;margin-bottom:10px;letter-spacing:-.02em}
+.demo{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:18px 18px 14px 30px;box-shadow:var(--shadow);margin:14px 0;background-image:linear-gradient(90deg,transparent 15px,var(--margin) 15px,var(--margin) 16.5px,transparent 16.5px,transparent 19px,var(--margin) 19px,var(--margin) 20.5px,transparent 20.5px)}
+.demo .s{font-family:Literata,Georgia,serif;font-size:1.35rem;line-height:2.1}
+.demo .pia{text-decoration:underline wavy var(--p1);text-underline-offset:7px;text-decoration-thickness:2px}
+.demo .nx{background:linear-gradient(transparent 55%,var(--hl) 55%)}
+.demo .note{font-size:1.3rem;color:var(--p1);line-height:1.15;margin:4px 0 0;transform:rotate(-1deg)}
+.demo .note+.note{color:var(--p0)}
+.indice{margin:6px 0 0;padding:0;list-style:none}
+.indice li+li{border-top:1px dashed var(--line)}
+.irow{display:block;width:100%;text-align:left;background:none;border:0;padding:12px 4px 10px 14px;position:relative;border-left:6px solid var(--tc)}
+.irow:hover{background:var(--surface2)}
+.irow .l1{display:flex;align-items:baseline;gap:8px}
+.irow .nm{font-family:Literata,Georgia,serif;font-weight:600;font-size:1.15rem}
+.irow .dots2{flex:1;border-bottom:2px dotted var(--line);transform:translateY(-4px)}
+.irow .cnt{font-variant-numeric:tabular-nums;font-weight:700}
+.irow p{margin:2px 0 6px;font-size:.9rem;color:var(--muted)}
+.meter{height:6px;border-radius:99px;background:var(--surface2);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--tc);width:0}
+.callout{border-radius:6px;padding:10px 12px;background:var(--warn-bg);color:var(--ink);border:1px solid var(--line);border-left:4px solid var(--hl);font-size:.92rem}
+
+/* lista de práctica */
+.grp{margin-top:18px}
+.grp h4{margin:0 0 8px;font-size:.98rem}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-width:52px;min-height:44px;padding:6px 10px;border-radius:4px;border:1.5px solid var(--ink);background:var(--surface);font-weight:700;font-variant-numeric:tabular-nums;font-size:.9rem;position:relative}
+.chip.done{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
+.chip.star::after{content:"★";position:absolute;top:-9px;right:-5px;font-size:.9rem;color:var(--margin)}
+.chip.cur{outline:3px solid var(--hl);outline-offset:1px}
+.btn{border:1.5px solid var(--u);background:var(--u);color:var(--u-ink);border-radius:6px;padding:9px 16px;font-weight:700;min-height:44px}
+.btn.alt{background:var(--surface);color:var(--ink);border-color:var(--ink)}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+/* ejercicio */
+.exhead{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap}
+.exhead h3{font-family:Caveat,cursive;font-size:1.9rem;color:var(--margin);font-weight:700}
+.sent{font-family:Literata,Georgia,serif;font-size:1.28rem;line-height:2.4;margin:10px 0 6px;overflow-wrap:anywhere}
+.w{border-radius:3px;padding:2px 0;transition:background .12s}
+.tap .w{cursor:pointer;text-decoration:underline dotted var(--muted);text-underline-offset:6px}
+.tap .w:hover,.tap .w:focus-visible{background:var(--surface2)}
+.w.sel{background:var(--hl);color:var(--hl-ink)}
+.w.pron{background:linear-gradient(transparent 20%,var(--hl) 20%);color:var(--hl-ink);padding:2px 3px;font-weight:600}
+.w.nx{background:linear-gradient(transparent 20%,var(--hl) 20%);color:var(--hl-ink);font-weight:700}
+.w.nxok{box-shadow:inset 0 -3px 0 var(--ink);font-weight:700}
+.w.ante{box-shadow:inset 0 -3px 0 var(--ok)}
+.sp.in,.w.in{background:color-mix(in srgb,var(--pc,var(--p0)) 13%,transparent)}
+.br{font-family:Caveat,cursive;font-weight:700;color:var(--pc,var(--p0));font-size:1.7em;line-height:0;padding-inline:1px;vertical-align:-.08em}
+.br sub{font-size:.5em;margin-left:1px;font-family:Atkinson Hyperlegible,sans-serif}
+.help{margin:6px 0 0;color:var(--muted);font-size:.93rem}
+.marks{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.mk{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--pc,var(--line));border-radius:4px;padding:3px 4px 3px 10px;font-size:.88rem;background:var(--surface);max-width:100%}
+.mk.ok{background:var(--ok-bg);border-color:var(--ok)}
+.mk em{font-style:normal;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:46vw}
+.mk button{border:0;background:var(--surface2);border-radius:50%;width:26px;height:26px;line-height:1;padding:0}
+.fb{border-radius:4px;padding:8px 12px;margin-top:10px;border:1px solid var(--line);border-left-width:5px;font-size:.97rem}
+.fb.ok{background:var(--ok-bg);border-color:var(--ok)}
+.fb.bad{background:var(--bad-bg);border-color:var(--bad)}
+.fb.info{background:var(--warn-bg);border-color:var(--margin)}
+.fb b.t{display:block;margin-bottom:0;font-family:Caveat,cursive;font-size:1.45rem;line-height:1.1;color:var(--bad)}
+.fb.ok b.t{color:var(--ok)}
+.fb.info b.t{color:var(--margin)}
+.q{font-family:Literata,Georgia,serif;font-size:1.1rem;margin:14px 0 8px;font-weight:600}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:8px}
+.opts.col1{grid-template-columns:1fr}
+.opt{text-align:left;background:var(--surface);border:1.5px solid var(--ink);border-radius:4px;padding:10px 12px;min-height:46px;line-height:1.3;box-shadow:2px 2px 0 var(--line)}
+.opt:hover:not([disabled]){border-color:var(--u);box-shadow:2px 2px 0 var(--u)}
+.opt.bad{background:var(--bad-bg);border-color:var(--bad);color:var(--ink);box-shadow:none;text-decoration:line-through;text-decoration-color:var(--bad)}
+.opt.good{background:var(--ok-bg);border-color:var(--ok)}
+.opt[disabled]{cursor:default}
+.opt small{display:block;color:var(--muted);font-size:.78rem}
+.grpl{font-size:.84rem;color:var(--muted);margin:10px 0 2px;grid-column:1/-1;font-weight:700}
+.pcards{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.pc{border:1px solid var(--line);border-left:6px solid var(--pc,var(--line));border-radius:4px;padding:8px 12px;background:var(--surface)}
+.pc.active{border-color:var(--pc);box-shadow:var(--shadow)}
+.pc.done{background:var(--ok-bg)}
+.pc .ph{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.pc .ph b{color:var(--pc);font-family:Literata,Georgia,serif}
+.pc .sum{margin:4px 0 0;font-size:.92rem}
+.pc ul,.sum{margin:4px 0 0;padding-left:1.1em}
+.dots{display:flex;gap:4px;margin:4px 0}
+.dots i{width:18px;height:5px;border-radius:9px;background:var(--line)}
+.dots i.on{background:var(--u)}
+.res{text-align:center;padding:10px 4px}
+.res .big{font-size:3rem;color:var(--margin);font-family:Caveat,cursive;line-height:1}
+.res h3{font-family:Caveat,cursive;font-size:2rem;color:var(--ok)}
+
+/* ventana auxiliar */
+.ov{position:fixed;inset:0;z-index:50;background:rgba(10,16,30,.55);display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--bg);width:100%;max-width:820px;max-height:88vh;overflow:auto;border-radius:12px 12px 0 0;padding:14px 16px calc(24px + env(safe-area-inset-bottom,0px));border-top:4px solid var(--u)}
+.sheet .hd{display:flex;justify-content:space-between;align-items:center;gap:8px;position:sticky;top:-14px;background:var(--bg);padding:8px 0;z-index:2}
+.stabs{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 10px}
+textarea.cp{width:100%;min-height:140px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.8rem;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:8px}
+
+/* árbol */
+.tree{display:grid;gap:8px}
+.tn{border:1px solid var(--line);background:var(--surface);border-radius:4px;padding:8px 10px;font-size:.92rem}
+.tn b{display:block}
+.tn .br2{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px;margin-top:6px}
+.tn .lf{background:var(--ok-bg);border-radius:4px;padding:5px 8px;font-size:.88rem}
+.tn .lf strong{display:block}
+@media (min-width:700px){ .sent{font-size:1.5rem} .hero h2{font-size:2.8rem} }
+@media (prefers-reduced-motion:reduce){ *{transition:none!important} }
+.w.wrong{background:var(--bad-bg);text-decoration:line-through;text-decoration-color:var(--bad)}
+.w.ok{background:var(--ok-bg);box-shadow:inset 0 -3px 0 var(--ok)}
+
+</style>
+</head><body><div id="app"></div>
+<script>
+const TEORIA = {
+rep: `
+<p class="lead">Un predicado verbal tiene un verbo como núcleo, que puede estar acompañado por distintos <b>modificadores del verbo</b>. Antes de analizar proposiciones conviene tenerlos a mano.</p>
+<h4>Objeto directo (OD)</h4>
+<p>Es el objeto de la acción. Se puede reemplazar por <b>lo, la, los, las</b> y, al pasar la oración a voz pasiva, se convierte en sujeto. Aparece con «a» cuando es una persona.</p>
+<p class="ex">Compré un lápiz → <i>Lo</i> compré. · Visité <u>a María</u> → <i>La</i> visité.</p>
+<h4>Objeto indirecto (OI)</h4>
+<p>Indica a quién va dirigida la acción. Se reemplaza por <b>le, les</b> y va con «a» o «para». El pronombre puede <em>duplicar</em> al OI sin que haya dos.</p>
+<p class="ex">Le pegué una trompada <u>a Pedro</u>. (<i>le</i> y <i>a Pedro</i> son el mismo OI)</p>
+<h4>Predicativo subjetivo</h4>
+<p>Modifica al verbo y también al sujeto: coincide con él en género y número. Es <b>obligatorio (PSO)</b> con los verbos copulativos (<i>ser, estar, parecer</i>) y <b>no obligatorio (PSNO)</b> con los demás.</p>
+<p class="ex">La prueba era <u>dificilísima</u> (PSO). · El chico caminaba <u>veloz</u> entre la gente (PSNO).</p>
+<h4>Complemento agente (CAg)</h4>
+<p>Sólo aparece en voz pasiva, va con «por» y en voz activa pasa a ser el sujeto.</p>
+<p class="ex">El examen fue desaprobado <u>por los alumnos</u>.</p>
+<h4>Circunstanciales</h4>
+<p>Expresan una circunstancia de la acción. Con preposición son <em>complementos circunstanciales</em>; sin ella (un adverbio), <em>circunstanciales</em>.</p>
+<div class="tbl"><table><tr><th>Tipo</th><th>Pregunta</th></tr>
+<tr><td>Lugar</td><td>¿Dónde?</td></tr><tr><td>Tiempo</td><td>¿Cuándo?</td></tr><tr><td>Modo</td><td>¿Cómo?</td></tr><tr><td>Cantidad</td><td>¿Cuánto?</td></tr><tr><td>Causa</td><td>¿Por qué?</td></tr><tr><td>Fin</td><td>¿Para qué?</td></tr><tr><td>Instrumento</td><td>¿Con qué?</td></tr><tr><td>Compañía</td><td>¿Con quién?</td></tr></table></div>
+<h4>Otros elementos de este repaso</h4>
+<p><b>SCR</b> (signo de cuasirreflejo): el «se» de <i>se levantó</i>; se explica en la pestaña Pronombres. Los verbos que no admiten sujeto (<i>amanece, llueve</i>) forman <b>oraciones unimembres</b>.</p>
+`,
+coo: `
+<p class="lead">Una <b>proposición</b> es la expresión de una idea completa, pero a diferencia de la oración <em>no tiene autonomía sintáctica</em>: forma parte de una estructura mayor.</p>
+<p><b>Proposiciones coordinadas</b> son las que están en el mismo nivel sintáctico y forman una oración compuesta. Cada una se analiza por dentro como una oración simple.</p>
+<p class="ex">[(Juan corre), (Elena lee) y (María escribe).]</p>
+<div class="tbl"><table>
+<tr><th>Clase</th><th>Nexos</th><th>Significado</th></tr>
+<tr><td>Copulativa</td><td>y, e, ni</td><td>Suma: lo dicho en una se suma a la otra.</td></tr>
+<tr><td>Disyuntiva</td><td>o, u</td><td>Exclusión: si se da una, no se da la otra.</td></tr>
+<tr><td>Adversativa</td><td>pero, mas, sino, sin embargo, no obstante</td><td>Oposición total o parcial.</td></tr>
+<tr><td>Explicativa</td><td>es decir, esto es, o sea</td><td>Una proposición explica el sentido de la otra.</td></tr>
+<tr><td>Yuxtapuesta</td><td>coma, punto y coma, dos puntos</td><td>Una junto a otra, sin nexo.</td></tr></table></div>
+<h4>Cómo se analiza</h4>
+<p>Se marcan las proposiciones y cada una se analiza como una oración. Ojo: un <em>sujeto compuesto</em> («él y su novia») no es coordinación de proposiciones.</p>
+`,
+pia: `
+<p class="lead">Las <b>proposiciones incluidas</b> (antes «subordinadas») están dentro de una oración y tienen <b>dos niveles de análisis</b>: cumplen una función dentro de la oración que las incluye y, además, se analizan por dentro como una oración simple.</p>
+<p>Las <b>adjetivas</b> cumplen las funciones del adjetivo: modificador directo de un sustantivo, predicativo y predicado no verbal. Están encabezadas por un <b>nexo relacionante</b> que toma el significado del sustantivo al que modifica: el <b>antecedente</b>.</p>
+<p class="ex">La chica (<b>que</b> pasó recién) es mi hermana. → <i>la chica</i> pasó recién (que = sujeto)</p>
+<h4>Nexos relacionantes</h4>
+<ul>
+<li><b>Relacionante:</b> marca la subordinación <em>y además</em> cumple una función dentro de la proposición. Tiene antecedente.</li>
+<li><b>Subordinante:</b> sólo marca la subordinación. No tiene antecedente y se tacha al bajar la proposición. Las adjetivas llevan siempre relacionantes.</li>
+</ul>
+<div class="tbl"><table>
+<tr><th>Relacionante</th><th>Función dentro de la proposición</th></tr>
+<tr><td>que, quien/es, el cual…</td><td>funciones del sustantivo: sujeto, OD, OI, término</td></tr>
+<tr><td>cuyo/a/os/as</td><td>modificador directo de un sustantivo (concuerda con él)</td></tr>
+<tr><td>donde, cuando, como</td><td>circunstanciales de lugar, tiempo y modo</td></tr></table></div>
+<p class="ex">Fue a la casa de sus abuelos (<b>a quienes</b> él quería mucho).<br>El cuento, (<b>cuya</b> difusión es amplia), es un género difundido.<br>Nos encontramos en el lugar (<b>donde</b> nos conocimos).</p>
+<h4>Especificativas y explicativas</h4>
+<p>La <b>especificativa</b> selecciona una parte del antecedente (lo recorta frente a otros). La <b>explicativa</b> sólo agrega un rasgo: va entre pausas (comas) y se puede quitar sin cambiar el sentido.</p>
+<p class="ex">Los alumnos que estudiaron aprobaron. (sólo algunos)<br>Los alumnos, que estudiaron, aprobaron. (todos)</p>
+<h4>Errores frecuentes</h4>
+<ul>
+<li>El relacionante tiene que cumplir una función: «<s>una película que su protagonista es…</s>» → <i>cuyo protagonista es…</i></li>
+<li>No se duplica la función: «<s>donde que se reparten</s>». Si falta un circunstancial de lugar, usá <i>en el cual</i> o <i>donde</i>.</li>
+</ul>
+`,
+pis: `
+<p class="lead">Las <b>incluidas sustantivas</b> cumplen dentro de la oración las funciones del sustantivo: sujeto, objeto directo, aposición, predicativo (PSO) y término. <em>No tienen antecedente.</em></p>
+<p class="ex">El que cruzó los Andes liberó América. (sujeto) · Estudiamos al que cruzó los Andes. (término del OD) · La espada del que cruzó los Andes… (término)</p>
+<div class="tbl"><table>
+<tr><th colspan="2">Con nexo</th><th colspan="2">Sin nexo</th></tr>
+<tr><th>Subordinante</th><th>Relacionante</th><th>Discurso directo</th><th>Interrogativa o exclamativa indirecta</th></tr>
+<tr><td><b>que, si</b>. Sólo marcan la subordinación; se tachan al bajar.</td><td><b>el que, la que, los/las que, lo que, quien/es, cuanto, donde, cuando</b>. Marcan la subordinación y cumplen una función.</td><td>Entre comillas, después de un verbo de decir o pensar.</td><td>Encabezadas por pronombres con tilde: <b>qué, cuál, quién, cuándo, cuánto, dónde, cómo</b>.</td></tr></table></div>
+<h4>Cómo reconocer una PIS</h4>
+<p>Se puede reemplazar por <b>esto</b> o <b>eso</b> (o por <i>lo</i> si es OD): <i>Me dijo <u>que no vengas más</u> → Me dijo <u>esto</u></i>.</p>
+<p class="ex">Me dijo (<b>que</b> no venga más). — Me preguntó (<b>si</b> me sentía bien). — Me dijo: (“Llegaste tarde”). — Me preguntó (<b>qué</b> hora era).</p>
+<h4>Queísmo y dequeísmo</h4>
+<p><b>Dequeísmo:</b> poner «de» donde no corresponde («<s>pienso de que</s>»). <b>Queísmo:</b> omitirlo donde hace falta («<s>me di cuenta que</s>»). Para comprobarlo, reemplazá la PIS por <i>eso</i>: «pienso eso», pero «me di cuenta de eso».</p>
+<p>También: <s>a menos de que</s> → a menos que · <s>una vez de que</s> → una vez que · <s>a medida de que</s> → a medida que.</p>
+`,
+pro: `
+<p class="lead">Los pronombres personales <b>cambian de forma según la función</b> que cumplen (declinación por caso): <i>yo</i> (sujeto), <i>me</i> (OD, OI, SCR), <i>mí</i> (término). Acá interesan los de caso objetivo: me, te, se, lo, la, le, nos…</p>
+<ul>
+<li><b>le, les</b> son siempre objeto indirecto (a veces duplicándolo).</li>
+<li><b>lo, la, los, las</b> son siempre objeto directo.</li>
+<li>Con los demás hay que hacer el recorrido del árbol de abajo.</li>
+</ul>
+<p>Si hay <i>lo</i> y <i>le</i> juntos, «le» se reemplaza por <b>se</b> («<s>le lo</s>» suena mal): <i>Juan <b>se</b> la prestó</i>. Ese «se» sigue siendo OI.</p>
+<h4>Árbol de decisión</h4>
+<div id="tree-slot"></div>
+<h4>Resumen de funciones</h4>
+<div class="tbl"><table>
+<tr><th>Tipo</th><th>Ejemplo</th><th>Función</th></tr>
+<tr><td>No coincide con el sujeto</td><td>Te vi. · Me trajo.</td><td>OD u OI</td></tr>
+<tr><td>Reflejo puro</td><td>Juan <b>se</b> peina (a sí mismo).</td><td>OD u OI</td></tr>
+<tr><td>Recíproco (plural)</td><td>Ellos <b>se</b> saludaron (entre ellos).</td><td>OD u OI</td></tr>
+<tr><td>Cuasirreflejo</td><td>Juan <b>se</b> cayó. · <b>Nos</b> vamos.</td><td>SCR</td></tr>
+<tr><td>Pasiva con se</td><td><b>Se</b> abrieron las puertas.</td><td>marca de pasiva</td></tr>
+<tr><td>Se impersonal</td><td>Aquí <b>se</b> vacuna. · <b>Se</b> come pescado.</td><td>marca de impersonalidad</td></tr></table></div>
+<p>La <b>pasiva con se</b> no admite complemento agente («<s>se abrió una puerta por Juan</s>»). Con el <b>se impersonal</b> el verbo no varía con el número de lo que sigue, que es OD: <i>se come pescado / se come pastas</i>.</p>
+`,
+adv: `
+<p class="lead">Las <b>incluidas adverbiales</b> cumplen la función del adverbio. Se dividen en las que tienen <b>función circunstancial</b> y las que no.</p>
+<h4>A. Con función circunstancial</h4>
+<p>Se pueden reemplazar por un adverbio (<i>allí, entonces, así, mucho</i>), salvo las causales, que no tienen adverbio equivalente.</p>
+<div class="tbl"><table>
+<tr><th>Clase</th><th>Función</th><th>Nexos</th><th>Tipo de nexo</th></tr>
+<tr><td>Locativas</td><td>C. de lugar</td><td>donde, adonde</td><td>relacionante</td></tr>
+<tr><td>Temporales</td><td>C. de tiempo</td><td>cuando, mientras, en tanto (simultaneidad) · antes que, no bien, apenas (anterioridad) · después que, luego de que (posterioridad)</td><td>relacionante</td></tr>
+<tr><td>Modales</td><td>C. de modo</td><td>como, según, como si</td><td>relacionante</td></tr>
+<tr><td>Cuantitativas</td><td>C. de cantidad</td><td>cuanto</td><td>relacionante</td></tr>
+<tr><td>Causales</td><td>C. de causa</td><td>porque, pues, puesto que, ya que</td><td>subordinante</td></tr></table></div>
+<p class="ex">Llevó al niño (<b>donde</b> están sus padres). — El viento entraba (<b>mientras</b> mi madre bordaba). — Lo miró (<b>como</b> tenía costumbre). — Dije esas pavadas (<b>porque</b> había tomado alcohol).</p>
+<h4>B. Sin función circunstancial</h4>
+<p>No modifican al verbo: modifican al resto de la oración (el <b>núcleo oracional</b>) o a otro adverbio o adjetivo.</p>
+<div class="tbl"><table>
+<tr><th>Clase</th><th>Función</th><th>Nexos (subordinantes)</th></tr>
+<tr><td>Consecutivas</td><td>Complemento consecutivo</td><td><b>que</b>, correlativo de <i>tan, tanto</i></td></tr>
+<tr><td>Concesivas</td><td>M.N.O.</td><td>aunque, si bien, por más que, aun cuando, así (+ subjuntivo)</td></tr>
+<tr><td>Condicionales</td><td>M.N.O.</td><td>si, con tal que, siempre que, como (+ subjuntivo)</td></tr></table></div>
+<p class="ex">Trabaja tanto (<b>que</b> apenas lo vemos). — (<b>Aunque</b> me lo pidan), no cederé. — (<b>Si</b> estudiaras más), aprobarías.</p>
+<p>La <b>concesiva</b> expresa una objeción que no impide lo que dice el núcleo oracional; la <b>condicional</b>, una hipótesis o condición para que se cumpla.</p>
+<h4>Correlaciones verbales en la condición</h4>
+<div class="tbl"><table>
+<tr><th>Condición</th><th>Subordinada (si…)</th><th>Núcleo oracional</th><th>Ejemplo</th></tr>
+<tr><td>Real</td><td>indicativo (casi todos los tiempos)</td><td>indicativo o imperativo</td><td>Si tengo plata, me compro una computadora.</td></tr>
+<tr><td>Posible</td><td>pretérito imperfecto del subjuntivo</td><td>condicional simple</td><td>Si tuviera plata, me compraría una computadora.</td></tr>
+<tr><td>Imposible</td><td>pretérito pluscuamperfecto del subjuntivo</td><td>condicional compuesto o pluscuamperfecto del subjuntivo</td><td>Si hubiera tenido plata, me habría comprado una computadora.</td></tr></table></div>
+<p>Es incorrecto usar el condicional dentro de la proposición con «si»: «<s>si tendría plata</s>», «<s>si habría tenido</s>».</p>
+<h4>No confundir</h4>
+<p><i>el lugar <b>donde</b> vendían</i> (adjetiva: tiene antecedente) · <i>llegamos <b>adonde</b> vendían</i> (adverbial locativa) · <i>preguntamos <b>dónde</b> vendían</i> (sustantiva interrogativa indirecta: «dónde» lleva tilde).</p>
+`
+};
+const ABREV = [
+ ['OSB / OU / OC','oración simple bimembre / unimembre / compuesta'],
+ ['ses · st','sujeto expreso simple · sujeto tácito'],
+ ['pvs','predicado verbal simple'],
+ ['n · md · mi · t','núcleo · modificador directo · modificador indirecto · término'],
+ ['vn · NV','núcleo verbal'],
+ ['OD · OI','objeto directo · objeto indirecto'],
+ ['PSO · PSNO','predicativo subjetivo obligatorio · no obligatorio'],
+ ['CAg','complemento agente'],
+ ['CCL · CCT · CCM','circunstancial de lugar · tiempo · modo'],
+ ['CCCn · CCCa','circunstancial de cantidad · de causa'],
+ ['CCCo · CCI','circunstancial de compañía · de instrumento'],
+ ['SCR','signo de cuasirreflejo'],
+ ['PIA · PIS · PIAdv','proposición incluida adjetiva · sustantiva · adverbial'],
+ ['PSB','proposición simple bimembre (la proposición ya «bajada» para analizarla)'],
+ ['MNO · NO','modificador del núcleo oracional · núcleo oracional'],
+ ['Apos','aposición']
+];
+
+(function(){
+'use strict';
+const ITEMS = [{"id":"rep-1a","u":"rep","m":"func","l":"Ej. 1a","k":[{"t":"El","w":1,"s":0},{"t":"osito","w":1,"s":1},{"t":"cariñoso","w":1,"s":1},{"t":"del","w":1,"s":1},{"t":"bosque","w":1,"s":1},{"t":"asesinó","w":1,"s":1},{"t":"a","w":1,"s":1},{"t":"los","w":1,"s":1},{"t":"niños","w":1,"s":1},{"t":"exploradores","w":1,"s":1},{"t":"e","w":1,"s":1},{"t":"hizo","w":1,"s":1},{"t":"un","w":1,"s":1},{"t":"collar","w":1,"s":1},{"t":"con","w":1,"s":1},{"t":"sus","w":1,"s":1},{"t":"tripas","w":1,"s":1},{"t":".","w":0,"s":0}],"spans":[{"s":0,"e":4,"fn":"Suj"},{"s":5,"e":5,"fn":"NV"},{"s":6,"e":9,"fn":"OD"},{"s":11,"e":11,"fn":"NV"},{"s":12,"e":16,"fn":"OD"}]},{"id":"rep-1b","u":"rep","m":"func","l":"Ej. 1b","k":[{"t":"El","w":1,"s":0},{"t":"banco","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"sangre","w":1,"s":1},{"t":"fue","w":1,"s":1},{"t":"comprado","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"lunes","w":1,"s":1},{"t":"por","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"conde","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"Transilvania","w":1,"s":1},{"t":".","w":0,"s":0}],"spans":[{"s":0,"e":3,"fn":"Suj"},{"s":4,"e":5,"fn":"NV"},{"s":6,"e":7,"fn":"CCT"},{"s":8,"e":12,"fn":"CAg"}]},{"id":"rep-1c","u":"rep","m":"func","l":"Ej. 1c","k":[{"t":"Godzilla","w":1,"s":0},{"t":"es","w":1,"s":1},{"t":"un","w":1,"s":1},{"t":"monstruo","w":1,"s":1},{"t":"amable","w":1,"s":1},{"t":"y","w":1,"s":1},{"t":"simpático","w":1,"s":1},{"t":".","w":0,"s":0}],"spans":[{"s":0,"e":0,"fn":"Suj"},{"s":1,"e":1,"fn":"NV"},{"s":2,"e":6,"fn":"PSO"}]},{"id":"rep-1d","u":"rep","m":"func","l":"Ej. 1d","k":[{"t":"Amanece","w":1,"s":0},{"t":"en","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"castillo","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"Drácula","w":1,"s":1},{"t":".","w":0,"s":0}],"spans":[{"s":0,"e":0,"fn":"NV"},{"s":1,"e":5,"fn":"CCL"}],"n":"Es una oración unimembre (verbo meteorológico): no tiene sujeto."},{"id":"rep-1e","u":"rep","m":"func","l":"Ej. 1e","k":[{"t":"El","w":1,"s":0},{"t":"cadáver","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"levantó","w":1,"s":1},{"t":"y","w":1,"s":1},{"t":"saludó","w":1,"s":1},{"t":"muy","w":1,"s":1},{"t":"amable","w":1,"s":1},{"t":"a","w":1,"s":1},{"t":"los","w":1,"s":1},{"t":"doctores","w":1,"s":1},{"t":".","w":0,"s":0}],"spans":[{"s":0,"e":1,"fn":"Suj"},{"s":2,"e":2,"fn":"SCR"},{"s":3,"e":3,"fn":"NV"},{"s":5,"e":5,"fn":"NV"},{"s":6,"e":7,"fn":"PSNO"},{"s":8,"e":10,"fn":"OD"}]},{"id":"rep-1f","u":"rep","m":"func","l":"Ej. 1f","k":[{"t":"El","w":1,"s":0},{"t":"hombre","w":1,"s":1},{"t":"lobo","w":1,"s":1},{"t":"pelado","w":1,"s":1},{"t":"y","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"zombie","w":1,"s":1},{"t":"vegetariano","w":1,"s":1},{"t":"salen","w":1,"s":1},{"t":"los","w":1,"s":1},{"t":"sábados","w":1,"s":1},{"t":"a","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"noche","w":1,"s":1},{"t":".","w":0,"s":0}],"spans":[{"s":0,"e":7,"fn":"Suj"},{"s":8,"e":8,"fn":"NV"},{"s":9,"e":13,"fn":"CCT"}],"n":"Discutible: «los sábados» y «a la noche» pueden analizarse como dos circunstanciales de tiempo. La clave toma uno solo."},{"id":"coo-1a","u":"coo","m":"props","l":"Ej. 1a","k":[{"t":"Llovía","w":1,"s":0},{"t":"mucho","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"pero","w":1,"s":1},{"t":"los","w":1,"s":1},{"t":"vampiros","w":1,"s":1},{"t":"fueron","w":1,"s":1},{"t":"alegremente","w":1,"s":1},{"t":"a","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"fiesta","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":1,"t":"coord","i":0},{"s":4,"e":10,"t":"coord","nexo":{"s":3,"e":3,"c":"conj","ct":"adv"},"i":1}]},{"id":"coo-1b","u":"coo","m":"props","l":"Ej. 1b","k":[{"t":"El","w":1,"s":0},{"t":"zombie","w":1,"s":1},{"t":"nunca","w":1,"s":1},{"t":"ríe","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"sin","w":1,"s":1},{"t":"embargo","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"él","w":1,"s":1},{"t":"y","w":1,"s":1},{"t":"su","w":1,"s":1},{"t":"novia","w":1,"s":1},{"t":"festejan","w":1,"s":1},{"t":"todos","w":1,"s":1},{"t":"los","w":1,"s":1},{"t":"chistes","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"Los","w":1,"s":1},{"t":"Simpson","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":3,"t":"coord","i":0},{"s":8,"e":18,"t":"coord","nexo":{"s":5,"e":6,"c":"conj","ct":"adv"},"i":1}],"n":"«él y su novia» es un sujeto compuesto: no hay coordinación de proposiciones dentro de la segunda."},{"id":"coo-1c","u":"coo","m":"props","l":"Ej. 1c","k":[{"t":"King","w":1,"s":0},{"t":"Kong","w":1,"s":1},{"t":"tiene","w":1,"s":1},{"t":"pulgas","w":1,"s":1},{"t":";","w":0,"s":0},{"t":"Godzilla","w":1,"s":1},{"t":"estornuda","w":1,"s":1},{"t":";","w":0,"s":0},{"t":"el","w":1,"s":1},{"t":"dragón","w":1,"s":1},{"t":"tiene","w":1,"s":1},{"t":"tos","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":3,"t":"coord","i":0},{"s":5,"e":6,"t":"coord","ct":"yux","i":1},{"s":8,"e":11,"t":"coord","ct":"yux","i":2}]},{"id":"coo-1d","u":"coo","m":"props","l":"Ej. 1d","k":[{"t":"O","w":1,"s":0},{"t":"van","w":1,"s":1},{"t":"al","w":1,"s":1},{"t":"shopping","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"fin","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"semana","w":1,"s":1},{"t":"o","w":1,"s":1},{"t":"los","w":1,"s":1},{"t":"vampiros","w":1,"s":1},{"t":"no","w":1,"s":1},{"t":"comen","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":1,"e":7,"t":"coord","nexo":{"s":0,"e":0,"c":"conj","ct":"dis"},"i":0},{"s":9,"e":12,"t":"coord","nexo":{"s":8,"e":8,"c":"conj","ct":"dis"},"i":1}],"n":"Coordinación disyuntiva correlativa: el nexo aparece antes de cada proposición."},{"id":"coo-1e","u":"coo","m":"props","l":"Ej. 1e","k":[{"t":"Anoche","w":1,"s":0},{"t":"la","w":1,"s":1},{"t":"mujer","w":1,"s":1},{"t":"degollada","w":1,"s":1},{"t":"lloraba","w":1,"s":1},{"t":"y","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"jinete","w":1,"s":1},{"t":"sin","w":1,"s":1},{"t":"cabeza","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"consoló","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":4,"t":"coord","i":0},{"s":6,"e":11,"t":"coord","nexo":{"s":5,"e":5,"c":"conj","ct":"cop"},"i":1}]},{"id":"coo-1f","u":"coo","m":"props","l":"Ej. 1f","k":[{"t":"El","w":1,"s":0},{"t":"conde","w":1,"s":1},{"t":"es","w":1,"s":1},{"t":"muy","w":1,"s":1},{"t":"elegante","w":1,"s":1},{"t":";","w":0,"s":0},{"t":"es","w":1,"s":1},{"t":"decir","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"su","w":1,"s":1},{"t":"ropa","w":1,"s":1},{"t":"siempre","w":1,"s":1},{"t":"está","w":1,"s":1},{"t":"a","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"moda","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":4,"t":"coord","i":0},{"s":9,"e":15,"t":"coord","nexo":{"s":6,"e":7,"c":"conj","ct":"exp"},"i":1}]},{"id":"pia-1a","u":"pia","m":"props","l":"Ej. 1a","k":[{"t":"El","w":1,"s":0},{"t":"muchacho","w":1,"s":1},{"t":"corrió","w":1,"s":1},{"t":"hacia","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"lugar","w":1,"s":1},{"t":"donde","w":1,"s":1},{"t":"había","w":1,"s":1},{"t":"escondido","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"cuchillo","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":6,"e":10,"t":"PIA","sub":"esp","nexo":{"s":6,"e":6,"c":"rel","nf":"CCL","a":5},"i":0}]},{"id":"pia-1b","u":"pia","m":"props","l":"Ej. 1b","k":[{"t":"Yo","w":1,"s":0},{"t":"ya","w":1,"s":1},{"t":"no","w":1,"s":1},{"t":"soy","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"infeliz","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"conociste","w":1,"s":1},{"t":"y","w":1,"s":1},{"t":"vos","w":1,"s":1},{"t":"ya","w":1,"s":1},{"t":"no","w":1,"s":1},{"t":"tenés","w":1,"s":1},{"t":"los","w":1,"s":1},{"t":"mismos","w":1,"s":1},{"t":"encantos","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"tu","w":1,"s":1},{"t":"juventud","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":7,"t":"coord","i":0},{"s":6,"e":7,"t":"PIA","sub":"esp","nexo":{"s":6,"e":6,"c":"rel","nf":"OD","a":5},"i":1},{"s":9,"e":18,"t":"coord","nexo":{"s":8,"e":8,"c":"conj","ct":"cop"},"i":2}]},{"id":"pia-1c","u":"pia","m":"props","l":"Ej. 1c","k":[{"t":"María","w":1,"s":0},{"t":"ubicó","w":1,"s":1},{"t":"a","w":1,"s":1},{"t":"las","w":1,"s":1},{"t":"compañeras","w":1,"s":1},{"t":"con","w":1,"s":1},{"t":"quienes","w":1,"s":1},{"t":"había","w":1,"s":1},{"t":"cursado","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"secundario","w":1,"s":1},{"t":"en","w":1,"s":1},{"t":"su","w":1,"s":1},{"t":"juventud","w":1,"s":1},{"t":"y","w":1,"s":1},{"t":"las","w":1,"s":1},{"t":"asesinó","w":1,"s":1},{"t":"a","w":1,"s":1},{"t":"todas","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"por","w":1,"s":1},{"t":"orden","w":1,"s":1},{"t":"alfabético","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":13,"t":"coord","i":0},{"s":5,"e":13,"t":"PIA","sub":"esp","nexo":{"s":5,"e":6,"c":"rel","nf":"CCCo/Term","a":4},"i":1},{"s":15,"e":22,"t":"coord","nexo":{"s":14,"e":14,"c":"conj","ct":"cop"},"i":2}]},{"id":"pia-1d","u":"pia","m":"props","l":"Ej. 1d","k":[{"t":"En","w":1,"s":0},{"t":"ese","w":1,"s":1},{"t":"libro","w":1,"s":1},{"t":"encontró","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"clave","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"condujo","w":1,"s":1},{"t":"al","w":1,"s":1},{"t":"culpable","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"muerte","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"su","w":1,"s":1},{"t":"padre","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":6,"e":16,"t":"PIA","sub":"esp","nexo":{"s":6,"e":6,"c":"rel","nf":"Suj","a":5},"i":0}]},{"id":"pia-1e","u":"pia","m":"props","l":"Ej. 1e","k":[{"t":"El","w":1,"s":0},{"t":"hombre","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"contrató","w":1,"s":1},{"t":"era","w":1,"s":1},{"t":"un","w":1,"s":1},{"t":"alto","w":1,"s":1},{"t":"jefe","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"mafia","w":1,"s":1},{"t":"rusa","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":2,"e":4,"t":"PIA","sub":"esp","nexo":{"s":2,"e":2,"c":"rel","nf":"Suj","a":1},"i":0}]},{"id":"pia-1f","u":"pia","m":"props","l":"Ej. 1f","k":[{"t":"El","w":1,"s":0},{"t":"delincuente","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"dirigió","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"asalto","w":1,"s":1},{"t":"a","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"joyería","w":1,"s":1},{"t":"del","w":1,"s":1},{"t":"centro","w":1,"s":1},{"t":"fue","w":1,"s":1},{"t":"apresado","w":1,"s":1},{"t":"con","w":1,"s":1},{"t":"sus","w":1,"s":1},{"t":"cómplices","w":1,"s":1},{"t":"por","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"policía","w":1,"s":1},{"t":"en","w":1,"s":1},{"t":"una","w":1,"s":1},{"t":"casa","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"los","w":1,"s":1},{"t":"suburbios","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":2,"e":10,"t":"PIA","sub":"esp","nexo":{"s":2,"e":2,"c":"rel","nf":"Suj","a":1},"i":0}]},{"id":"pia-1g","u":"pia","m":"props","l":"Ej. 1g","k":[{"t":"La","w":1,"s":0},{"t":"manera","w":1,"s":1},{"t":"como","w":1,"s":1},{"t":"él","w":1,"s":1},{"t":"hablaba","w":1,"s":1},{"t":"a","w":1,"s":1},{"t":"las","w":1,"s":1},{"t":"personas","w":1,"s":1},{"t":"provocaba","w":1,"s":1},{"t":"risas","w":1,"s":1},{"t":"y","w":1,"s":1},{"t":"él","w":1,"s":1},{"t":"juró","w":1,"s":1},{"t":"vengarse","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":9,"t":"coord","i":0},{"s":2,"e":7,"t":"PIA","sub":"esp","nexo":{"s":2,"e":2,"c":"rel","nf":"CCM","a":1},"i":1},{"s":11,"e":13,"t":"coord","nexo":{"s":10,"e":10,"c":"conj","ct":"cop"},"i":2}]},{"id":"pia-1h","u":"pia","m":"props","l":"Ej. 1h","k":[{"t":"Estudió","w":1,"s":0},{"t":"toda","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"noche","w":1,"s":1},{"t":"en","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"mismo","w":1,"s":1},{"t":"bar","w":1,"s":1},{"t":"donde","w":1,"s":1},{"t":"había","w":1,"s":1},{"t":"conocido","w":1,"s":1},{"t":"a","w":1,"s":1},{"t":"su","w":1,"s":1},{"t":"primera","w":1,"s":1},{"t":"novia","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":8,"e":14,"t":"PIA","sub":"esp","nexo":{"s":8,"e":8,"c":"rel","nf":"CCL","a":7},"i":0}]},{"id":"pia-1i","u":"pia","m":"props","l":"Ej. 1i","k":[{"t":"No","w":1,"s":0},{"t":"encontró","w":1,"s":1},{"t":"en","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"lugar","w":1,"s":1},{"t":"convenido","w":1,"s":1},{"t":"a","w":1,"s":1},{"t":"su","w":1,"s":1},{"t":"amigo","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"quien","w":1,"s":1},{"t":"en","w":1,"s":1},{"t":"ese","w":1,"s":1},{"t":"momento","w":1,"s":1},{"t":"asesinaba","w":1,"s":1},{"t":"a","w":1,"s":1},{"t":"su","w":1,"s":1},{"t":"mujer","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":10,"e":17,"t":"PIA","sub":"exp","nexo":{"s":10,"e":10,"c":"rel","nf":"Suj","a":8},"i":0}]},{"id":"pia-1j","u":"pia","m":"props","l":"Ej. 1j","k":[{"t":"El","w":1,"s":0},{"t":"hombre","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"encontró","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"cartera","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"yo","w":1,"s":1},{"t":"había","w":1,"s":1},{"t":"perdido","w":1,"s":1},{"t":"llamó","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"lunes","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":2,"e":9,"t":"PIA","sub":"esp","nexo":{"s":2,"e":2,"c":"rel","nf":"Suj","a":1},"i":0},{"s":6,"e":9,"t":"PIA","sub":"esp","nexo":{"s":6,"e":6,"c":"rel","nf":"OD","a":5},"i":1}],"n":"Dos proposiciones adjetivas, una dentro de la otra."},{"id":"pia-2a","u":"pia","m":"choice","l":"Ej. 2a","q":"En el Torneo Abierto de Tenis de Praga, que se reparten importantes sumas en premios, habrá puntos para el Gran Prix. ¿Cómo se corrige?","o":[{"t":"En el Torneo Abierto de Tenis de Praga, en el cual se reparten importantes sumas en premios, habrá puntos para el Gran Prix.","ok":1},{"t":"En el Torneo Abierto de Tenis de Praga, cuyo se reparten importantes sumas en premios, habrá puntos para el Gran Prix.","ok":0},{"t":"En el Torneo Abierto de Tenis de Praga, que en él se reparten importantes sumas en premios, habrá puntos para el Gran Prix.","ok":0},{"t":"En el Torneo Abierto de Tenis de Praga, donde que se reparten importantes sumas en premios, habrá puntos para el Gran Prix.","ok":0}],"e":"El relacionante «que» tiene que cumplir una función dentro de la proposición. Acá el verbo «se reparten» ya tiene sujeto («sumas») y falta un circunstancial de lugar: «en el cual» (o «donde») cumple esa función."},{"id":"pia-2b","u":"pia","m":"choice","l":"Ej. 2b","q":"Esa es una operación en la cual la mayoría de las veces resulta riesgosa. ¿Cómo se corrige?","o":[{"t":"Esa es una operación que la mayoría de las veces resulta riesgosa.","ok":1},{"t":"Esa es una operación en que la mayoría de las veces resulta riesgosa.","ok":0},{"t":"Esa es una operación cuya la mayoría de las veces resulta riesgosa.","ok":0},{"t":"Esa es una operación donde la mayoría de las veces resulta riesgosa.","ok":0}],"e":"El verbo «resulta» necesita un sujeto, y no un complemento con preposición. El relacionante tiene que ser el sujeto de la proposición («la operación resulta riesgosa»): «que»."},{"id":"pia-2c","u":"pia","m":"choice","l":"Ej. 2c","q":"Vi una película que su protagonista es Leonardo Di Caprio. ¿Cómo se corrige?","o":[{"t":"Vi una película cuyo protagonista es Leonardo Di Caprio.","ok":1},{"t":"Vi una película que el protagonista es Leonardo Di Caprio.","ok":0},{"t":"Vi una película la cual su protagonista es Leonardo Di Caprio.","ok":0},{"t":"Vi una película donde su protagonista es Leonardo Di Caprio.","ok":0}],"e":"«Que su» duplica la función: el relacionante tiene que cumplir una función dentro de la proposición. «Cuyo» funciona como modificador directo del sustantivo («protagonista») y concuerda con él en género y número."},{"id":"pia-3a","u":"pia","m":"props","l":"Ej. 3a","k":[{"t":"Frente","w":1,"s":0},{"t":"a","w":1,"s":1},{"t":"mí","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"sentó","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"chica","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"me","w":1,"s":1},{"t":"gustaba","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":7,"e":9,"t":"PIA","sub":"esp","nexo":{"s":7,"e":7,"c":"rel","nf":"Suj","a":6},"i":0}],"n":"«que» es sujeto en «la chica me gustaba»: «me» es objeto indirecto y «la chica» sujeto. La clave toma «Sujeto»."},{"id":"pia-3b","u":"pia","m":"props","l":"Ej. 3b","k":[{"t":"El","w":1,"s":0},{"t":"ministro","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"encarga","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"los","w":1,"s":1},{"t":"asuntos","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"vivienda","w":1,"s":1},{"t":"viajó","w":1,"s":1},{"t":"ayer","w":1,"s":1},{"t":"a","w":1,"s":1},{"t":"las","w":1,"s":1},{"t":"zonas","w":1,"s":1},{"t":"inundadas","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":2,"e":9,"t":"PIA","sub":"esp","nexo":{"s":2,"e":2,"c":"rel","nf":"Suj","a":1},"i":0}]},{"id":"pia-3c","u":"pia","m":"props","l":"Ej. 3c","k":[{"t":"No","w":1,"s":0},{"t":"fue","w":1,"s":1},{"t":"fácil","w":1,"s":1},{"t":"hablar","w":1,"s":1},{"t":"con","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"ministro","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"que","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"encarga","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"los","w":1,"s":1},{"t":"asuntos","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"vivienda","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":8,"e":15,"t":"PIA","sub":"exp","nexo":{"s":8,"e":8,"c":"rel","nf":"Suj","a":6},"i":0}]},{"id":"pia-3d","u":"pia","m":"props","l":"Ej. 3d","k":[{"t":"Los","w":1,"s":0},{"t":"periodistas","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"que","w":1,"s":1},{"t":"confunden","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"información","w":1,"s":1},{"t":"con","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"chisme","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"se","w":1,"s":1},{"t":"apiñaban","w":1,"s":1},{"t":"ayer","w":1,"s":1},{"t":"frente","w":1,"s":1},{"t":"al","w":1,"s":1},{"t":"hospital","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"alojaba","w":1,"s":1},{"t":"al","w":1,"s":1},{"t":"famoso","w":1,"s":1},{"t":"deportista","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":3,"e":9,"t":"PIA","sub":"exp","nexo":{"s":3,"e":3,"c":"rel","nf":"Suj","a":1},"i":0},{"s":17,"e":21,"t":"PIA","sub":"esp","nexo":{"s":17,"e":17,"c":"rel","nf":"Suj","a":16},"i":1}],"n":"Hay dos proposiciones adjetivas: una explicativa y una especificativa."},{"id":"pis-1a","u":"pis","m":"props","l":"Ej. 1a","k":[{"t":"Lo","w":1,"s":0},{"t":"que","w":1,"s":1},{"t":"dijiste","w":1,"s":1},{"t":"es","w":1,"s":1},{"t":"una","w":1,"s":1},{"t":"tontería","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":2,"t":"PIS","f":"Suj","nexo":{"s":0,"e":1,"c":"rel","nf":"OD"},"i":0}]},{"id":"pis-1b","u":"pis","m":"props","l":"Ej. 1b","k":[{"t":"Todavía","w":1,"s":0},{"t":"no","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"sabe","w":1,"s":1},{"t":"quién","w":1,"s":1},{"t":"es","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"ganador","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"las","w":1,"s":1},{"t":"elecciones","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":4,"e":10,"t":"PIS","f":"Suj","nexo":{"s":4,"e":4,"c":"int","nf":"PSO/Suj"},"i":0}],"n":"Discutible: en «quién es el ganador» el pronombre interrogativo puede analizarse como predicativo (la clave) o como sujeto. Se acepta cualquiera."},{"id":"pis-1c","u":"pis","m":"props","l":"Ej. 1c","k":[{"t":"Crispino","w":1,"s":0},{"t":"me","w":1,"s":1},{"t":"dijo","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"me","w":1,"s":1},{"t":"esperaban","w":1,"s":1},{"t":"a","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"mañana","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"sin","w":1,"s":1},{"t":"otra","w":1,"s":1},{"t":"explicación","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":3,"e":8,"t":"PIS","f":"OD","nexo":{"s":3,"e":3,"c":"sub"},"i":0}]},{"id":"pis-1d","u":"pis","m":"props","l":"Ej. 1d","k":[{"t":"Imaginé","w":1,"s":0},{"t":"que","w":1,"s":1},{"t":"eso","w":1,"s":1},{"t":"era","w":1,"s":1},{"t":"lo","w":1,"s":1},{"t":"más","w":1,"s":1},{"t":"cercano","w":1,"s":1},{"t":"a","w":1,"s":1},{"t":"una","w":1,"s":1},{"t":"confesión","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"Calisser","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":1,"e":11,"t":"PIS","f":"OD","nexo":{"s":1,"e":1,"c":"sub"},"i":0}]},{"id":"pis-1e","u":"pis","m":"props","l":"Ej. 1e","k":[{"t":"“","w":0,"s":0},{"t":"La","w":1,"s":0},{"t":"tapa","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"su","w":1,"s":1},{"t":"ataúd","w":1,"s":1},{"t":"y","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"del","w":1,"s":1},{"t":"piano","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"cerraron","w":1,"s":1},{"t":"al","w":1,"s":1},{"t":"mismo","w":1,"s":1},{"t":"tiempo","w":1,"s":1},{"t":"”","w":0,"s":0},{"t":",","w":0,"s":0},{"t":"dijo","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"mujer","w":1,"s":1},{"t":"con","w":1,"s":1},{"t":"un","w":1,"s":1},{"t":"aire","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"sobreactuación","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":1,"e":14,"t":"PIS","sub":"dd","f":"OD","i":0}]},{"id":"pis-1f","u":"pis","m":"props","l":"Ej. 1f","k":[{"t":"El","w":1,"s":0},{"t":"que","w":1,"s":1},{"t":"esperaba","w":1,"s":1},{"t":"en","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"puerta","w":1,"s":1},{"t":"era","w":1,"s":1},{"t":"Montiel","w":1,"s":1},{"t":"y","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"estaba","w":1,"s":1},{"t":"atado","w":1,"s":1},{"t":"en","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"habitación","w":1,"s":1},{"t":"era","w":1,"s":1},{"t":"un","w":1,"s":1},{"t":"anticuario","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":7,"t":"coord","i":0},{"s":0,"e":5,"t":"PIS","f":"Suj","nexo":{"s":0,"e":1,"c":"rel","nf":"Suj"},"i":1},{"s":9,"e":18,"t":"coord","nexo":{"s":8,"e":8,"c":"conj","ct":"cop"},"i":2},{"s":9,"e":15,"t":"PIS","f":"Suj","nexo":{"s":9,"e":10,"c":"rel","nf":"Suj"},"i":3}]},{"id":"pis-2a","u":"pis","m":"props","l":"Ej. 2a","k":[{"t":"Finalmente","w":1,"s":0},{"t":"dijeron","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"muerte","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"Montiel","w":1,"s":1},{"t":"fue","w":1,"s":1},{"t":"un","w":1,"s":1},{"t":"suicidio","w":1,"s":1},{"t":"y","w":1,"s":1},{"t":"todo","w":1,"s":1},{"t":"quedó","w":1,"s":1},{"t":"así","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":9,"t":"coord","i":0},{"s":2,"e":9,"t":"PIS","f":"OD","nexo":{"s":2,"e":2,"c":"sub"},"i":1},{"s":11,"e":13,"t":"coord","nexo":{"s":10,"e":10,"c":"conj","ct":"cop"},"i":2}],"n":"Discutible: la clave coordina «dijeron que…» con «todo quedó así». También podría leerse «y todo quedó así» como parte de lo que dijeron (las dos coordinadas dentro de la PIS)."},{"id":"pis-2b","u":"pis","m":"props","l":"Ej. 2b","k":[{"t":"Lo","w":1,"s":0},{"t":"que","w":1,"s":1},{"t":"Calisser","w":1,"s":1},{"t":"dijo","w":1,"s":1},{"t":"ese","w":1,"s":1},{"t":"día","w":1,"s":1},{"t":"me","w":1,"s":1},{"t":"impresionó","w":1,"s":1},{"t":"profundamente","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":5,"t":"PIS","f":"Suj","nexo":{"s":0,"e":1,"c":"rel","nf":"OD"},"i":0}]},{"id":"pis-2c","u":"pis","m":"props","l":"Ej. 2c","k":[{"t":"Bajó","w":1,"s":0},{"t":"el","w":1,"s":1},{"t":"hacha","w":1,"s":1},{"t":"y","w":1,"s":1},{"t":"dijo","w":1,"s":1},{"t":":","w":0,"s":0},{"t":"“","w":0,"s":1},{"t":"Yo","w":1,"s":0},{"t":"soy","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"filatelista","w":1,"s":1},{"t":"”","w":0,"s":0},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":2,"t":"coord","i":0},{"s":4,"e":10,"t":"coord","nexo":{"s":3,"e":3,"c":"conj","ct":"cop"},"i":1},{"s":7,"e":10,"t":"PIS","sub":"dd","f":"OD","i":2}]},{"id":"pis-2d","u":"pis","m":"props","l":"Ej. 2d","k":[{"t":"Le","w":1,"s":0},{"t":"pregunté","w":1,"s":1},{"t":"quién","w":1,"s":1},{"t":"era","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"paciente","w":1,"s":1},{"t":"al","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"visitaba","w":1,"s":1},{"t":"a","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"Casa","w":1,"s":1},{"t":"Spinoza","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":2,"e":12,"t":"PIS","f":"OD","nexo":{"s":2,"e":2,"c":"int","nf":"PSO/Suj"},"i":0},{"s":6,"e":12,"t":"PIA","sub":"esp","nexo":{"s":6,"e":7,"c":"rel","nf":"OD","a":5},"i":1}],"n":"Discutible: «quién» puede ser predicativo o sujeto. Además, «a la Casa Spinoza» se analiza como circunstancial de lugar."},{"id":"pis-2e","u":"pis","m":"props","l":"Ej. 2e","k":[{"t":"Veamos","w":1,"s":0},{"t":"si","w":1,"s":1},{"t":"ese","w":1,"s":1},{"t":"ruido","w":1,"s":1},{"t":"viene","w":1,"s":1},{"t":"del","w":1,"s":1},{"t":"sótano","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":1,"e":6,"t":"PIS","f":"OD","nexo":{"s":1,"e":1,"c":"sub"},"i":0}]},{"id":"pis-2f","u":"pis","m":"props","l":"Ej. 2f","k":[{"t":"A","w":1,"s":0},{"t":"quienes","w":1,"s":1},{"t":"habían","w":1,"s":1},{"t":"figurado","w":1,"s":1},{"t":"en","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"cuadro","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"honor","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"las","w":1,"s":1},{"t":"autoridades","w":1,"s":1},{"t":"les","w":1,"s":1},{"t":"entregaban","w":1,"s":1},{"t":"una","w":1,"s":1},{"t":"medalla","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":1,"e":8,"t":"PIS","f":"Term","ft":"del objeto indirecto «a quienes…»","nexo":{"s":1,"e":1,"c":"rel","nf":"Suj"},"i":0}],"n":"La preposición «a» introduce el objeto indirecto; la PIS es su término. El pronombre «les» duplica ese objeto indirecto."},{"id":"pis-2g","u":"pis","m":"props","l":"Ej. 2g","k":[{"t":"Quienes","w":1,"s":0},{"t":"habían","w":1,"s":1},{"t":"cruzado","w":1,"s":1},{"t":"palabras","w":1,"s":1},{"t":"con","w":1,"s":1},{"t":"él","w":1,"s":1},{"t":"eran","w":1,"s":1},{"t":"extranjeros","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":5,"t":"PIS","f":"Suj","nexo":{"s":0,"e":0,"c":"rel","nf":"Suj"},"i":0}]},{"id":"pis-2h","u":"pis","m":"props","l":"Ej. 2h","k":[{"t":"Los","w":1,"s":0},{"t":"que","w":1,"s":1},{"t":"llegaban","w":1,"s":1},{"t":"intrigados","w":1,"s":1},{"t":"a","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"plaza","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"sumergían","w":1,"s":1},{"t":"en","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"masa","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"chiquillos","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":6,"t":"PIS","f":"Suj","nexo":{"s":0,"e":1,"c":"rel","nf":"Suj"},"i":0}]},{"id":"pis-2i","u":"pis","m":"props","l":"Ej. 2i","k":[{"t":"Yo","w":1,"s":0},{"t":"sentía","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"mi","w":1,"s":1},{"t":"hermana","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"portaba","w":1,"s":1},{"t":"estúpidamente","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":2,"e":7,"t":"PIS","f":"OD","nexo":{"s":2,"e":2,"c":"sub"},"i":0}]},{"id":"pis-2j","u":"pis","m":"props","l":"Ej. 2j","k":[{"t":"Al","w":1,"s":0},{"t":"bajar","w":1,"s":1},{"t":"del","w":1,"s":1},{"t":"colectivo","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"preguntó","w":1,"s":1},{"t":"bruscamente","w":1,"s":1},{"t":"por","w":1,"s":1},{"t":"qué","w":1,"s":1},{"t":"no","w":1,"s":1},{"t":"le","w":1,"s":1},{"t":"había","w":1,"s":1},{"t":"mostrado","w":1,"s":1},{"t":"a","w":1,"s":1},{"t":"Laura","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"carta","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"mamá","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":7,"e":18,"t":"PIS","f":"OD","nexo":{"s":7,"e":8,"c":"int","nf":"CCCa"},"i":0}],"n":"«Al bajar del colectivo» es una construcción de infinitivo (circunstancial de tiempo): los cuadernillos no la tratan como proposición."},{"id":"pis-2k","u":"pis","m":"props","l":"Ej. 2k","k":[{"t":"La","w":1,"s":0},{"t":"niña","w":1,"s":1},{"t":"observó","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"sobre","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"rostro","w":1,"s":1},{"t":"temblaban","w":1,"s":1},{"t":"dos","w":1,"s":1},{"t":"lágrimas","w":1,"s":1},{"t":"absurdas","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":3,"e":10,"t":"PIS","f":"OD","nexo":{"s":3,"e":3,"c":"sub"},"i":0}]},{"id":"pis-2l","u":"pis","m":"props","l":"Ej. 2l","k":[{"t":"Fue","w":1,"s":0},{"t":"aplaudido","w":1,"s":1},{"t":"por","w":1,"s":1},{"t":"quienes","w":1,"s":1},{"t":"lo","w":1,"s":1},{"t":"admiraban","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":3,"e":5,"t":"PIS","f":"Term","ft":"del complemento agente «por quienes…»","nexo":{"s":3,"e":3,"c":"rel","nf":"Suj"},"i":0}]},{"id":"pis-2m","u":"pis","m":"props","l":"Ej. 2m","k":[{"t":"Me","w":1,"s":0},{"t":"preguntó","w":1,"s":1},{"t":"con","w":1,"s":1},{"t":"quién","w":1,"s":1},{"t":"irías","w":1,"s":1},{"t":"a","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"fiesta","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":2,"e":7,"t":"PIS","f":"OD","nexo":{"s":2,"e":3,"c":"int","nf":"CCCo/Term"},"i":0}]},{"id":"pis-2n","u":"pis","m":"props","l":"Ej. 2n","k":[{"t":"Mi","w":1,"s":0},{"t":"familia","w":1,"s":1},{"t":"agradeció","w":1,"s":1},{"t":"siempre","w":1,"s":1},{"t":"lo","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"tus","w":1,"s":1},{"t":"padres","w":1,"s":1},{"t":"habían","w":1,"s":1},{"t":"hecho","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":4,"e":9,"t":"PIS","f":"OD","nexo":{"s":4,"e":5,"c":"rel","nf":"OD"},"i":0}]},{"id":"pis-3a","u":"pis","m":"props","l":"Ej. 3a","k":[{"t":"Lo","w":1,"s":0},{"t":"que","w":1,"s":1},{"t":"conté","w":1,"s":1},{"t":"hasta","w":1,"s":1},{"t":"ahora","w":1,"s":1},{"t":"fue","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"largo","w":1,"s":1},{"t":"prólogo","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"noche","w":1,"s":1},{"t":"extraordinaria","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"cambió","w":1,"s":1},{"t":"mi","w":1,"s":1},{"t":"vida","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":4,"t":"PIS","f":"Suj","nexo":{"s":0,"e":1,"c":"rel","nf":"OD"},"i":0},{"s":13,"e":16,"t":"PIA","sub":"esp","nexo":{"s":13,"e":13,"c":"rel","nf":"Suj","a":11},"i":1}]},{"id":"pis-3b","u":"pis","m":"props","l":"Ej. 3b","k":[{"t":"El","w":1,"s":0},{"t":"peón","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"con","w":1,"s":1},{"t":"quien","w":1,"s":1},{"t":"había","w":1,"s":1},{"t":"tratado","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"me","w":1,"s":1},{"t":"dijo","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"no","w":1,"s":1},{"t":"trabajaría","w":1,"s":1},{"t":"más","w":1,"s":1},{"t":"en","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"monte","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":3,"e":6,"t":"PIA","sub":"exp","nexo":{"s":3,"e":4,"c":"rel","nf":"CCCo/Term","a":1},"i":0},{"s":10,"e":16,"t":"PIS","f":"OD","nexo":{"s":10,"e":10,"c":"sub"},"i":1}]},{"id":"pis-3c","u":"pis","m":"props","l":"Ej. 3c","k":[{"t":"Regresaré","w":1,"s":0},{"t":"a","w":1,"s":1},{"t":"Buenos","w":1,"s":1},{"t":"Aires","w":1,"s":1},{"t":"con","w":1,"s":1},{"t":"mucho","w":1,"s":1},{"t":"dinero","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"y","w":1,"s":1},{"t":"todos","w":1,"s":1},{"t":"verán","w":1,"s":1},{"t":"quién","w":1,"s":1},{"t":"es","w":1,"s":1},{"t":"Esteban","w":1,"s":1},{"t":"Gonzáles","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"el","w":1,"s":1},{"t":"buscador","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"oro","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":6,"t":"coord","i":0},{"s":9,"e":19,"t":"coord","nexo":{"s":8,"e":8,"c":"conj","ct":"cop"},"i":1},{"s":11,"e":19,"t":"PIS","f":"OD","nexo":{"s":11,"e":11,"c":"int","nf":"PSO/Suj"},"i":2}],"n":"Discutible: «quién» puede ser predicativo o sujeto."},{"id":"pis-3d","u":"pis","m":"props","l":"Ej. 3d","k":[{"t":"Entraron","w":1,"s":0},{"t":"otros","w":1,"s":1},{"t":"músicos","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"tocan","w":1,"s":1},{"t":"en","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"banda","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"Johnny","w":1,"s":1},{"t":"y","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"saludaron","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":9,"t":"coord","i":0},{"s":3,"e":9,"t":"PIA","sub":"esp","nexo":{"s":3,"e":3,"c":"rel","nf":"Suj","a":2},"i":1},{"s":11,"e":12,"t":"coord","nexo":{"s":10,"e":10,"c":"conj","ct":"cop"},"i":2}]},{"id":"pis-3e","u":"pis","m":"props","l":"Ej. 3e","k":[{"t":"Se","w":1,"s":0},{"t":"peinó","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"cabellera","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"que","w":1,"s":1},{"t":"le","w":1,"s":1},{"t":"llegaba","w":1,"s":1},{"t":"hasta","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"cintura","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"y","w":1,"s":1},{"t":"luego","w":1,"s":1},{"t":"preguntó","w":1,"s":1},{"t":"si","w":1,"s":1},{"t":"teníamos","w":1,"s":1},{"t":"algo","w":1,"s":1},{"t":"para","w":1,"s":1},{"t":"comer","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":10,"t":"coord","i":0},{"s":5,"e":10,"t":"PIA","sub":"exp","nexo":{"s":5,"e":5,"c":"rel","nf":"Suj","a":3},"i":1},{"s":13,"e":19,"t":"coord","nexo":{"s":12,"e":12,"c":"conj","ct":"cop"},"i":2},{"s":15,"e":19,"t":"PIS","f":"OD","nexo":{"s":15,"e":15,"c":"sub"},"i":3}]},{"id":"pis-3f","u":"pis","m":"props","l":"Ej. 3f","k":[{"t":"María","w":1,"s":0},{"t":",","w":0,"s":0},{"t":"la","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"casó","w":1,"s":1},{"t":"con","w":1,"s":1},{"t":"Esteban","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"fue","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"bailó","w":1,"s":1},{"t":"sobre","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"parlante","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":2,"e":7,"t":"PIS","f":"Apos","nexo":{"s":2,"e":3,"c":"rel","nf":"Suj"},"i":0},{"s":10,"e":15,"t":"PIS","f":"PSO","nexo":{"s":10,"e":11,"c":"rel","nf":"Suj"},"i":1}],"n":"Las dos son sustantivas: la primera es aposición de «María»; la segunda, predicativo subjetivo obligatorio."},{"id":"pis-3g","u":"pis","m":"props","l":"Ej. 3g","k":[{"t":"María","w":1,"s":0},{"t":",","w":0,"s":0},{"t":"que","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"casó","w":1,"s":1},{"t":"con","w":1,"s":1},{"t":"Esteban","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"fue","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"bailó","w":1,"s":1},{"t":"sobre","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"parlante","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":2,"e":6,"t":"PIA","sub":"exp","nexo":{"s":2,"e":2,"c":"rel","nf":"Suj","a":0},"i":0},{"s":9,"e":14,"t":"PIS","f":"PSO","nexo":{"s":9,"e":10,"c":"rel","nf":"Suj"},"i":1}],"n":"Compará con la 3f: acá «que» tiene antecedente («María»), por eso la primera es adjetiva (explicativa)."},{"id":"pis-3h","u":"pis","m":"props","l":"Ej. 3h","k":[{"t":"La","w":1,"s":0},{"t":"que","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"casó","w":1,"s":1},{"t":"con","w":1,"s":1},{"t":"Esteban","w":1,"s":1},{"t":"fue","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"bailó","w":1,"s":1},{"t":"sobre","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"parlante","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":5,"t":"PIS","f":"Suj","nexo":{"s":0,"e":1,"c":"rel","nf":"Suj"},"i":0},{"s":7,"e":12,"t":"PIS","f":"PSO","nexo":{"s":7,"e":8,"c":"rel","nf":"Suj"},"i":1}]},{"id":"pis-3i","u":"pis","m":"props","l":"Ej. 3i","k":[{"t":"La","w":1,"s":0},{"t":"chica","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"vivía","w":1,"s":1},{"t":"en","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"departamento","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"al","w":1,"s":1},{"t":"lado","w":1,"s":1},{"t":"dijo","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"eras","w":1,"s":1},{"t":"un","w":1,"s":1},{"t":"chico","w":1,"s":1},{"t":"interesante","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":2,"e":9,"t":"PIA","sub":"esp","nexo":{"s":2,"e":2,"c":"rel","nf":"Suj","a":1},"i":0},{"s":11,"e":15,"t":"PIS","f":"OD","nexo":{"s":11,"e":11,"c":"sub"},"i":1}]},{"id":"pis-3j","u":"pis","m":"props","l":"Ej. 3j","k":[{"t":"No","w":1,"s":0},{"t":"sé","w":1,"s":1},{"t":"dónde","w":1,"s":1},{"t":"dejé","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"discman","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"me","w":1,"s":1},{"t":"prestaste","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":2,"e":8,"t":"PIS","f":"OD","nexo":{"s":2,"e":2,"c":"int","nf":"CCL"},"i":0},{"s":6,"e":8,"t":"PIA","sub":"esp","nexo":{"s":6,"e":6,"c":"rel","nf":"OD","a":5},"i":1}]},{"id":"pis-3k","u":"pis","m":"props","l":"Ej. 3k","k":[{"t":"Le","w":1,"s":0},{"t":"pregunté","w":1,"s":1},{"t":"si","w":1,"s":1},{"t":"venía","w":1,"s":1},{"t":"siempre","w":1,"s":1},{"t":"a","w":1,"s":1},{"t":"bailar","w":1,"s":1},{"t":"acá","w":1,"s":1},{"t":"y","w":1,"s":1},{"t":"ella","w":1,"s":1},{"t":"me","w":1,"s":1},{"t":"respondió","w":1,"s":1},{"t":":","w":0,"s":0},{"t":"“","w":0,"s":1},{"t":"A","w":1,"s":0},{"t":"veces","w":1,"s":1},{"t":"”","w":0,"s":0},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":7,"t":"coord","i":0},{"s":2,"e":7,"t":"PIS","f":"OD","nexo":{"s":2,"e":2,"c":"sub"},"i":1},{"s":9,"e":15,"t":"coord","nexo":{"s":8,"e":8,"c":"conj","ct":"cop"},"i":2},{"s":14,"e":15,"t":"PIS","sub":"dd","f":"OD","i":3}]},{"id":"pis-4a","u":"pis","m":"choice","l":"Ej. 4a","q":"Elegí la opción correcta: «Le dijo ___ había un complot para eliminarlo.»","o":[{"t":"que","ok":1},{"t":"de que","ok":0}],"e":"Es dequeísmo. Se puede reemplazar la PIS por «eso» («Le dijo eso»), y «Le dijo de eso» no funciona: la PIS es objeto directo y no lleva preposición."},{"id":"pis-4b","u":"pis","m":"choice","l":"Ej. 4b","q":"Elegí la opción correcta: «Estaba convencido ___ Corcho era uno de los mejores informantes.»","o":[{"t":"de que","ok":1},{"t":"que","ok":0}],"e":"Es queísmo si se omite el «de». «Estaba convencido de eso» sí funciona; «Estaba convencido eso», no. La PIS es término de la preposición «de»."},{"id":"pis-4c","u":"pis","m":"choice","l":"Ej. 4c","q":"Elegí la opción correcta: «Santarelli se dio cuenta ___ necesitaba más datos.»","o":[{"t":"de que","ok":1},{"t":"que","ok":0}],"e":"«Darse cuenta de» exige la preposición: «se dio cuenta de eso». Omitirla es queísmo."},{"id":"pis-4d","u":"pis","m":"choice","l":"Ej. 4d","q":"Elegí la opción correcta: «Pienso ___ esto es muy injusto.»","o":[{"t":"que","ok":1},{"t":"de que","ok":0}],"e":"Dequeísmo. «Pienso eso» funciona y «Pienso de eso» no: la PIS es objeto directo."},{"id":"pis-4e","u":"pis","m":"choice","l":"Ej. 4e","q":"Elegí la opción correcta: «Necesitás ___ alguien te arregle las neuronas.»","o":[{"t":"que","ok":1},{"t":"de que","ok":0}],"e":"«Necesitar» pide objeto directo: «Necesitás eso». Por eso la PIS no lleva «de»."},{"id":"pis-5a","u":"pis","m":"choice","l":"Ej. 5a","q":"Transformá la adjetiva en sustantiva: «Los jueces que habían dictado la sentencia se levantaron del tribunal.»","o":[{"t":"Los que habían dictado la sentencia se levantaron del tribunal.","ok":1},{"t":"Que habían dictado la sentencia se levantaron del tribunal.","ok":0},{"t":"Los jueces los que habían dictado la sentencia se levantaron del tribunal.","ok":0},{"t":"Los jueces que ellos habían dictado la sentencia se levantaron del tribunal.","ok":0}],"e":"Para que la proposición sea sustantiva se elimina el antecedente («los jueces») y el relacionante lo absorbe: «los que». Ahora la PIS es sujeto."},{"id":"pis-5b","u":"pis","m":"choice","l":"Ej. 5b","q":"Transformá la adjetiva en sustantiva: «Extrañaron al cantante que actuó ayer.»","o":[{"t":"Extrañaron al que actuó ayer.","ok":1},{"t":"Extrañaron a que actuó ayer.","ok":0},{"t":"Extrañaron al cantante el que actuó ayer.","ok":0},{"t":"Extrañaron al que cantante actuó ayer.","ok":0}],"e":"Se elimina «cantante» y queda «al que» (a + el que). La PIS es ahora término de la preposición «a» del objeto directo."},{"id":"pis-5c","u":"pis","m":"choice","l":"Ej. 5c","q":"Transformá la adjetiva en sustantiva: «La persona que lo atendió fue muy descortés.»","o":[{"t":"La que lo atendió fue muy descortés.","ok":1},{"t":"La persona la que lo atendió fue muy descortés.","ok":0},{"t":"Que lo atendió fue muy descortés.","ok":0},{"t":"La persona que lo atendió, la que fue muy descortés.","ok":0}],"e":"El antecedente («persona») desaparece y el artículo pasa a formar parte del relacionante: «la que»."},{"id":"pis-5d","u":"pis","m":"choice","l":"Ej. 5d","q":"Transformá la adjetiva en sustantiva: «Vendieron los productos que habían comprado.»","o":[{"t":"Vendieron lo que habían comprado.","ok":1},{"t":"Vendieron que habían comprado.","ok":0},{"t":"Vendieron los productos lo que habían comprado.","ok":0},{"t":"Vendieron los que productos habían comprado.","ok":0}],"e":"«Los productos que» se reemplaza por el relacionante «lo que» (o «los que»). Sin antecedente, la proposición es sustantiva y funciona como objeto directo."},{"id":"pro-1","u":"pro","m":"pron","l":"Ej. a1","k":[{"t":"Las","w":1,"s":0},{"t":"hojas","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"caen","w":1,"s":1},{"t":"en","w":1,"s":1},{"t":"otoño","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[],"prons":[{"s":2,"e":2,"p":"SCR"}]},{"id":"pro-2","u":"pro","m":"pron","l":"Ej. a2","k":[{"t":"No","w":1,"s":0},{"t":"nos","w":1,"s":1},{"t":"lavamos","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"cara","w":1,"s":1},{"t":"a","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"mañana","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[],"prons":[{"s":1,"e":1,"p":"REF_OI"}],"n":"El objeto directo es «la cara»; por eso el pronombre reflejo cumple la función de objeto indirecto («nos lavamos la cara a nosotros mismos»)."},{"id":"pro-3","u":"pro","m":"pron","l":"Ej. a3","k":[{"t":"Se","w":1,"s":0},{"t":"escucharon","w":1,"s":1},{"t":"unos","w":1,"s":1},{"t":"alaridos","w":1,"s":1},{"t":"horribles","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[],"prons":[{"s":0,"e":0,"p":"PAS"}]},{"id":"pro-4","u":"pro","m":"pron","l":"Ej. a4","k":[{"t":"Se","w":1,"s":0},{"t":"lo","w":1,"s":1},{"t":"entregué","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"miércoles","w":1,"s":1},{"t":"pasado","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[],"prons":[{"s":0,"e":0,"p":"OI"},{"s":1,"e":1,"p":"OD"}],"n":"«Se» reemplaza a «le» (OI) porque «le lo» suena mal; «lo» es el objeto directo."},{"id":"pro-5","u":"pro","m":"pron","l":"Ej. a5","k":[{"t":"Te","w":1,"s":0},{"t":"vimos","w":1,"s":1},{"t":"en","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"boliche","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[],"prons":[{"s":0,"e":0,"p":"OD"}]},{"id":"pro-6","u":"pro","m":"pron","l":"Ej. a6","k":[{"t":"No","w":1,"s":0},{"t":"se","w":1,"s":1},{"t":"lo","w":1,"s":1},{"t":"digas","w":1,"s":1},{"t":"a","w":1,"s":1},{"t":"nadie","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[],"prons":[{"s":1,"e":1,"p":"OI"},{"s":2,"e":2,"p":"OD"}],"n":"«Se» reemplaza a «le» (OI); «lo» es objeto directo. No coincide con el sujeto («vos» tácito)."},{"id":"pro-7","u":"pro","m":"pron","l":"Ej. a7","k":[{"t":"Me","w":1,"s":0},{"t":"trataron","w":1,"s":1},{"t":"muy","w":1,"s":1},{"t":"bien","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[],"prons":[{"s":0,"e":0,"p":"OD"}]},{"id":"pro-8","u":"pro","m":"pron","l":"Ej. a8","k":[{"t":"En","w":1,"s":0},{"t":"este","w":1,"s":1},{"t":"país","w":1,"s":1},{"t":"no","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"persigue","w":1,"s":1},{"t":"a","w":1,"s":1},{"t":"los","w":1,"s":1},{"t":"delincuentes","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[],"prons":[{"s":4,"e":4,"p":"IMP"}],"n":"El verbo no varía si cambia el número de «los delincuentes» (no es sujeto, es objeto directo con «a»): se impersonal."},{"id":"pro-9","u":"pro","m":"pron","l":"Ej. a9","k":[{"t":"Se","w":1,"s":0},{"t":"agravó","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"conflicto","w":1,"s":1},{"t":"con","w":1,"s":1},{"t":"las","w":1,"s":1},{"t":"papeleras","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[],"prons":[{"s":0,"e":0,"p":"SCR/PAS"}],"n":"Discutible: «agravarse» es pronominal (cuasirreflejo, la clave), pero también puede leerse como pasiva con se. Se acepta cualquiera de las dos."},{"id":"pro-10","u":"pro","m":"pron","l":"Ej. a10","k":[{"t":"Nos","w":1,"s":0},{"t":"visita","w":1,"s":1},{"t":"un","w":1,"s":1},{"t":"pianista","w":1,"s":1},{"t":"sueco","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[],"prons":[{"s":0,"e":0,"p":"OD"}]},{"id":"pro-11","u":"pro","m":"pron","l":"Ej. a11","k":[{"t":"Se","w":1,"s":0},{"t":"secó","w":1,"s":1},{"t":"las","w":1,"s":1},{"t":"lágrimas","w":1,"s":1},{"t":"luego","w":1,"s":1},{"t":"del","w":1,"s":1},{"t":"triunfo","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[],"prons":[{"s":0,"e":0,"p":"REF_OI"}],"n":"Admite «a sí mismo»; el objeto directo es «las lágrimas», así que el pronombre es OI."},{"id":"pro-12","u":"pro","m":"pron","l":"Ej. a12","k":[{"t":"Los","w":1,"s":0},{"t":"mandatarios","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"Argentina","w":1,"s":1},{"t":"y","w":1,"s":1},{"t":"Uruguay","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"saludaron","w":1,"s":1},{"t":"en","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"reunión","w":1,"s":1},{"t":"cumbre","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[],"prons":[{"s":6,"e":6,"p":"REC_OD"}]},{"id":"pro-13","u":"pro","m":"pron","l":"Ej. a13","k":[{"t":"Se","w":1,"s":0},{"t":"esperan","w":1,"s":1},{"t":"lluvias","w":1,"s":1},{"t":"y","w":1,"s":1},{"t":"nevadas","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[],"prons":[{"s":0,"e":0,"p":"PAS"}]},{"id":"pro-14","u":"pro","m":"pron","l":"Ej. a14","k":[{"t":"El","w":1,"s":0},{"t":"presidente","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"retiró","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"reunión","w":1,"s":1},{"t":"ofendido","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[],"prons":[{"s":2,"e":2,"p":"SCR"}]},{"id":"pro-b1","u":"pro","m":"props","l":"Ej. b1","k":[{"t":"Se","w":1,"s":0},{"t":"miró","w":1,"s":1},{"t":"los","w":1,"s":1},{"t":"pies","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"que","w":1,"s":1},{"t":"estaban","w":1,"s":1},{"t":"embarrados","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":5,"e":7,"t":"PIA","sub":"exp","nexo":{"s":5,"e":5,"c":"rel","nf":"Suj","a":3},"i":0}],"prons":[{"s":0,"e":0,"p":"REF_OI"}]},{"id":"pro-b2","u":"pro","m":"props","l":"Ej. b2","k":[{"t":"Me","w":1,"s":0},{"t":"dijo","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"me","w":1,"s":1},{"t":"había","w":1,"s":1},{"t":"llamado","w":1,"s":1},{"t":"varias","w":1,"s":1},{"t":"veces","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":2,"e":7,"t":"PIS","f":"OD","nexo":{"s":2,"e":2,"c":"sub"},"i":0}],"prons":[{"s":0,"e":0,"p":"OI"},{"s":3,"e":3,"p":"OD"}]},{"id":"pro-b3","u":"pro","m":"props","l":"Ej. b3","k":[{"t":"Le","w":1,"s":0},{"t":"pediste","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"ayuda","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"necesitabas","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":4,"e":5,"t":"PIA","sub":"esp","nexo":{"s":4,"e":4,"c":"rel","nf":"OD","a":3},"i":0}],"prons":[{"s":0,"e":0,"p":"OI"}]},{"id":"pro-b4","u":"pro","m":"props","l":"Ej. b4","k":[{"t":"El","w":1,"s":0},{"t":"que","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"cayó","w":1,"s":1},{"t":"por","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"escalera","w":1,"s":1},{"t":"fue","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"había","w":1,"s":1},{"t":"golpeado","w":1,"s":1},{"t":"con","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"puerta","w":1,"s":1},{"t":"del","w":1,"s":1},{"t":"aula","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":6,"t":"PIS","f":"Suj","nexo":{"s":0,"e":1,"c":"rel","nf":"Suj"},"i":0},{"s":8,"e":17,"t":"PIS","f":"PSO","nexo":{"s":8,"e":9,"c":"rel","nf":"Suj"},"i":1}],"prons":[{"s":2,"e":2,"p":"SCR"},{"s":10,"e":10,"p":"SCR"}],"n":"Discutible: «se había golpeado» puede ser cuasirreflejo (accidente, la clave) o reflejo si fue a propósito."},{"id":"pro-b5","u":"pro","m":"props","l":"Ej. b5","k":[{"t":"El","w":1,"s":0},{"t":"alumno","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"cayó","w":1,"s":1},{"t":"por","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"escalera","w":1,"s":1},{"t":"fue","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"mismo","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"había","w":1,"s":1},{"t":"golpeado","w":1,"s":1},{"t":"con","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"puerta","w":1,"s":1},{"t":"del","w":1,"s":1},{"t":"aula","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":2,"e":7,"t":"PIA","sub":"esp","nexo":{"s":2,"e":2,"c":"rel","nf":"Suj","a":1},"i":0},{"s":11,"e":19,"t":"PIA","sub":"esp","nexo":{"s":11,"e":11,"c":"rel","nf":"Suj","a":10},"i":1}],"prons":[{"s":3,"e":3,"p":"SCR"},{"s":12,"e":12,"p":"SCR"}],"n":"Discutible: «se había golpeado» puede ser cuasirreflejo (la clave) o reflejo."},{"id":"pro-b6","u":"pro","m":"props","l":"Ej. b6","k":[{"t":"El","w":1,"s":0},{"t":"cartel","w":1,"s":1},{"t":"dice","w":1,"s":1},{"t":":","w":0,"s":0},{"t":"“","w":0,"s":1},{"t":"Se","w":1,"s":0},{"t":"prohíbe","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"venta","w":1,"s":1},{"t":"callejera","w":1,"s":1},{"t":"”","w":0,"s":0},{"t":".","w":0,"s":0}],"props":[{"s":5,"e":9,"t":"PIS","sub":"dd","f":"OD","i":0}],"prons":[{"s":5,"e":5,"p":"PAS"}]},{"id":"pro-b7","u":"pro","m":"props","l":"Ej. b7","k":[{"t":"Se","w":1,"s":0},{"t":"sancionará","w":1,"s":1},{"t":"a","w":1,"s":1},{"t":"los","w":1,"s":1},{"t":"alumnos","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"no","w":1,"s":1},{"t":"concurran","w":1,"s":1},{"t":"al","w":1,"s":1},{"t":"establecimiento","w":1,"s":1},{"t":"con","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"vestimenta","w":1,"s":1},{"t":"adecuada","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":5,"e":13,"t":"PIA","sub":"esp","nexo":{"s":5,"e":5,"c":"rel","nf":"Suj","a":4},"i":0}],"prons":[{"s":0,"e":0,"p":"IMP"}]},{"id":"pro-b8","u":"pro","m":"props","l":"Ej. b8","k":[{"t":"No","w":1,"s":0},{"t":"sabía","w":1,"s":1},{"t":"quién","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"había","w":1,"s":1},{"t":"llevado","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"dinero","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":2,"e":7,"t":"PIS","f":"OD","nexo":{"s":2,"e":2,"c":"int","nf":"Suj"},"i":0}],"prons":[{"s":3,"e":3,"p":"SCR"}],"n":"«Llevarse» se toma como verbo pronominal (cuasirreflejo)."},{"id":"pro-b9","u":"pro","m":"props","l":"Ej. b9","k":[{"t":"No","w":1,"s":0},{"t":"se","w":1,"s":1},{"t":"divisa","w":1,"s":1},{"t":"nada","w":1,"s":1},{"t":";","w":0,"s":0},{"t":"indudablemente","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"ha","w":1,"s":1},{"t":"empañado","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"cristal","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":3,"t":"coord","i":0},{"s":5,"e":10,"t":"coord","ct":"yux","i":1}],"prons":[{"s":1,"e":1,"p":"IMP"},{"s":6,"e":6,"p":"SCR/PAS"}],"n":"Son dos proposiciones yuxtapuestas. Discutible: en la segunda, «se ha empañado» puede leerse como cuasirreflejo (la clave) o como pasiva con se."},{"id":"pro-b10","u":"pro","m":"props","l":"Ej. b10","k":[{"t":"Le","w":1,"s":0},{"t":"preguntaron","w":1,"s":1},{"t":"si","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"sentía","w":1,"s":1},{"t":"bien","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":2,"e":5,"t":"PIS","f":"OD","nexo":{"s":2,"e":2,"c":"sub"},"i":0}],"prons":[{"s":0,"e":0,"p":"OI"},{"s":3,"e":3,"p":"SCR"}]},{"id":"pro-b12","u":"pro","m":"props","l":"Ej. b12","k":[{"t":"Desde","w":1,"s":0},{"t":"lo","w":1,"s":1},{"t":"alto","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"ve","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"humo","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"anuncia","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"llegada","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"locomotora","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":7,"e":13,"t":"PIA","sub":"esp","nexo":{"s":7,"e":7,"c":"rel","nf":"Suj","a":6},"i":0}],"prons":[{"s":3,"e":3,"p":"PAS"}]},{"id":"pro-b13","u":"pro","m":"props","l":"Ej. b13","k":[{"t":"Se","w":1,"s":0},{"t":"repararon","w":1,"s":1},{"t":"las","w":1,"s":1},{"t":"veredas","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"estaban","w":1,"s":1},{"t":"rotas","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":4,"e":6,"t":"PIA","sub":"esp","nexo":{"s":4,"e":4,"c":"rel","nf":"Suj","a":3},"i":0}],"prons":[{"s":0,"e":0,"p":"PAS"}]},{"id":"pro-b14","u":"pro","m":"props","l":"Ej. b14","k":[{"t":"Se","w":1,"s":0},{"t":"perciben","w":1,"s":1},{"t":"los","w":1,"s":1},{"t":"aromas","w":1,"s":1},{"t":"suaves","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"desprenden","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"las","w":1,"s":1},{"t":"rosas","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":5,"e":10,"t":"PIA","sub":"esp","nexo":{"s":5,"e":5,"c":"rel","nf":"Suj","a":3},"i":0}],"prons":[{"s":0,"e":0,"p":"PAS"},{"s":6,"e":6,"p":"SCR"}]},{"id":"adv-a1","u":"adv","m":"props","l":"Ej. a1","k":[{"t":"En","w":1,"s":0},{"t":"cuanto","w":1,"s":1},{"t":"entran","w":1,"s":1},{"t":"en","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"habitación","w":1,"s":1},{"t":"del","w":1,"s":1},{"t":"niño","w":1,"s":1},{"t":"enfermo","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"los","w":1,"s":1},{"t":"médicos","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"percatan","w":1,"s":1},{"t":"del","w":1,"s":1},{"t":"cambio","w":1,"s":1},{"t":"ocurrido","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":8,"t":"PIAdv","sub":"temp","nexo":{"s":0,"e":1,"c":"rel","nf":"CCT"},"i":0}]},{"id":"adv-a2","u":"adv","m":"props","l":"Ej. a2","k":[{"t":"Sus","w":1,"s":0},{"t":"palabras","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"atropellaban","w":1,"s":1},{"t":"ansiosas","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"como","w":1,"s":1},{"t":"si","w":1,"s":1},{"t":"no","w":1,"s":1},{"t":"tuviera","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"tiempo","w":1,"s":1},{"t":"necesario","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":6,"e":12,"t":"PIAdv","sub":"mod","nexo":{"s":6,"e":7,"c":"rel","nf":"CCM"},"i":0}]},{"id":"adv-a3","u":"adv","m":"props","l":"Ej. a3","k":[{"t":"El","w":1,"s":0},{"t":"corregidor","w":1,"s":1},{"t":"y","w":1,"s":1},{"t":"su","w":1,"s":1},{"t":"esposa","w":1,"s":1},{"t":"lo","w":1,"s":1},{"t":"recibieron","w":1,"s":1},{"t":"complacidos","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"porque","w":1,"s":1},{"t":"ignoraban","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"propósito","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"su","w":1,"s":1},{"t":"visita","w":1,"s":1},{"t":"imprevista","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":9,"e":16,"t":"PIAdv","sub":"caus","nexo":{"s":9,"e":9,"c":"sub"},"i":0}]},{"id":"adv-a4","u":"adv","m":"props","l":"Ej. a4","k":[{"t":"Si","w":1,"s":0},{"t":"no","w":1,"s":1},{"t":"hubiera","w":1,"s":1},{"t":"tenido","w":1,"s":1},{"t":"las","w":1,"s":1},{"t":"narices","w":1,"s":1},{"t":"tapadas","w":1,"s":1},{"t":"por","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"fiebre","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"habría","w":1,"s":1},{"t":"sentido","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"olor","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"mecha","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":9,"t":"PIAdv","sub":"cond","nexo":{"s":0,"e":0,"c":"sub"},"i":0}]},{"id":"adv-a5","u":"adv","m":"props","l":"Ej. a5","k":[{"t":"Aunque","w":1,"s":0},{"t":"ya","w":1,"s":1},{"t":"tenía","w":1,"s":1},{"t":"cien","w":1,"s":1},{"t":"años","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"la","w":1,"s":1},{"t":"anciana","w":1,"s":1},{"t":"conservaba","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"dinamismo","w":1,"s":1},{"t":"físico","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"la","w":1,"s":1},{"t":"integridad","w":1,"s":1},{"t":"del","w":1,"s":1},{"t":"carácter","w":1,"s":1},{"t":"y","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"dinamismo","w":1,"s":1},{"t":"mental","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":4,"t":"PIAdv","sub":"conc","nexo":{"s":0,"e":0,"c":"sub"},"i":0}]},{"id":"adv-a6","u":"adv","m":"props","l":"Ej. a6","k":[{"t":"Los","w":1,"s":0},{"t":"hechos","w":1,"s":1},{"t":"habían","w":1,"s":1},{"t":"sucedido","w":1,"s":1},{"t":"con","w":1,"s":1},{"t":"tan","w":1,"s":1},{"t":"vertiginosa","w":1,"s":1},{"t":"rapidez","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"le","w":1,"s":1},{"t":"parecían","w":1,"s":1},{"t":"un","w":1,"s":1},{"t":"sueño","w":1,"s":1},{"t":"más","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":8,"e":13,"t":"PIAdv","sub":"cons","nexo":{"s":8,"e":8,"c":"sub"},"i":0}],"n":"Es correlativa de «tan» y aparece dentro del circunstancial de modo «con tan vertiginosa rapidez»."},{"id":"adv-a7","u":"adv","m":"props","l":"Ej. a7","k":[{"t":"Abrió","w":1,"s":0},{"t":"los","w":1,"s":1},{"t":"brazos","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"como","w":1,"s":1},{"t":"si","w":1,"s":1},{"t":"midiera","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"tamaño","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"noche","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"y","w":1,"s":1},{"t":"encontró","w":1,"s":1},{"t":"una","w":1,"s":1},{"t":"cerca","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"árboles","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":11,"t":"coord","i":0},{"s":4,"e":11,"t":"PIAdv","sub":"mod","nexo":{"s":4,"e":5,"c":"rel","nf":"CCM"},"i":1},{"s":14,"e":18,"t":"coord","nexo":{"s":13,"e":13,"c":"conj","ct":"cop"},"i":2}]},{"id":"adv-a8","u":"adv","m":"props","l":"Ej. a8","k":[{"t":"El","w":1,"s":0},{"t":"cansado","w":1,"s":1},{"t":"peregrino","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"dirige","w":1,"s":1},{"t":"lentamente","w":1,"s":1},{"t":"adonde","w":1,"s":1},{"t":"lo","w":1,"s":1},{"t":"espera","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"reposo","w":1,"s":1},{"t":"del","w":1,"s":1},{"t":"crepúsculo","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":6,"e":12,"t":"PIAdv","sub":"loc","nexo":{"s":6,"e":6,"c":"rel","nf":"CCL"},"i":0}]},{"id":"adv-a9","u":"adv","m":"props","l":"Ej. a9","k":[{"t":"Nos","w":1,"s":0},{"t":"besamos","w":1,"s":1},{"t":"apasionadamente","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"cuanto","w":1,"s":1},{"t":"quisimos","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"mientras","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"sol","w":1,"s":1},{"t":"asomaba","w":1,"s":1},{"t":"su","w":1,"s":1},{"t":"somnolienta","w":1,"s":1},{"t":"cabeza","w":1,"s":1},{"t":"por","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"paisaje","w":1,"s":1},{"t":"ondulado","w":1,"s":1},{"t":"del","w":1,"s":1},{"t":"mar","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":4,"e":5,"t":"PIAdv","sub":"cuant","nexo":{"s":4,"e":4,"c":"rel","nf":"CCCn"},"i":0},{"s":7,"e":19,"t":"PIAdv","sub":"temp","nexo":{"s":7,"e":7,"c":"rel","nf":"CCT"},"i":1}]},{"id":"adv-d1","u":"adv","m":"props","l":"Ej. d1","k":[{"t":"Si","w":1,"s":0},{"t":"no","w":1,"s":1},{"t":"hubiera","w":1,"s":1},{"t":"estado","w":1,"s":1},{"t":"ahí","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"gobernador","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"cuya","w":1,"s":1},{"t":"cólera","w":1,"s":1},{"t":"temen","w":1,"s":1},{"t":"todos","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"la","w":1,"s":1},{"t":"muchacha","w":1,"s":1},{"t":"habría","w":1,"s":1},{"t":"sido","w":1,"s":1},{"t":"apedreada","w":1,"s":1},{"t":"por","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"multitud","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":11,"t":"PIAdv","sub":"cond","nexo":{"s":0,"e":0,"c":"sub"},"i":0},{"s":8,"e":11,"t":"PIA","sub":"exp","nexo":{"s":8,"e":8,"c":"rel","nf":"MD","a":6},"i":1}],"n":"«Cuya» es modificador directo de «cólera», que es el objeto directo de «temen». La adjetiva está dentro de la condicional."},{"id":"adv-d2","u":"adv","m":"props","l":"Ej. d2","k":[{"t":"Cuando","w":1,"s":0},{"t":"leí","w":1,"s":1},{"t":"ese","w":1,"s":1},{"t":"libro","w":1,"s":1},{"t":"me","w":1,"s":1},{"t":"enteré","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"las","w":1,"s":1},{"t":"brujas","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"reunían","w":1,"s":1},{"t":"en","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"mismo","w":1,"s":1},{"t":"campo","w":1,"s":1},{"t":"donde","w":1,"s":1},{"t":"yo","w":1,"s":1},{"t":"había","w":1,"s":1},{"t":"pasado","w":1,"s":1},{"t":"mi","w":1,"s":1},{"t":"infancia","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":3,"t":"PIAdv","sub":"temp","nexo":{"s":0,"e":0,"c":"rel","nf":"CCT"},"i":0},{"s":7,"e":21,"t":"PIS","f":"Term","ft":"del complemento de régimen «de que…»","nexo":{"s":7,"e":7,"c":"sub"},"i":1},{"s":16,"e":21,"t":"PIA","sub":"esp","nexo":{"s":16,"e":16,"c":"rel","nf":"CCL","a":15},"i":2}],"n":"En el cuadernillo esta oración dice «me enteré que»: es queísmo, y acá se corrigió a «me enteré de que»."},{"id":"adv-d3","u":"adv","m":"props","l":"Ej. d3","k":[{"t":"La","w":1,"s":0},{"t":"muchacha","w":1,"s":1},{"t":"era","w":1,"s":1},{"t":"tan","w":1,"s":1},{"t":"negra","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"su","w":1,"s":1},{"t":"piel","w":1,"s":1},{"t":"brillaba","w":1,"s":1},{"t":"como","w":1,"s":1},{"t":"si","w":1,"s":1},{"t":"tuviera","w":1,"s":1},{"t":"lustre","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":5,"e":12,"t":"PIAdv","sub":"cons","nexo":{"s":5,"e":5,"c":"sub"},"i":0},{"s":9,"e":12,"t":"PIAdv","sub":"mod","nexo":{"s":9,"e":10,"c":"rel","nf":"CCM"},"i":1}],"n":"La consecutiva (complemento consecutivo) está dentro del predicativo «tan negra» y contiene una modal."},{"id":"adv-d4","u":"adv","m":"props","l":"Ej. d4","k":[{"t":"Aunque","w":1,"s":0},{"t":"eran","w":1,"s":1},{"t":"novios","w":1,"s":1},{"t":"desde","w":1,"s":1},{"t":"años","w":1,"s":1},{"t":"atrás","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"recién","w":1,"s":1},{"t":"ahora","w":1,"s":1},{"t":"él","w":1,"s":1},{"t":"supo","w":1,"s":1},{"t":"qué","w":1,"s":1},{"t":"era","w":1,"s":1},{"t":"lo","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"ella","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"proponía","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":5,"t":"PIAdv","sub":"conc","nexo":{"s":0,"e":0,"c":"sub"},"i":0},{"s":11,"e":17,"t":"PIS","f":"OD","nexo":{"s":11,"e":11,"c":"int","nf":"PSO/Suj"},"i":1},{"s":13,"e":17,"t":"PIS","f":"Suj/PSO","nexo":{"s":13,"e":14,"c":"rel","nf":"OD"},"i":2}],"n":"Discutible: en «qué era lo que ella se proponía» puede ser predicativo «qué» y sujeto la PIS, o al revés."},{"id":"adv-f1","u":"adv","m":"props","l":"Ej. f1","k":[{"t":"Estás","w":1,"s":0},{"t":"triste","w":1,"s":1},{"t":"porque","w":1,"s":1},{"t":"te","w":1,"s":1},{"t":"has","w":1,"s":1},{"t":"metido","w":1,"s":1},{"t":"en","w":1,"s":1},{"t":"un","w":1,"s":1},{"t":"atolladero","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":2,"e":8,"t":"PIAdv","sub":"caus","nexo":{"s":2,"e":2,"c":"sub"},"i":0}]},{"id":"adv-f2","u":"adv","m":"props","l":"Ej. f2","k":[{"t":"El","w":1,"s":0},{"t":"hombre","w":1,"s":1},{"t":"cantaba","w":1,"s":1},{"t":"en","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"escenario","w":1,"s":1},{"t":"como","w":1,"s":1},{"t":"lo","w":1,"s":1},{"t":"hacía","w":1,"s":1},{"t":"Gardel","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":6,"e":9,"t":"PIAdv","sub":"mod","nexo":{"s":6,"e":6,"c":"rel","nf":"CCM"},"i":0}]},{"id":"adv-f3","u":"adv","m":"props","l":"Ej. f3","k":[{"t":"Cuando","w":1,"s":0},{"t":"lo","w":1,"s":1},{"t":"sacaron","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"cama","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"Paradela","w":1,"s":1},{"t":"reaccionó","w":1,"s":1},{"t":"inmediatamente","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":5,"t":"PIAdv","sub":"temp","nexo":{"s":0,"e":0,"c":"rel","nf":"CCT"},"i":0}]},{"id":"adv-f4","u":"adv","m":"props","l":"Ej. f4","k":[{"t":"Donde","w":1,"s":0},{"t":"estamos","w":1,"s":1},{"t":"ahora","w":1,"s":1},{"t":"son","w":1,"s":1},{"t":"dagas","w":1,"s":1},{"t":"las","w":1,"s":1},{"t":"sonrisas","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"los","w":1,"s":1},{"t":"hombres","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":2,"t":"PIAdv","sub":"loc","nexo":{"s":0,"e":0,"c":"rel","nf":"CCL"},"i":0}],"n":"Es un circunstancial de lugar antepuesto: «Las sonrisas de los hombres son dagas donde estamos ahora»."},{"id":"adv-f5","u":"adv","m":"props","l":"Ej. f5","k":[{"t":"Bancos","w":1,"s":0},{"t":"de","w":1,"s":1},{"t":"arena","w":1,"s":1},{"t":"y","w":1,"s":1},{"t":"negros","w":1,"s":1},{"t":"islotes","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"basalto","w":1,"s":1},{"t":"habían","w":1,"s":1},{"t":"surgido","w":1,"s":1},{"t":"donde","w":1,"s":1},{"t":"un","w":1,"s":1},{"t":"mes","w":1,"s":1},{"t":"atrás","w":1,"s":1},{"t":"las","w":1,"s":1},{"t":"quillas","w":1,"s":1},{"t":"cortaban","w":1,"s":1},{"t":"sin","w":1,"s":1},{"t":"riesgo","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"agua","w":1,"s":1},{"t":"profunda","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":10,"e":21,"t":"PIAdv","sub":"loc","nexo":{"s":10,"e":10,"c":"rel","nf":"CCL"},"i":0}]},{"id":"adv-f6","u":"adv","m":"props","l":"Ej. f6","k":[{"t":"Después","w":1,"s":0},{"t":"que","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"africano","w":1,"s":1},{"t":"modulaba","w":1,"s":1},{"t":"su","w":1,"s":1},{"t":"rezongo","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"su","w":1,"s":1},{"t":"acompañante","w":1,"s":1},{"t":"arrojaba","w":1,"s":1},{"t":"en","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"orilla","w":1,"s":1},{"t":"manojos","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"hierbas","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":6,"t":"PIAdv","sub":"temp","nexo":{"s":0,"e":1,"c":"rel","nf":"CCT"},"i":0}]},{"id":"adv-f7","u":"adv","m":"props","l":"Ej. f7","k":[{"t":"Iba","w":1,"s":0},{"t":"la","w":1,"s":1},{"t":"nave","w":1,"s":1},{"t":"como","w":1,"s":1},{"t":"si","w":1,"s":1},{"t":"transportara","w":1,"s":1},{"t":"en","w":1,"s":1},{"t":"andas","w":1,"s":1},{"t":"las","w":1,"s":1},{"t":"divinidades","w":1,"s":1},{"t":"del","w":1,"s":1},{"t":"río","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":3,"e":11,"t":"PIAdv","sub":"mod","nexo":{"s":3,"e":4,"c":"rel","nf":"CCM"},"i":0}]},{"id":"adv-f8","u":"adv","m":"props","l":"Ej. f8","k":[{"t":"Antonia","w":1,"s":0},{"t":"alarga","w":1,"s":1},{"t":"los","w":1,"s":1},{"t":"brazos","w":1,"s":1},{"t":"cuanto","w":1,"s":1},{"t":"puede","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"pero","w":1,"s":1},{"t":"no","w":1,"s":1},{"t":"alcanza","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"repisa","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":5,"t":"coord","i":0},{"s":4,"e":5,"t":"PIAdv","sub":"cuant","nexo":{"s":4,"e":4,"c":"rel","nf":"CCCn"},"i":1},{"s":8,"e":11,"t":"coord","nexo":{"s":7,"e":7,"c":"conj","ct":"adv"},"i":2}]},{"id":"adv-f9","u":"adv","m":"props","l":"Ej. f9","k":[{"t":"El","w":1,"s":0},{"t":"indio","w":1,"s":1},{"t":"tenía","w":1,"s":1},{"t":"malos","w":1,"s":1},{"t":"presentimientos","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"ya","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"noche","w":1,"s":1},{"t":"anterior","w":1,"s":1},{"t":"un","w":1,"s":1},{"t":"zorro","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"le","w":1,"s":1},{"t":"había","w":1,"s":1},{"t":"cruzado","w":1,"s":1},{"t":"por","w":1,"s":1},{"t":"delante","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":6,"e":18,"t":"PIAdv","sub":"caus","nexo":{"s":6,"e":7,"c":"sub"},"i":0}]},{"id":"adv-f10","u":"adv","m":"props","l":"Ej. f10","k":[{"t":"Me","w":1,"s":0},{"t":"dijeron","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"si","w":1,"s":1},{"t":"no","w":1,"s":1},{"t":"estudiaba","w":1,"s":1},{"t":"no","w":1,"s":1},{"t":"iba","w":1,"s":1},{"t":"a","w":1,"s":1},{"t":"aprobar","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"materia","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":2,"e":11,"t":"PIS","f":"OD","nexo":{"s":2,"e":2,"c":"sub"},"i":0},{"s":3,"e":5,"t":"PIAdv","sub":"cond","nexo":{"s":3,"e":3,"c":"sub"},"i":1}],"n":"La condicional está dentro de la PIS que funciona como objeto directo."},{"id":"adv-f11","u":"adv","m":"props","l":"Ej. f11","k":[{"t":"Si","w":1,"s":0},{"t":"hubiera","w":1,"s":1},{"t":"muerto","w":1,"s":1},{"t":"una","w":1,"s":1},{"t":"hora","w":1,"s":1},{"t":"antes","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"yo","w":1,"s":1},{"t":"habría","w":1,"s":1},{"t":"tenido","w":1,"s":1},{"t":"una","w":1,"s":1},{"t":"vida","w":1,"s":1},{"t":"feliz","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":5,"t":"PIAdv","sub":"cond","nexo":{"s":0,"e":0,"c":"sub"},"i":0}]},{"id":"adv-f12","u":"adv","m":"props","l":"Ej. f12","k":[{"t":"Si","w":1,"s":0},{"t":"se","w":1,"s":1},{"t":"lo","w":1,"s":1},{"t":"hubieran","w":1,"s":1},{"t":"dicho","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"no","w":1,"s":1},{"t":"lo","w":1,"s":1},{"t":"habría","w":1,"s":1},{"t":"creído","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":4,"t":"PIAdv","sub":"cond","nexo":{"s":0,"e":0,"c":"sub"},"i":0}]},{"id":"adv-f13","u":"adv","m":"props","l":"Ej. f13","k":[{"t":"La","w":1,"s":0},{"t":"muchedumbre","w":1,"s":1},{"t":"compacta","w":1,"s":1},{"t":"se","w":1,"s":1},{"t":"mantenía","w":1,"s":1},{"t":"serena","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"aunque","w":1,"s":1},{"t":"escuché","w":1,"s":1},{"t":"algunos","w":1,"s":1},{"t":"gritos","w":1,"s":1},{"t":"estridentes","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":7,"e":11,"t":"PIAdv","sub":"conc","nexo":{"s":7,"e":7,"c":"sub"},"i":0}]},{"id":"adv-f14","u":"adv","m":"props","l":"Ej. f14","k":[{"t":"Así","w":1,"s":0},{"t":"hablaran","w":1,"s":1},{"t":"en","w":1,"s":1},{"t":"voz","w":1,"s":1},{"t":"baja","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"el","w":1,"s":1},{"t":"rumor","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"las","w":1,"s":1},{"t":"conversaciones","w":1,"s":1},{"t":"llenaba","w":1,"s":1},{"t":"todo","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"bosque","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":4,"t":"PIAdv","sub":"conc","nexo":{"s":0,"e":0,"c":"sub"},"i":0}],"n":"«Así» con verbo en subjuntivo funciona como nexo concesivo."},{"id":"adv-f15","u":"adv","m":"props","l":"Ej. f15","k":[{"t":"La","w":1,"s":0},{"t":"cabeza","w":1,"s":1},{"t":"le","w":1,"s":1},{"t":"dolía","w":1,"s":1},{"t":"tanto","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"no","w":1,"s":1},{"t":"fue","w":1,"s":1},{"t":"a","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"escuela","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":5,"e":10,"t":"PIAdv","sub":"cons","nexo":{"s":5,"e":5,"c":"sub"},"i":0}]},{"id":"adv-f16","u":"adv","m":"props","l":"Ej. f16","k":[{"t":"La","w":1,"s":0},{"t":"película","w":1,"s":1},{"t":"era","w":1,"s":1},{"t":"tan","w":1,"s":1},{"t":"buena","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"vi","w":1,"s":1},{"t":"tres","w":1,"s":1},{"t":"veces","w":1,"s":1},{"t":"seguidas","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":5,"e":10,"t":"PIAdv","sub":"cons","nexo":{"s":5,"e":5,"c":"sub"},"i":0}]},{"id":"adv-f17","u":"adv","m":"props","l":"Ej. f17","k":[{"t":"Los","w":1,"s":0},{"t":"políticos","w":1,"s":1},{"t":"mienten","w":1,"s":1},{"t":"tanto","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"ya","w":1,"s":1},{"t":"nadie","w":1,"s":1},{"t":"les","w":1,"s":1},{"t":"cree","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":4,"e":8,"t":"PIAdv","sub":"cons","nexo":{"s":4,"e":4,"c":"sub"},"i":0}]},{"id":"adv-f18","u":"adv","m":"props","l":"Ej. f18","k":[{"t":"La","w":1,"s":0},{"t":"mujer","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"salió","w":1,"s":1},{"t":"de","w":1,"s":1},{"t":"ese","w":1,"s":1},{"t":"edificio","w":1,"s":1},{"t":"fue","w":1,"s":1},{"t":"la","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"me","w":1,"s":1},{"t":"dijo","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"me","w":1,"s":1},{"t":"quedara","w":1,"s":1},{"t":"en","w":1,"s":1},{"t":"casa","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":2,"e":6,"t":"PIA","sub":"esp","nexo":{"s":2,"e":2,"c":"rel","nf":"Suj","a":1},"i":0},{"s":8,"e":16,"t":"PIS","f":"PSO","nexo":{"s":8,"e":9,"c":"rel","nf":"Suj"},"i":1},{"s":12,"e":16,"t":"PIS","f":"OD","nexo":{"s":12,"e":12,"c":"sub"},"i":2}]},{"id":"adv-f19","u":"adv","m":"props","l":"Ej. f19","k":[{"t":"Lo","w":1,"s":0},{"t":"que","w":1,"s":1},{"t":"te","w":1,"s":1},{"t":"conté","w":1,"s":1},{"t":"es","w":1,"s":1},{"t":"verdad","w":1,"s":1},{"t":",","w":0,"s":0},{"t":"aunque","w":1,"s":1},{"t":"no","w":1,"s":1},{"t":"lo","w":1,"s":1},{"t":"creas","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":0,"e":3,"t":"PIS","f":"Suj","nexo":{"s":0,"e":1,"c":"rel","nf":"OD"},"i":0},{"s":7,"e":10,"t":"PIAdv","sub":"conc","nexo":{"s":7,"e":7,"c":"sub"},"i":1}]},{"id":"adv-f20","u":"adv","m":"props","l":"Ej. f20","k":[{"t":"Nunca","w":1,"s":0},{"t":"supe","w":1,"s":1},{"t":"quién","w":1,"s":1},{"t":"era","w":1,"s":1},{"t":"esa","w":1,"s":1},{"t":"mujer","w":1,"s":1},{"t":"que","w":1,"s":1},{"t":"veía","w":1,"s":1},{"t":"todos","w":1,"s":1},{"t":"los","w":1,"s":1},{"t":"días","w":1,"s":1},{"t":"en","w":1,"s":1},{"t":"el","w":1,"s":1},{"t":"subte","w":1,"s":1},{"t":".","w":0,"s":0}],"props":[{"s":2,"e":13,"t":"PIS","f":"OD","nexo":{"s":2,"e":2,"c":"int","nf":"PSO/Suj"},"i":0},{"s":6,"e":13,"t":"PIA","sub":"esp","nexo":{"s":6,"e":6,"c":"rel","nf":"OD","a":5},"i":1}],"n":"Discutible: «quién» puede ser predicativo o sujeto."},{"id":"adv-b1p","u":"adv","m":"choice","l":"Ej. b1 (posible)","q":"Pasá a condición posible: «Si Andrea viaja con el seleccionado de hockey, voy con ella.»","o":[{"t":"Si Andrea viajara con el seleccionado de hockey, iría con ella.","ok":1},{"t":"Si Andrea viajaría con el seleccionado de hockey, iría con ella.","ok":0},{"t":"Si Andrea viaja con el seleccionado de hockey, iría con ella.","ok":0},{"t":"Si Andrea hubiera viajado con el seleccionado de hockey, iría con ella.","ok":0}],"e":"Condición posible: si + pretérito imperfecto del subjuntivo en la subordinada, y condicional simple en el núcleo. Nunca se usa el condicional en las dos partes."},{"id":"adv-b1i","u":"adv","m":"choice","l":"Ej. b1 (imposible)","q":"Pasá a condición imposible: «Si Andrea viaja con el seleccionado de hockey, voy con ella.»","o":[{"t":"Si Andrea hubiera viajado con el seleccionado de hockey, habría ido con ella.","ok":1},{"t":"Si Andrea habría viajado con el seleccionado de hockey, habría ido con ella.","ok":0},{"t":"Si Andrea viajara con el seleccionado de hockey, habría ido con ella.","ok":0},{"t":"Si Andrea hubiera viajado con el seleccionado de hockey, voy con ella.","ok":0}],"e":"Condición imposible: si + pluscuamperfecto del subjuntivo, y condicional compuesto (o pretérito pluscuamperfecto del subjuntivo) en el núcleo. Es incorrecto «si habría viajado»."},{"id":"adv-b2p","u":"adv","m":"choice","l":"Ej. b2 (posible)","q":"Pasá a condición posible: «Si Alberto rinde su última materia, se recibe de abogado.»","o":[{"t":"Si Alberto rindiera su última materia, se recibiría de abogado.","ok":1},{"t":"Si Alberto rendiría su última materia, se recibiría de abogado.","ok":0},{"t":"Si Alberto rinde su última materia, se recibiría de abogado.","ok":0},{"t":"Si Alberto hubiera rendido su última materia, se recibiría de abogado.","ok":0}],"e":"Posible = imperfecto del subjuntivo + condicional simple."},{"id":"adv-b2i","u":"adv","m":"choice","l":"Ej. b2 (imposible)","q":"Pasá a condición imposible: «Si Alberto rinde su última materia, se recibe de abogado.»","o":[{"t":"Si Alberto hubiera rendido su última materia, se habría recibido de abogado.","ok":1},{"t":"Si Alberto habría rendido su última materia, se habría recibido de abogado.","ok":0},{"t":"Si Alberto rindiera su última materia, se habría recibido de abogado.","ok":0},{"t":"Si Alberto hubiera rendido su última materia, se recibe de abogado.","ok":0}],"e":"Imposible = pluscuamperfecto del subjuntivo + condicional compuesto. La subordinada no admite el condicional compuesto."},{"id":"adv-b3p","u":"adv","m":"choice","l":"Ej. b3 (posible)","q":"Pasá a condición posible: «Se conocerán hoy los ajustes salariales, si los anuncia el ministro.»","o":[{"t":"Se conocerían hoy los ajustes salariales, si los anunciara el ministro.","ok":1},{"t":"Se conocerían hoy los ajustes salariales, si los anunciaría el ministro.","ok":0},{"t":"Se conocerán hoy los ajustes salariales, si los anunciara el ministro.","ok":0},{"t":"Se conocerían hoy los ajustes salariales, si los hubiera anunciado el ministro.","ok":0}],"e":"Posible = condicional simple en el núcleo («se conocerían») e imperfecto del subjuntivo en la condicional («anunciara»). El orden de las proposiciones no cambia la regla."},{"id":"adv-b3i","u":"adv","m":"choice","l":"Ej. b3 (imposible)","q":"Pasá a condición imposible: «Se conocerán hoy los ajustes salariales, si los anuncia el ministro.»","o":[{"t":"Se habrían conocido hoy los ajustes salariales, si los hubiera anunciado el ministro.","ok":1},{"t":"Se habrían conocido hoy los ajustes salariales, si los habría anunciado el ministro.","ok":0},{"t":"Se conocerían hoy los ajustes salariales, si los hubiera anunciado el ministro.","ok":0},{"t":"Se habrían conocido hoy los ajustes salariales, si los anunciara el ministro.","ok":0}],"e":"Imposible = condicional compuesto («se habrían conocido») y pluscuamperfecto del subjuntivo («hubiera anunciado»)."},{"id":"adv-b4p","u":"adv","m":"choice","l":"Ej. b4 (posible)","q":"Pasá a condición posible: «Si llueve, no vamos de camping.»","o":[{"t":"Si lloviera, no iríamos de camping.","ok":1},{"t":"Si llovería, no iríamos de camping.","ok":0},{"t":"Si llueve, no iríamos de camping.","ok":0},{"t":"Si hubiera llovido, no iríamos de camping.","ok":0}],"e":"Posible = imperfecto del subjuntivo («lloviera») + condicional simple («iríamos»)."},{"id":"adv-b4i","u":"adv","m":"choice","l":"Ej. b4 (imposible)","q":"Pasá a condición imposible: «Si llueve, no vamos de camping.»","o":[{"t":"Si hubiera llovido, no habríamos ido de camping.","ok":1},{"t":"Si habría llovido, no habríamos ido de camping.","ok":0},{"t":"Si lloviera, no habríamos ido de camping.","ok":0},{"t":"Si hubiera llovido, no vamos de camping.","ok":0}],"e":"Imposible = pluscuamperfecto del subjuntivo («hubiera llovido») + condicional compuesto («habríamos ido»)."},{"id":"adv-e1","u":"adv","m":"choice","l":"Ej. e1","q":"«Llegamos al lugar donde vendían las entradas para el recital de Madonna.» ¿Qué es la proposición «donde vendían las entradas…»?","o":[{"t":"Incluida adjetiva: modifica al sustantivo «lugar» (su antecedente).","ok":1},{"t":"Incluida adverbial locativa: es un circunstancial de lugar.","ok":0},{"t":"Incluida sustantiva interrogativa indirecta.","ok":0}],"e":"«Donde» tiene antecedente («lugar»): la proposición modifica a ese sustantivo, por eso es adjetiva."},{"id":"adv-e2","u":"adv","m":"choice","l":"Ej. e2","q":"«Llegamos adonde vendían las entradas para el recital de Madonna.» ¿Qué es la proposición «adonde vendían las entradas…»?","o":[{"t":"Incluida adverbial locativa: es un circunstancial de lugar.","ok":1},{"t":"Incluida adjetiva: modifica al sustantivo «lugar».","ok":0},{"t":"Incluida sustantiva interrogativa indirecta.","ok":0}],"e":"Acá no hay antecedente: la proposición modifica directamente al verbo («llegamos») y se puede reemplazar por «allí». Es un circunstancial de lugar."},{"id":"adv-e3","u":"adv","m":"choice","l":"Ej. e3","q":"«Preguntamos dónde vendían las entradas para el recital de Madonna.» ¿Qué es la proposición «dónde vendían las entradas…»?","o":[{"t":"Incluida sustantiva: interrogativa indirecta (objeto directo).","ok":1},{"t":"Incluida adverbial locativa: es un circunstancial de lugar.","ok":0},{"t":"Incluida adjetiva: modifica al sustantivo «entradas».","ok":0}],"e":"«Dónde» lleva tilde: es un pronombre interrogativo. Se puede reemplazar por «esto» («preguntamos esto»), así que la proposición cumple la función de objeto directo."},{"id":"adv-e4","u":"adv","m":"choice","l":"Ej. e4","q":"«Se preguntó cuántos chicos había en el aula.» ¿La proposición «cuántos chicos había en el aula» es una adverbial cuantitativa?","o":[{"t":"No: es una sustantiva interrogativa indirecta (objeto directo).","ok":1},{"t":"Sí: es una adverbial cuantitativa, como «cuanto puede».","ok":0}],"e":"«Cuántos» lleva tilde (interrogativo) y se puede reemplazar por «esto» («se preguntó esto»). Las adverbiales cuantitativas llevan «cuanto» sin tilde y se reemplazan por un adverbio («mucho»)."}];
+const BYID = {}; ITEMS.forEach(i=>BYID[i.id]=i);
+
+/* ---------- vocabulario ---------- */
+const FN = {Suj:'Sujeto',NV:'Núcleo verbal',OD:'Objeto directo',OI:'Objeto indirecto',PSO:'Predicativo subjetivo obligatorio',PSNO:'Predicativo subjetivo no obligatorio',CAg:'Complemento agente',CCL:'Circunstancial de lugar',CCT:'Circunstancial de tiempo',CCM:'Circunstancial de modo',CCCn:'Circunstancial de cantidad',CCCa:'Circunstancial de causa',CCI:'Circunstancial de instrumento',CCCo:'Circunstancial de compañía',SCR:'Signo de cuasirreflejo',MD:'Modificador directo',Term:'Término',Apos:'Aposición',CCons:'Complemento consecutivo',MNO:'Modificador del núcleo oracional'};
+const FN_HINT = {
+ Suj:'Concuerda con el verbo: si cambiás su número, cambia el verbo.',
+ NV:'Es el verbo conjugado (con sus auxiliares, si los tiene).',
+ OD:'Se puede reemplazar por lo, la, los, las; en voz pasiva pasa a ser sujeto.',
+ OI:'Se puede reemplazar por le o les.',
+ PSO:'Va con ser, estar o parecer y concuerda con el sujeto.',
+ PSNO:'Modifica al verbo y al sujeto (concuerda con él), pero el verbo no es copulativo.',
+ CAg:'Aparece en voz pasiva, con «por»; en voz activa pasa a ser el sujeto.',
+ CCL:'Responde a ¿dónde?',CCT:'Responde a ¿cuándo?',CCM:'Responde a ¿cómo?',CCCn:'Responde a ¿cuánto?',CCCa:'Responde a ¿por qué?',CCI:'Responde a ¿con qué?',CCCo:'Responde a ¿con quién?',
+ SCR:'Es el «se» (o me, te, nos) que coincide con el sujeto pero no es reflejo ni recíproco.'
+};
+const FN_PALETTE = ['Suj','NV','OD','OI','PSO','PSNO','CAg','CCL','CCT','CCM','CCCn','CCCa','CCI','CCCo','SCR'];
+const NF_OPTS = ['Suj','OD','OI','PSO','CCL','CCT','CCM','CCCn','CCCa','CCCo','MD','Term'];
+const PF_PIS = ['Suj','OD','PSO','Apos','Term'];
+const PF_ADV = ['CCL','CCT','CCM','CCCn','CCCa','CCons','MNO'];
+const ADV_FN = {loc:'CCL',temp:'CCT',mod:'CCM',cuant:'CCCn',caus:'CCCa',cons:'CCons',conc:'MNO',cond:'MNO'};
+const TYPES=[{v:'coord',t:'Coordinada'},{v:'PIA',t:'Incluida adjetiva'},{v:'PIS',t:'Incluida sustantiva'},{v:'PIAdv',t:'Incluida adverbial'}];
+const TYPE_L={coord:'coordinada',PIA:'incluida adjetiva',PIS:'incluida sustantiva',PIAdv:'incluida adverbial'};
+const CT=[{v:'cop',t:'Copulativa'},{v:'dis',t:'Disyuntiva'},{v:'adv',t:'Adversativa'},{v:'exp',t:'Explicativa'},{v:'yux',t:'Yuxtapuesta'}];
+const CT_L={cop:'copulativa',dis:'disyuntiva',adv:'adversativa',exp:'explicativa',yux:'yuxtapuesta'};
+const NCLASS=[{v:'rel',t:'Relacionante',d:'cumple una función dentro de la proposición'},{v:'sub',t:'Subordinante',d:'sólo marca la subordinación'}];
+const PCLS=[{v:'sub',t:'Con nexo subordinante',d:'que, si'},{v:'rel',t:'Con nexo relacionante',d:'el que, lo que, quien, donde…'},{v:'dd',t:'Sin nexo: discurso directo',d:'entre comillas'},{v:'int',t:'Sin nexo: interrogativa o exclamativa indirecta',d:'qué, quién, dónde… con tilde'}];
+const ADV=[{v:'loc',t:'Locativa',g:'Con función circunstancial'},{v:'temp',t:'Temporal',g:'Con función circunstancial'},{v:'mod',t:'Modal',g:'Con función circunstancial'},{v:'cuant',t:'Cuantitativa',g:'Con función circunstancial'},{v:'caus',t:'Causal',g:'Con función circunstancial'},{v:'cons',t:'Consecutiva',g:'Sin función circunstancial'},{v:'conc',t:'Concesiva',g:'Sin función circunstancial'},{v:'cond',t:'Condicional',g:'Sin función circunstancial'}];
+const ADV_L={loc:'locativa',temp:'temporal',mod:'modal',cuant:'cuantitativa',caus:'causal',cons:'consecutiva',conc:'concesiva',cond:'condicional'};
+const PI_COLORS=['var(--p0)','var(--p1)','var(--p2)','var(--p3)'];
+
+const UNITS=[
+ {id:'rep',name:'Repaso',sub:'Modificadores del verbo',desc:'Sujeto, OD, OI, predicativos, complemento agente y circunstanciales.',cu:'Cuadernillo 1'},
+ {id:'coo',name:'Coordinadas',sub:'Proposiciones coordinadas',desc:'Qué es una proposición y cómo se unen las coordinadas.',cu:'Cuadernillo 1'},
+ {id:'pia',name:'Adjetivas',sub:'Proposiciones incluidas adjetivas',desc:'Relacionantes, antecedente, especificativas y explicativas.',cu:'Cuadernillo 1'},
+ {id:'pis',name:'Sustantivas',sub:'Proposiciones incluidas sustantivas',desc:'Con nexo y sin nexo, discurso indirecto, queísmo y dequeísmo.',cu:'Cuadernillo 2'},
+ {id:'pro',name:'Pronombres',sub:'Pronombres personales como modificadores del verbo',desc:'OD, OI, reflejos, recíprocos, cuasirreflejos, pasiva con se y se impersonal.',cu:'Cuadernillo 2'},
+ {id:'adv',name:'Adverbiales',sub:'Proposiciones incluidas adverbiales',desc:'Circunstanciales, consecutivas, concesivas y condicionales.',cu:'Cuadernillo 3'}
+];
+const GROUPS={
+ rep:[[/^rep-1/,'Ejercicio 1: analizar las oraciones']],
+ coo:[[/^coo-1/,'Ejercicio 1: analizar las oraciones']],
+ pia:[[/^pia-1/,'Ejercicio 1: analizar las oraciones'],[/^pia-2/,'Ejercicio 2: detectar y corregir errores'],[/^pia-3/,'Ejercicio 3: explicativa o especificativa']],
+ pis:[[/^pis-1/,'Ejercicio 1: reconocer y clasificar'],[/^pis-2/,'Ejercicio 2: analizar'],[/^pis-3/,'Ejercicio 3: combinados con adjetivas'],[/^pis-4/,'Ejercicio 4: queísmo y dequeísmo'],[/^pis-5/,'Ejercicio 5: de adjetiva a sustantiva']],
+ pro:[[/^pro-\d/,'Ejercicio a: pronombres'],[/^pro-b/,'Ejercicio b: combinados con proposiciones']],
+ adv:[[/^adv-a/,'Ejercicio a: analizar'],[/^adv-b/,'Ejercicio b: condiciones real, posible e imposible'],[/^adv-d/,'Ejercicio d: combinados'],[/^adv-e/,'Distinguir: ¿adjetiva, adverbial o sustantiva?'],[/^adv-f/,'Ejercicio f: más análisis']]
+};
+function unitItems(u){return ITEMS.filter(i=>i.u===u);}
+
+/* ---------- árbol de pronombres ---------- */
+const YN=[{v:'si',t:'Sí'},{v:'no',t:'No'}];
+const TREE={
+ N0:{q:'¿El pronombre coincide con el sujeto en persona y número?',o:[{v:'si',t:'Sí, coincide'},{v:'no',t:'No coincide'}],nx:{si:'N1',no:'N0b'}},
+ N0b:{q:'Reemplazalo por «le/les» o por «lo/la/los/las». ¿Cuál queda bien?',o:[{v:'OI',t:'le / les',d:'objeto indirecto'},{v:'OD',t:'lo / la / los / las',d:'objeto directo'}],code:{OI:'OI',OD:'OD'}},
+ N1:{q:'¿Admite «a sí mismo», «a mí mismo», «a vos mismo»…?',o:YN,nx:{si:'N1f',no:'N2'}},
+ N1f:{q:'Es un reflejo puro. ¿Qué función cumple?',o:[{v:'OD',t:'Objeto directo'},{v:'OI',t:'Objeto indirecto'}],code:{OD:'REF_OD',OI:'REF_OI'}},
+ N2:{q:'¿Admite «entre ellos», «mutuamente», «uno al otro»? (sólo en plural)',o:YN,nx:{si:'N2f',no:'N3'}},
+ N2f:{q:'Es un recíproco. ¿Qué función cumple?',o:[{v:'OD',t:'Objeto directo'},{v:'OI',t:'Objeto indirecto'}],code:{OD:'REC_OD',OI:'REC_OI'}},
+ N3:{q:'¿El verbo se puede conjugar en todas las personas? (yo me caigo, vos te caés, él se cae…)',o:[{v:'si',t:'Sí, en todas'},{v:'no',t:'No, sólo en tercera'}],nx:{no:'N4'},code:{si:'SCR'}},
+ N4:{q:'¿La oración admite sujeto? ¿El verbo concuerda con lo que sigue?',o:[{v:'si',t:'Sí, lo que sigue es el sujeto'},{v:'no',t:'No, lo que sigue es un objeto o no hay sujeto'}],code:{si:'PAS',no:'IMP'}}
+};
+const PATHS={
+ OD:[['N0','no'],['N0b','OD']],OI:[['N0','no'],['N0b','OI']],
+ REF_OD:[['N0','si'],['N1','si'],['N1f','OD']],REF_OI:[['N0','si'],['N1','si'],['N1f','OI']],
+ REC_OD:[['N0','si'],['N1','no'],['N2','si'],['N2f','OD']],REC_OI:[['N0','si'],['N1','no'],['N2','si'],['N2f','OI']],
+ SCR:[['N0','si'],['N1','no'],['N2','no'],['N3','si']],
+ PAS:[['N0','si'],['N1','no'],['N2','no'],['N3','no'],['N4','si']],
+ IMP:[['N0','si'],['N1','no'],['N2','no'],['N3','no'],['N4','no']]
+};
+const LEAF={OD:'Objeto directo',OI:'Objeto indirecto',REF_OD:'Reflejo puro, objeto directo',REF_OI:'Reflejo puro, objeto indirecto',REC_OD:'Recíproco, objeto directo',REC_OI:'Recíproco, objeto indirecto',SCR:'Signo de cuasirreflejo (SCR)',PAS:'Marca de pasiva con se',IMP:'Marca de se impersonal'};
+const TREE_HINT={
+ N0:(c)=>PATHS[c][0][1]==='si'?'Compará la persona del pronombre con la del verbo («me compré»: yo / me). Tené en cuenta que el «se» de la pasiva, de la impersonal y de los cuasirreflejos es de tercera persona, como el verbo.':'Acá el pronombre no remite a la misma persona que el verbo (por ejemplo «te vimos»: nosotros / vos). Si no coinciden, el pronombre es un objeto.',
+ N0b:()=>'Probá las dos opciones: la que suena bien (aunque cambie un poco el sentido) te dice si es OI u OD. Si hay un «lo» al lado, el «se» reemplaza a un «le».',
+ N1:()=>'Probá agregar «a sí mismo», «a mí mismo», «a vos mismo», «a ellos mismos»… Si funciona, es un reflejo puro.',
+ N1f:()=>'Fijate si la oración ya tiene otro objeto directo: si lo tiene («se secó las lágrimas»), el pronombre es OI. Si no («se peina»), es OD.',
+ N2:()=>'Los recíprocos sólo van en plural y admiten «entre ellos», «mutuamente», «uno al otro».',
+ N2f:()=>'Fijate si la oración ya tiene otro objeto directo: si lo tiene («se dieron la mano»), el pronombre es OI. Si no («se saludaron»), es OD.',
+ N3:()=>'Probá conjugar: «yo me caigo, vos te caés, él se cae». Si el verbo con su pronombre funciona en todas las personas, es un cuasirreflejo común. La pasiva y la impersonal sólo existen en tercera.',
+ N4:()=>'En la pasiva el verbo concuerda con lo que sigue («se abrió una puerta / se abrieron las puertas»). En la impersonal no varía, porque lo que sigue es un OD («se come pescado / se come pastas»).'
+};
+
+/* ---------- almacenamiento ---------- */
+const KEY='sx3-v1';
+let store={p:{},q:{},tab:'inicio',view:'teoria',cur:null};
+function load(){try{const j=localStorage.getItem(KEY);if(j){const o=JSON.parse(j);if(o&&typeof o==='object')store=Object.assign(store,o);}}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(store));}catch(e){}}
+function stat(id){return store.p[id]||null;}
+function unitDone(u){const l=unitItems(u);return [l.filter(i=>stat(i.id)).length,l.length];}
+
+/* ---------- utilidades DOM ---------- */
+function h(tag,props){
+  const el=document.createElement(tag);
+  props=props||{};
+  for(const k in props){
+    const v=props[k]; if(v==null||v===false) continue;
+    if(k==='class') el.className=v;
+    else if(k==='html') el.innerHTML=v;
+    else if(k.startsWith('on')) el[k]=v;
+    else if(k==='style') el.setAttribute('style',v);
+    else el.setAttribute(k,v===true?'':v);
+  }
+  for(let i=2;i<arguments.length;i++) add(el,arguments[i]);
+  return el;
+}
+function add(el,c){ if(c==null||c===false) return; if(Array.isArray(c)) c.forEach(x=>add(el,x)); else el.append(c.nodeType?c:document.createTextNode(c)); }
+function q(s,el){return (el||document).querySelector(s);}
+function txt(it,s,e){let r='';for(let i=s;i<=e;i++){const t=it.k[i];if(i>s&&t.s)r+=' ';r+=t.t;}return r;}
+function hash(s){let x=0;for(let i=0;i<s.length;i++)x=(x*31+s.charCodeAt(i))|0;return Math.abs(x);}
+function seeded(arr,seed){const a=arr.slice();let s=seed||1;for(let i=a.length-1;i>0;i--){s=(s*1103515245+12345)&0x7fffffff;const j=s%(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
+const alts=v=>String(v).split('/');
+const fnName=c=>FN[alts(c)[0]]||c;
+
+/* ---------- oración con corchetes ---------- */
+function sentEl(it,spans,cls,onTap){
+  const el=h('div',{class:'sent'+(onTap?' tap':''),'aria-label':'Oración'});
+  it.k.forEach((t,i)=>{
+    if(t.s){const sp0=h('span',{class:'sp '+((i>0&&cls&&cls(i).includes('in')&&cls(i-1).includes('in'))?'in':'')},' ');el.append(sp0);}
+    spans.filter(sp=>sp.s===i).sort((a,b)=>b.e-a.e).forEach(sp=>el.append(h('span',{class:'br',style:'--pc:'+PI_COLORS[sp.c%4],'aria-hidden':'true'},sp.g==='c'?'[':'(',h('sub',{},sp.n))));
+    const w=h('span',{class:'w '+((cls&&cls(i))||[]).join(' '),'data-i':i},t.t);
+    if(onTap&&t.w){w.tabIndex=0;w.setAttribute('role','button');w.onclick=()=>onTap(i);w.onkeydown=ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();onTap(i);}};}
+    el.append(w);
+    spans.filter(sp=>sp.e===i).sort((a,b)=>a.s-b.s).forEach(sp=>el.append(h('span',{class:'br',style:'--pc:'+PI_COLORS[sp.c%4],'aria-hidden':'true'},sp.g==='c'?']':')')));
+  });
+  return el;
+}
+
+/* ---------- estado de la app ---------- */
+let R=null;           // ejercicio en curso
+let overlay=null;
+const app=q('#app');
+
+function setTab(tab,view){store.tab=tab;if(view)store.view=view;save();try{history.replaceState(null,'','#'+tab);}catch(e){}R=null;Q=null;render();window.scrollTo(0,0);}
+
+function render(){
+  app.innerHTML='';app.dataset.u=store.tab;
+  app.append(renderTop(),h('main',{id:'main'},renderMain()));
+  const t=q('#tree-slot');if(t)renderTreeTheory(t);
+}
+function renderTop(){
+  const top=h('div',{class:'top'});
+  top.append(h('div',{class:'bar'},
+    h('div',{class:'brand'},'Sintaxis',h('small',{},'3.º año')),
+    h('div',{class:'tools'},
+      h('button',{class:'tbtn',onclick:()=>openSheet(curUnit()||'pis')},'Teoría'),
+      h('button',{class:'tbtn',onclick:()=>openSheet('abrev')},'Abrev.'),
+      h('button',{class:'tbtn',onclick:()=>openSheet('prog')},'Progreso'))));
+  const tabs=h('div',{class:'tabs',role:'tablist'});
+  const all=[{id:'inicio',name:'Inicio'}].concat(UNITS);
+  all.forEach(u=>{
+    const b=h('button',{class:'tab',role:'tab','aria-selected':store.tab===u.id?'true':'false','data-tab':u.id,onclick:()=>setTab(u.id,store.tab===u.id?store.view:(store.view||'teoria'))},u.name,u.id==='inicio'?null:h('span',{class:'n'},unitDone(u.id).join('/')));
+    tabs.append(b);
+  });
+  top.append(tabs);
+  setTimeout(()=>{const s=q('.tab[aria-selected="true"]',tabs);if(s&&s.scrollIntoView)try{s.scrollIntoView({inline:'center',block:'nearest'});}catch(e){}},0);
+  top.append(crumbs());
+  return top;
+}
+function curUnit(){return store.tab==='inicio'?null:store.tab;}
+function crumbs(){
+  const c=h('div',{class:'crumbs'},h('span',{},'Sintaxis'));
+  const sep=()=>h('span',{class:'sep'},'›');
+  if(store.tab==='inicio'){c.append(sep(),h('b',{},'Inicio'));return c;}
+  const u=UNITS.find(x=>x.id===store.tab);
+  c.append(sep(),h('b',{},u.name),sep(),h('span',{},store.view==='teoria'?'Teoría':'Práctica'));
+  if(store.view==='practica'&&R){
+    const l=unitItems(u.id);const n=l.indexOf(R.it)+1;
+    c.append(sep(),h('span',{},R.it.l+'  ('+n+' de '+l.length+')'));
+    if(R.stage==='props')c.append(sep(),h('span',{},'Proposición '+(R.pi+1)));
+  }
+  return c;
+}
+function renderMain(){
+  if(store.tab==='inicio')return Q?h('div',{},roundCard()):renderHome();
+  const u=UNITS.find(x=>x.id===store.tab);
+  const wrap=h('div',{});
+  wrap.append(h('h2',{},u.sub),h('p',{class:'muted',style:'margin:2px 0 0'},u.cu+' · '+u.desc));
+  wrap.append(h('div',{class:'sub',role:'group'},
+    h('button',{class:'seg','aria-pressed':store.view==='teoria'?'true':'false',onclick:()=>{store.view='teoria';save();R=null;render();}},'Teoría'),
+    h('button',{class:'seg','aria-pressed':store.view==='practica'?'true':'false',onclick:()=>{store.view='practica';save();render();}},'Práctica ('+unitDone(u.id).join('/')+')')));
+  if(store.view==='teoria'){
+    wrap.append(h('div',{class:'card teo',html:TEORIA[u.id]}));
+    const next=h('div',{class:'row',style:'margin-top:14px'},h('button',{class:'btn',onclick:()=>{store.view='practica';save();render();window.scrollTo(0,0);}},'Pasar a la práctica'));
+    wrap.append(next);
+  } else wrap.append(Q?roundCard():R?renderEx():renderList(u));
+  return wrap;
+}
+
+/* ---------- inicio ---------- */
+function renderHome(){
+  const w=h('div',{});
+  const tot=ITEMS.length,done=ITEMS.filter(i=>stat(i.id)).length;
+  w.append(h('div',{class:'hero'},h('h2',{},'Aprender sintaxis, oración por oración'),
+    h('p',{style:'max-width:56ch;font-family:Literata,Georgia,serif;font-size:1.05rem;margin:0'},'Un apoyo para estudiar en casa lo que se ve en clase. Sigue los tres cuadernillos: cada pestaña es un tema, con su teoría y ejercicios que se corrigen al instante.')));
+  w.append(h('div',{class:'demo','aria-label':'Ejemplo de análisis'},
+    h('div',{class:'s',html:'El hombre <span class="pia">(<span class="nx">que</span> la contrató)</span> era un alto jefe.'}),
+    h('div',{class:'note pen'},'↑ incluida adjetiva: «que» reemplaza a «hombre»'),
+    h('div',{class:'note pen'},'Vos marcás, tocás y respondés; la app corrige.')));
+  const cont=store.cur&&BYID[store.cur];
+  const row=h('div',{class:'row',style:'margin:4px 0 14px'});
+  if(cont)row.append(h('button',{class:'btn',onclick:()=>{store.tab=cont.u;store.view='practica';startItem(cont.id);}},'Seguir donde quedé: '+UNITS.find(x=>x.id===cont.u).name+' '+cont.l.replace('Ej. ','')));
+  else row.append(h('button',{class:'btn',onclick:()=>setTab('rep','teoria')},'Empezar por el repaso'));
+  row.append(h('button',{class:'btn alt','data-act':'round-all',onclick:()=>startRound('all')},'Ronda mixta'));
+  w.append(row);
+  const idx=h('div',{class:'card sheetp'},h('h3',{},'Índice'));
+  const ul=h('ul',{class:'indice'});
+  UNITS.forEach(u=>{const d=unitDone(u.id);ul.append(h('li',{},h('button',{class:'irow','data-tab':u.id,style:'--tc:var(--u-'+u.id+')',onclick:()=>setTab(u.id,'teoria')},
+    h('div',{class:'l1'},h('span',{class:'nm'},u.name),h('span',{class:'dots2'}),h('span',{class:'cnt'},d[0]+'/'+d[1])),
+    h('p',{},u.cu+'. '+u.desc),h('div',{class:'meter'},h('i',{style:'width:'+Math.round(100*d[0]/d[1])+'%'})))));});
+  idx.append(ul);w.append(idx);
+  w.append(h('div',{class:'callout',style:'margin-top:16px'},h('b',{},'Prototipo en prueba. '),'Las claves son un borrador a revisar por el profesor; cuando un análisis admite más de una lectura, se marca como «discutible». Tu avance ('+done+' de '+tot+') se guarda en este dispositivo.'));
+  return w;
+}
+
+/* ---------- lista de práctica ---------- */
+function renderList(u){
+  const w=h('div',{});
+  const list=unitItems(u.id);
+  const next=list.find(i=>!stat(i.id));
+  const top=h('div',{class:'row'});
+  if(next)top.append(h('button',{class:'btn',onclick:()=>startItem(next.id)},'Siguiente ejercicio sin hacer ('+next.l.replace('Ej. ','')+')'));
+  else top.append(h('span',{class:'muted'},'¡Completaste todos los ejercicios de esta pestaña!'));
+  w.append(top);
+  const bq=(store.q||{})[u.id];
+  w.append(h('div',{class:'row',style:'margin:8px 0 0'},h('button',{class:'btn alt','data-act':'round',onclick:()=>startRound(u.id)},'Ronda rápida de 8 preguntas'),bq!=null?h('span',{class:'muted'},'mejor: '+bq+' de 8'):null));
+  (GROUPS[u.id]||[]).forEach(([re,title])=>{
+    const g=list.filter(i=>re.test(i.id));if(!g.length)return;
+    const chips=h('div',{class:'chips'});
+    g.forEach(i=>{const s=stat(i.id);const lab=i.l.replace('Ej. ','').replace('(posible)','pos.').replace('(imposible)','imp.');
+      chips.append(h('button',{class:'chip'+(s?' done':'')+(s&&s.p?' star':'')+(store.cur===i.id?' cur':''),'data-id':i.id,'aria-label':'Ejercicio '+lab+(s?(s.p?', hecho sin errores':', hecho'):''),onclick:()=>startItem(i.id)},lab));});
+    w.append(h('div',{class:'grp'},h('h4',{},title+'  ·  '+g.filter(i=>stat(i.id)).length+'/'+g.length),chips));
+  });
+  w.append(h('p',{class:'muted',style:'margin-top:18px;font-size:.9rem'},'★ = hecho sin errores. Los ejercicios de construir o completar oraciones se hacen en clase con el profesor.'));
+  return w;
+}
+
+/* ---------- ejercicios ---------- */
+function startItem(id){
+  const it=BYID[id];store.cur=id;store.tab=it.u;store.view='practica';save();
+  Q=null;R={it,errs:0,helped:false,checks:0,msg:null,done:false};
+  if(it.m==='props'){R.stage='mark';R.marks=[];R.first=null;R.pi=0;R.ps=it.props.map(()=>null);R.badMsgs=[];}
+  else if(it.m==='pron'){R.stage='pron';initPron();}
+  else if(it.m==='func'){R.stage='func';R.marks=[];R.first=null;R.pending=null;}
+  else if(it.m==='choice'){R.stage='choice';R.opts=seeded(it.o,hash(it.id));R.wrongs=[];R.reveal=false;R.solved=false;}
+  render();window.scrollTo(0,0);
+}
+function renderEx(){
+  const it=R.it;const card=h('div',{class:'card','data-ex':it.id});
+  card.append(h('div',{class:'exhead'},h('h3',{},it.l),h('div',{class:'row'},
+    h('button',{class:'tbtn',onclick:()=>{R=null;render();}},'Volver a la lista'),
+    h('button',{class:'tbtn',onclick:()=>startItem(it.id)},'Reiniciar'))));
+  const body=h('div',{});
+  card.append(body);
+  if(R.done)renderResult(body);
+  else if(R.stage==='choice')renderChoice(body);
+  else if(R.stage==='func')renderFunc(body);
+  else if(R.stage==='mark')renderMark(body);
+  else if(R.stage==='props')renderProps(body);
+  else if(R.stage==='pron')renderPron(body);
+  return card;
+}
+function rerender(){const old=q('[data-ex]');if(!old){render();return;}const y=window.scrollY;const nu=renderEx();old.replaceWith(nu);const c=q('.crumbs');if(c)c.replaceWith(crumbs());window.scrollTo(0,y);}
+function fb(kind,title,text){return h('div',{class:'fb '+kind,role:'status'},title?h('b',{class:'t'},title):null,text);}
+
+/* --- marcado de proposiciones --- */
+function renderMark(b){
+  const it=R.it,n=it.props.length;
+  b.append(h('p',{class:'q'},'Marcá las proposiciones'));
+  b.append(h('p',{class:'help'},'Tocá la primera y la última palabra de cada proposición (incluidas y coordinadas). Hay '+n+' para marcar. Si una proposición tiene una sola palabra, tocala dos veces.'));
+  const spans=R.marks.map((m,k)=>({s:m.s,e:m.e,c:k,n:k+1,g:'i'}));
+  b.append(sentEl(it,spans,i=>R.first===i?['sel']:[],onTapMark));
+  const ml=h('div',{class:'marks'});
+  R.marks.forEach((m,k)=>ml.append(h('span',{class:'mk '+(m.ok?'ok':''),style:'--pc:'+PI_COLORS[k%4]},h('em',{},(k+1)+'. '+txt(it,m.s,m.e)),m.ok?null:h('button',{'aria-label':'Quitar marca',onclick:()=>{R.marks.splice(k,1);R.msg=null;rerender();}},'×'))));
+  b.append(ml);
+  if(R.first!=null)b.append(h('p',{class:'help'},'Empieza en «'+it.k[R.first].t+'». Tocá la palabra donde termina.'));
+  if(R.msg)b.append(R.msg);
+  const row=h('div',{class:'row'},h('button',{class:'btn','data-act':'check',disabled:!R.marks.length||R.marks.some(m=>!m.ok)&&false?null:null,onclick:checkMarks},'Comprobar'));
+  if(R.checks>=3)row.append(h('button',{class:'btn alt',onclick:revealMarks},'Mostrame las proposiciones'));
+  b.append(row);
+}
+function onTapMark(i){
+  if(R.first==null){R.first=i;}
+  else{const s=Math.min(R.first,i),e=Math.max(R.first,i);R.first=null;
+    if(!R.marks.some(m=>m.s===s&&m.e===e))R.marks.push({s,e,ok:false});}
+  R.msg=null;rerender();
+}
+function checkMarks(){
+  const it=R.it;R.checks++;
+  const keys=it.props;const okMarks=[];const bad=[];
+  R.marks.forEach(m=>{const k=keys.find(p=>p.s===m.s&&p.e===m.e);if(k)m.ok=true;else bad.push(m);});
+  const matched=keys.filter(p=>R.marks.some(m=>m.ok&&m.s===p.s&&m.e===p.e));
+  const missing=keys.length-matched.length;
+  if(!bad.length&&!missing){
+    // ordenar marcas por posición para numerar
+    R.marks.sort((a,b)=>a.s-b.s||b.e-a.e);
+    R.stage='props';R.pi=0;R.msg=null;R.ps=keys.map(()=>null);activate(0);rerender();return;
+  }
+  R.errs+=bad.length+ (bad.length?0:1);
+  const parts=[];
+  bad.forEach(m=>{
+    const near=keys.filter(p=>!(p.e<m.s||p.s>m.e)).sort((a,b)=>Math.abs(a.s-m.s)+Math.abs(a.e-m.e)-Math.abs(b.s-m.s)-Math.abs(b.e-m.e))[0];
+    let t='«'+txt(it,m.s,m.e)+'» no coincide con ninguna proposición.';
+    if(near){ if(near.s===m.s)t+=' Empieza bien, pero termina en otro lado.'; else if(near.e===m.e)t+=' Termina bien, pero empieza en otro lado.'; else t+=' Se superpone con una proposición, pero los límites no son esos.'; }
+    else t+=' Fijate que cada proposición tiene su propio verbo.';
+    parts.push(h('div',{},t));
+  });
+  if(missing)parts.push(h('div',{},missing===1?'Te falta marcar 1 proposición.':'Te faltan marcar '+missing+' proposiciones.'));
+  parts.push(h('div',{class:'muted'},'Pista: cada proposición tiene un verbo; el nexo forma parte de la proposición que introduce (en las coordinadas, el nexo queda afuera). Las marcas incorrectas se quitaron.'));
+  R.marks=R.marks.filter(m=>m.ok);
+  R.msg=fb('bad','Todavía no',parts);
+  rerender();
+}
+function revealMarks(){
+  R.helped=true;R.errs++;
+  R.marks=R.it.props.map(p=>({s:p.s,e:p.e,ok:true}));R.marks.sort((a,b)=>a.s-b.s||b.e-a.e);
+  R.stage='props';R.pi=0;R.ps=R.it.props.map(()=>null);R.msg=null;activate(0);rerender();
+}
+
+/* --- preguntas por proposición --- */
+function buildSteps(p){
+  const n=p.nexo,S=[{k:'type'}];
+  if(p.t==='coord'){ if(n)S.push({k:'nexo'},{k:'ctype'}); else if(p.ct==='yux')S.push({k:'ctype'}); }
+  else if(p.t==='PIA')S.push({k:'nexo'},{k:'nclass'},{k:'ante'},{k:'nfunc'},{k:'esp'});
+  else if(p.t==='PIS'){S.push({k:'pcls'}); if(p.sub!=='dd'){S.push({k:'nexo'}); if(n.c!=='sub')S.push({k:'nfunc'});} S.push({k:'pfunc'});}
+  else if(p.t==='PIAdv'){S.push({k:'adv'},{k:'nexo'},{k:'nclass'}); if(n.c==='rel')S.push({k:'nfunc'}); S.push({k:'pfunc'});}
+  return S;
+}
+function activate(i){
+  R.pi=i;const p=R.it.props[i];
+  if(!R.ps[i])R.ps[i]={steps:buildSteps(p),si:0,w:{},sum:[],done:false,reveal:false,sel:[],msg:null,typed:false};
+}
+function pstate(i){return R.ps[i];}
+function keyFor(k,p){
+  switch(k){
+    case 'type':return p.t;
+    case 'ctype':return p.nexo?p.nexo.ct:'yux';
+    case 'nclass':return p.nexo.c;
+    case 'nfunc':return p.nexo.nf;
+    case 'esp':return p.sub;
+    case 'pcls':return p.sub==='dd'?'dd':p.nexo.c;
+    case 'adv':return p.sub;
+    case 'pfunc':return p.t==='PIAdv'?ADV_FN[p.sub]:p.f;
+  }
+}
+function nexoText(it,p){return txt(it,p.nexo.s,p.nexo.e);}
+function labelOf(k,p,v){
+  switch(k){
+    case 'type':return TYPES.find(o=>o.v===v).t;
+    case 'ctype':return CT.find(o=>o.v===v).t;
+    case 'nclass':return NCLASS.find(o=>o.v===v).t;
+    case 'pcls':return PCLS.find(o=>o.v===v).t;
+    case 'adv':return ADV.find(o=>o.v===v).t;
+    case 'esp':return v==='esp'?'Especificativa':'Explicativa';
+    default:return fnName(v);
+  }
+}
+function sumLine(k,p){
+  const it=R.it,key=keyFor(k,p);
+  switch(k){
+    case 'type':return 'Es una proposición '+TYPE_L[p.t]+'.';
+    case 'ctype':return 'Coordinación '+CT_L[key]+'.';
+    case 'nexo':return (p.t==='PIS'&&p.nexo.c==='int'?'Pronombre interrogativo: «':'Nexo: «')+nexoText(it,p)+'».';
+    case 'nclass':return 'Nexo '+(key==='rel'?'relacionante':'subordinante')+'.';
+    case 'ante':return 'Antecedente: «'+it.k[p.nexo.a].t+'».';
+    case 'nfunc':return '«'+nexoText(it,p)+'» es '+fnName(key).toLowerCase()+' dentro de la proposición.';
+    case 'esp':return 'Es '+(key==='esp'?'especificativa':'explicativa')+'.';
+    case 'pcls':return PCLS.find(o=>o.v===key).t+'.';
+    case 'adv':return 'Adverbial '+ADV_L[key]+'.';
+    case 'pfunc':return 'En la oración funciona como '+fnName(key).toLowerCase()+(p.ft?' ('+p.ft+')':'')+'.';
+  }
+}
+function hintFor(k,p){
+  switch(k){
+    case 'type':return {coord:'Las coordinadas están al mismo nivel que otra proposición y se unen con un nexo o con un signo de puntuación; no cumplen función dentro de otra.',PIA:'Modifica a un sustantivo (el antecedente) y empieza con un relacionante como que, quien, donde, cuyo.',PIS:'Cumple función de sustantivo: se puede reemplazar por «esto» o «eso».',PIAdv:'Cumple función de adverbio: se puede reemplazar por un adverbio (allí, entonces, así, mucho) o modifica al núcleo oracional.'}[p.t];
+    case 'ctype':return {cop:'Las dos ideas se suman (y, e, ni).',dis:'Las ideas se excluyen: si se da una, no se da la otra (o, u).',adv:'Hay oposición entre las dos ideas (pero, sino, sin embargo…).',exp:'La segunda proposición explica el sentido de la primera (es decir, o sea, esto es).',yux:'No hay nexo: las proposiciones se unen sólo con signos de puntuación.'}[keyFor(k,p)];
+    case 'nclass':return 'El relacionante cumple una función dentro de la proposición (por eso tiene antecedente o equivale a un sustantivo o adverbio). El subordinante sólo marca la subordinación y se tacha al bajar la proposición.';
+    case 'nfunc':return p.t==='PIA'?'Reemplazá el nexo por el antecedente y bajá la proposición: ¿qué función cumple?':p.t==='PIAdv'?'Los relacionantes de lugar, tiempo, modo y cantidad funcionan como circunstanciales dentro de la proposición.':'Bajá la proposición y preguntate qué función cumple ese nexo dentro de ella.';
+    case 'esp':return 'Si va entre pausas (comas) y se puede quitar sin cambiar el sentido, es explicativa. Si recorta o identifica al antecedente, es especificativa.';
+    case 'pcls':return 'Subordinante: «que» o «si», sin función. Relacionante: el que, lo que, quien, donde… Discurso directo: va entre comillas. Interrogativa indirecta: empieza con qué, quién, dónde, cómo… con tilde.';
+    case 'adv':return 'Fijate en el nexo y el significado: lugar, tiempo, modo, cantidad, causa, consecuencia (tan… que), objeción (aunque), condición (si).';
+    case 'pfunc':return p.t==='PIS'?'Reemplazá la proposición por «esto» o «eso» y fijate qué función cumple en la oración.':'Las temporales, locativas, modales, cuantitativas y causales son circunstanciales; la consecutiva es complemento consecutivo; la concesiva y la condicional modifican al núcleo oracional.';
+    case 'nexo':return 'El nexo es la palabra (o las palabras) que introduce la proposición. Puede tener más de una («por qué», «como si», «después que»).';
+    case 'ante':return 'El antecedente es el sustantivo al que modifica la proposición. Está antes del nexo.';
+  }
+  return '';
+}
+function stepOptions(st,p){
+  switch(st.k){
+    case 'type':return TYPES;
+    case 'ctype':return CT;
+    case 'nclass':return NCLASS;
+    case 'pcls':return PCLS;
+    case 'adv':return ADV;
+    case 'esp':return [{v:'esp',t:'Especificativa',d:'recorta al antecedente'},{v:'exp',t:'Explicativa',d:'agrega un rasgo; va entre pausas'}];
+    case 'nfunc':return NF_OPTS.map(c=>({v:c,t:FN[c]}));
+    case 'pfunc':return (p.t==='PIAdv'?PF_ADV:PF_PIS).map(c=>({v:c,t:FN[c]}));
+  }
+}
+function questionFor(st,p){
+  const it=R.it;
+  switch(st.k){
+    case 'type':return '¿Qué tipo de proposición es?';
+    case 'ctype':return p.nexo?'¿Qué clase de coordinación expresa «'+nexoText(it,p)+'»?':'Estas dos proposiciones están unidas por signos de puntuación. ¿Qué clase de coordinación es?';
+    case 'nexo':return p.t==='PIS'&&p.nexo.c==='int'?'Tocá el pronombre interrogativo o exclamativo.':'Tocá el nexo que introduce la proposición. Si tiene más de una palabra, tocalas todas y confirmá.';
+    case 'nclass':return '¿Qué clase de nexo es «'+nexoText(it,p)+'»?';
+    case 'ante':return 'Tocá el antecedente de «'+nexoText(it,p)+'».';
+    case 'nfunc':{let t='¿Qué función cumple «'+nexoText(it,p)+'» dentro de la proposición?';return t;}
+    case 'esp':return '¿Es especificativa o explicativa?';
+    case 'pcls':return '¿Cómo empieza esta proposición sustantiva?';
+    case 'adv':return '¿Qué clase de adverbial es?';
+    case 'pfunc':return p.t==='PIAdv'?'¿Qué función cumple la proposición en la oración?':'¿Qué función cumple esta proposición sustantiva en la oración?';
+  }
+}
+function bajada(p){
+  const it=R.it,n=p.nexo;if(!n||n.a==null)return null;
+  const last=it.k[n.e].t.toLowerCase();
+  if(!['que','quien','quienes','cual','cuales'].includes(last))return null;
+  const prefix=n.e>n.s?txt(it,n.s,n.e-1)+' ':'';
+  return '… '+prefix+it.k[n.a].t+' '+txt(it,n.e+1,p.e);
+}
+function tokCls(i){
+  const cls=[];const p=R.it.props[R.pi];const ps=R.ps&&R.ps[R.pi];
+  R.it.props.forEach((q2,k)=>{ if(R.ps[k]&&R.ps[k].done&&q2.nexo&&i>=q2.nexo.s&&i<=q2.nexo.e)cls.push('nxok'); if(R.ps[k]&&R.ps[k].anteOk&&q2.nexo&&q2.nexo.a===i)cls.push('ante'); });
+  if(R.stage==='props'&&p&&i>=p.s&&i<=p.e&&ps&&!ps.done)cls.push('in');
+  if(ps&&!ps.done){
+    const st=ps.steps[ps.si];
+    if(st&&st.k==='nexo'&&ps.sel.includes(i))cls.push('nx');
+    if(p.nexo&&ps.nexoOk&&i>=p.nexo.s&&i<=p.nexo.e)cls.push('nxok');
+    if(ps.anteOk&&p.nexo&&p.nexo.a===i)cls.push('ante');
+  }
+  if(R.stage==='pron'&&R.pr&&R.pr.cur){const pr=R.it.prons[R.pr.i];if(pr&&i>=pr.s&&i<=pr.e)cls.push('pron');}
+  if(R.stage==='pron'&&R.pr&&!R.pr.cur){}
+  return cls;
+}
+function renderProps(b){
+  const it=R.it;
+  const spans=it.props.map((p,k)=>({s:p.s,e:p.e,c:k,n:k+1,g:(R.ps[k]&&R.ps[k].typed&&p.t!=='coord')?'i':(R.ps[k]&&R.ps[k].typed?'c':'i')}));
+  // corchete cuadrado sólo para coordinadas ya tipificadas
+  spans.forEach((sp,k)=>{sp.g=(R.ps[k]&&R.ps[k].typed&&it.props[k].t==='coord')?'c':'i';});
+  const ps0=R.ps[R.pi];const st0=ps0&&!ps0.done?ps0.steps[ps0.si]:null;
+  const tapOn=st0&&(st0.k==='nexo'||st0.k==='ante')&&!ps0.reveal;
+  const se=sentEl(it,spans,tokCls,tapOn?onTapStep:null);se.style.setProperty('--pc',PI_COLORS[R.pi%4]);b.append(se);
+  const wrap=h('div',{class:'pcards'});
+  it.props.forEach((p,k)=>{
+    const ps=R.ps[k];const act=k===R.pi;
+    const card=h('div',{class:'pc'+(act&&!(ps&&ps.done)?' active':'')+(ps&&ps.done?' done':''),style:'--pc:'+PI_COLORS[k%4],'data-p':k});
+    card.append(h('div',{class:'ph'},h('b',{},'Proposición '+(k+1)),(!act&&!(ps&&ps.done))?null:null,h('span',{class:'muted',style:'flex-basis:100%;order:3;font-size:.9rem'},'«'+txt(it,p.s,p.e)+'»'),
+      (!act&&!(ps&&ps.done))?h('button',{class:'tbtn',onclick:()=>{activate(k);R.pi=k;rerender();}},'Analizar'):null));
+    if(ps&&ps.sum.length)card.append(h('ul',{class:'sum'},ps.sum.map(s=>h('li',{},s))));
+    if(act&&ps&&!ps.done)card.append(stepUI(p,ps));
+    wrap.append(card);
+  });
+  b.append(wrap);
+}
+function stepUI(p,ps){
+  const it=R.it,st=ps.steps[ps.si];const box=h('div',{});
+  box.append(h('div',{class:'dots','aria-hidden':'true'},ps.steps.map((s,i)=>h('i',{class:i<=ps.si?'on':''}))));
+  box.append(h('p',{class:'q'},questionFor(st,p)));
+  if(st.k==='nfunc'){const bj=bajada(p);if(bj)box.append(h('p',{class:'help'},'Probá bajar la proposición con el antecedente en lugar del nexo: «'+bj+'».'));}
+  if(ps.reveal){
+    const key=keyFor(st.k,p);
+    let ans;
+    if(st.k==='nexo')ans='«'+nexoText(it,p)+'»';else if(st.k==='ante')ans='«'+it.k[p.nexo.a].t+'»';else ans=labelOf(st.k,p,alts(key)[0]);
+    box.append(fb('info','La respuesta es: '+ans,hintFor(st.k,p)));
+    box.append(h('div',{class:'row',style:'margin-top:10px'},h('button',{class:'btn','data-act':'next',onclick:()=>{ps.sum.push(sumLine(st.k,p));if(st.k==='nexo')ps.nexoOk=true;if(st.k==='ante')ps.anteOk=true;advance(p,ps);}},'Entendido, seguir')));
+    return box;
+  }
+  if(st.k==='nexo'){
+    box.append(h('p',{class:'help'},ps.sel.length?'Seleccionado: «'+ps.sel.slice().sort((a,b)=>a-b).map(i=>it.k[i].t).join(' ')+'»':'Tocá las palabras en la oración de arriba.'));
+    box.append(h('div',{class:'row',style:'margin-top:6px'},h('button',{class:'btn','data-act':'confirm',disabled:!ps.sel.length,onclick:()=>confirmNexo(p,ps)},'Es este nexo'),ps.sel.length?h('button',{class:'btn alt',onclick:()=>{ps.sel=[];rerender();}},'Borrar selección'):null));
+  } else if(st.k==='ante'){
+    box.append(h('p',{class:'help'},'Tocá la palabra en la oración de arriba.'));
+  } else {
+    const opts=stepOptions(st,p);
+    const grid=h('div',{class:'opts'+(st.k==='pcls'||st.k==='esp'||st.k==='nclass'?' col1':'')});
+    let lastG=null;
+    opts.forEach(o=>{
+      if(o.g&&o.g!==lastG){grid.append(h('div',{class:'grpl'},o.g));lastG=o.g;}
+      const wrongs=ps.w[st.k]||[];
+      grid.append(h('button',{class:'opt'+(wrongs.includes(o.v)?' bad':''),'data-v':o.v,disabled:wrongs.includes(o.v),onclick:()=>pick(p,ps,st,o.v)},o.t,o.d?h('small',{},o.d):null));
+    });
+    box.append(grid);
+  }
+  if(ps.msg)box.append(ps.msg);
+  return box;
+}
+function onTapStep(i){
+  const p=R.it.props[R.pi],ps=R.ps[R.pi],st=ps.steps[ps.si];
+  if(!R.it.k[i].w)return;
+  if(st.k==='nexo'){const j=ps.sel.indexOf(i);if(j>=0)ps.sel.splice(j,1);else ps.sel.push(i);ps.msg=null;rerender();}
+  else if(st.k==='ante'){
+    if(i===p.nexo.a){ps.anteOk=true;ps.sum.push(sumLine('ante',p));advance(p,ps);}
+    else miss(p,ps,'ante','«'+R.it.k[i].t+'» no es el antecedente. '+hintFor('ante',p));
+  }
+}
+function confirmNexo(p,ps){
+  const n=p.nexo;const want=[];for(let i=n.s;i<=n.e;i++)want.push(i);
+  const got=ps.sel.slice().sort((a,b)=>a-b);
+  if(want.length===got.length&&want.every((x,i)=>x===got[i])){ps.nexoOk=true;ps.sum.push(sumLine('nexo',p));ps.sel=[];advance(p,ps);}
+  else{ps.sel=[];miss(p,ps,'nexo','Esa selección no es el nexo. '+hintFor('nexo',p));}
+}
+function miss(p,ps,k,text){
+  R.errs++;ps.w[k]=(ps.w[k]||[]).concat(['x']);
+  if(ps.w[k].length>=3){ps.reveal=true;ps.msg=null;}
+  else ps.msg=fb('bad','No es así',text);
+  rerender();
+}
+function pick(p,ps,st,v){
+  const key=keyFor(st.k,p);
+  if(alts(key).includes(v)){
+    ps.sum.push(sumLine(st.k,p));
+    if(st.k==='type')ps.typed=true;
+    advance(p,ps);
+  } else {
+    R.errs++;ps.w[st.k]=(ps.w[st.k]||[]).concat([v]);
+    if(ps.w[st.k].length>=3){ps.reveal=true;ps.msg=null;}
+    else ps.msg=fb('bad','No es '+labelOf(st.k,p,v).toLowerCase(),hintFor(st.k,p));
+    rerender();
+  }
+}
+function advance(p,ps){
+  if(ps.reveal){R.helped=true;}
+  ps.reveal=false;ps.msg=null;ps.si++;
+  if(ps.steps[ps.si-1].k==='type')ps.typed=true;
+  if(ps.si>=ps.steps.length){
+    ps.done=true;
+    const nxt=R.it.props.findIndex((q2,k)=>!(R.ps[k]&&R.ps[k].done));
+    if(nxt>=0){activate(nxt);}
+    else{ if(R.it.prons&&R.it.prons.length){R.stage='pron';initPron();}else finish(); }
+  }
+  rerender();
+}
+
+/* --- pronombres --- */
+function initPron(){R.pr={i:0,node:'N0',w:{},msg:null,reveal:false,cur:true,sum:[]};}
+function renderPron(b){
+  const it=R.it,pr=R.pr,list=it.prons;
+  const spans=it.props.map((p,k)=>({s:p.s,e:p.e,c:k,n:k+1,g:p.t==='coord'?'c':'i'}));
+  b.append(sentEl(it,spans,tokCls,null));
+  if(it.m==='pron')b.append(h('p',{class:'help'},'Analizá cada pronombre destacado. Respondé las preguntas del árbol de decisión.'));
+  else b.append(h('p',{class:'help'},'Ahora, los pronombres destacados.'));
+  if(pr.sum.length)b.append(h('ul',{class:'sum'},pr.sum.map(s=>h('li',{},s))));
+  const code=alts(list[pr.i].p);
+  const nd=TREE[pr.node];
+  const box=h('div',{class:'card',style:'margin-top:10px;background:var(--surface2);box-shadow:none'});
+  box.append(h('div',{class:'muted',style:'font-size:.85rem'},'Pronombre '+(pr.i+1)+' de '+list.length+': «'+txt(it,list[pr.i].s,list[pr.i].e)+'»'));
+  box.append(h('p',{class:'q'},nd.q));
+  if(pr.reveal){
+    const right=nd.o.find(o=>okAt(pr.node,o.v,code));
+    box.append(fb('info','La respuesta es: '+right.t,TREE_HINT[pr.node](code[0])));
+    box.append(h('div',{class:'row',style:'margin-top:10px'},h('button',{class:'btn','data-act':'next',onclick:()=>{R.helped=true;pr.reveal=false;treeGo(right.v,code);}},'Entendido, seguir')));
+  } else {
+    const grid=h('div',{class:'opts'});
+    nd.o.forEach(o=>{const wr=(pr.w[pr.node]||[]).includes(o.v);grid.append(h('button',{class:'opt'+(wr?' bad':''),'data-v':o.v,disabled:wr,onclick:()=>treePick(o.v,code)},o.t,o.d?h('small',{},o.d):null));});
+    box.append(grid);
+    if(pr.msg)box.append(pr.msg);
+  }
+  b.append(box);
+}
+function okAt(node,v,codes){return codes.some(c=>PATHS[c].some(([n,x])=>n===node&&x===v));}
+function treePick(v,code){
+  const pr=R.pr;
+  if(okAt(pr.node,v,code)){treeGo(v,code);}
+  else{R.errs++;pr.w[pr.node]=(pr.w[pr.node]||[]).concat([v]);
+    if(pr.w[pr.node].length>=2&&TREE[pr.node].o.length>2||pr.w[pr.node].length>=3){pr.reveal=true;pr.msg=null;}
+    else if(TREE[pr.node].o.length===2&&pr.w[pr.node].length>=1){pr.reveal=false;pr.msg=fb('bad','Probá con la otra opción',TREE_HINT[pr.node](code[0]));}
+    rerender();}
+}
+function treeGo(v,code){
+  const pr=R.pr,nd=TREE[pr.node];
+  if(nd.code&&nd.code[v]){
+    const leaf=nd.code[v];
+    const it=R.it,pn=it.prons[pr.i];
+    pr.sum.push('«'+txt(it,pn.s,pn.e)+'»: '+LEAF[leaf]+'.');
+    pr.i++;pr.node='N0';pr.w={};pr.msg=null;
+    if(pr.i>=it.prons.length){pr.cur=false;finish();return;}
+    rerender();return;
+  }
+  pr.node=nd.nx[v];pr.msg=null;rerender();
+}
+
+/* --- analisis de funciones (repaso) --- */
+function renderFunc(b){
+  const it=R.it;
+  b.append(h('p',{class:'q'},'Analizá la oración'));
+  b.append(h('p',{class:'help'},'Tocá la primera y la última palabra de cada constituyente y elegí su función. Marcá el verbo (núcleo verbal) y todos sus modificadores. Hay '+it.spans.length+' para marcar.'));
+  const spans=R.marks.map((m,k)=>({s:m.s,e:m.e,c:k,n:k+1,g:'c'}));
+  if(R.pending)spans.push({s:R.pending.s,e:R.pending.e,c:R.marks.length,n:'?',g:'c'});
+  b.append(sentEl(it,spans,i=>R.first===i?['sel']:[],onTapFunc));
+  const ml=h('div',{class:'marks'});
+  R.marks.forEach((m,k)=>ml.append(h('span',{class:'mk '+(m.ok?'ok':''),style:'--pc:'+PI_COLORS[k%4]},h('em',{},(k+1)+'. '+txt(it,m.s,m.e)+' → '),h('b',{class:'mono'},m.fn),m.ok?null:h('button',{'aria-label':'Quitar',onclick:()=>{R.marks.splice(k,1);R.msg=null;rerender();}},'×'))));
+  b.append(ml);
+  if(R.pending){
+    b.append(h('p',{class:'q'},'¿Qué función cumple «'+txt(it,R.pending.s,R.pending.e)+'»?'));
+    const grid=h('div',{class:'opts'});
+    FN_PALETTE.forEach(c=>grid.append(h('button',{class:'opt','data-v':c,onclick:()=>{R.marks.push({s:R.pending.s,e:R.pending.e,fn:c,ok:false});R.pending=null;R.msg=null;rerender();}},FN[c],h('small',{},c))));
+    b.append(grid,h('div',{class:'row',style:'margin-top:8px'},h('button',{class:'btn alt',onclick:()=>{R.pending=null;rerender();}},'Cancelar')));
+  } else if(R.first!=null)b.append(h('p',{class:'help'},'Empieza en «'+it.k[R.first].t+'». Tocá donde termina.'));
+  if(R.msg)b.append(R.msg);
+  const row=h('div',{class:'row'},h('button',{class:'btn','data-act':'check',disabled:!R.marks.length||!!R.pending,onclick:checkFunc},'Comprobar'));
+  if(R.checks>=3)row.append(h('button',{class:'btn alt',onclick:()=>{R.helped=true;R.errs++;R.marks=R.it.spans.map(s=>({s:s.s,e:s.e,fn:alts(s.fn)[0],ok:true}));R.marks.sort((a,b)=>a.s-b.s);finish();}},'Mostrame la respuesta'));
+  b.append(row);
+}
+function onTapFunc(i){
+  if(R.pending)return;
+  if(R.first==null)R.first=i;
+  else{const s=Math.min(R.first,i),e=Math.max(R.first,i);R.first=null;
+    if(R.marks.some(m=>m.s===s&&m.e===e)){R.msg=fb('info','','Ese tramo ya está marcado.');}
+    else R.pending={s,e};}
+  R.msg=R.pending?null:R.msg;rerender();
+}
+function checkFunc(){
+  const it=R.it;R.checks++;const parts=[];let wrong=0;
+  R.marks.forEach(m=>{ if(m.ok)return;
+    const k=it.spans.find(s=>s.s===m.s&&s.e===m.e);
+    if(k&&alts(k.fn).includes(m.fn)){m.ok=true;}
+    else if(k){wrong++;m.bad='fn';parts.push(h('div',{},'«'+txt(it,m.s,m.e)+'»: la extensión está bien, pero no es '+FN[m.fn].toLowerCase()+'. '+(FN_HINT[alts(k.fn)[0]]||'')));}
+    else{wrong++;m.bad='span';parts.push(h('div',{},'«'+txt(it,m.s,m.e)+'» no coincide con ningún constituyente de la oración. Revisá dónde empieza y dónde termina.'));}
+  });
+  const okc=R.marks.filter(m=>m.ok).length;const missing=it.spans.length-okc-wrong;
+  if(!wrong&&!missing){R.marks.sort((a,b)=>a.s-b.s);finish();return;}
+  R.errs+=wrong||1;
+  if(missing>0)parts.push(h('div',{},missing===1?'Te falta marcar 1 constituyente.':'Te faltan marcar '+missing+' constituyentes.'));
+  parts.push(h('div',{class:'muted'},'Las marcas incorrectas se quitaron; las correctas quedaron en verde.'));
+  R.marks=R.marks.filter(m=>m.ok);
+  R.msg=fb('bad','Todavía no',parts);rerender();
+}
+
+/* --- opción múltiple --- */
+function renderChoice(b){
+  const it=R.it;
+  b.append(h('p',{class:'q',style:'font-size:1.2rem'},it.q));
+  const grid=h('div',{class:'opts col1'});
+  R.opts.forEach((o,k)=>{
+    const wr=R.wrongs.includes(k);
+    const good=(R.reveal||R.solved)&&o.ok;
+    grid.append(h('button',{class:'opt'+(wr?' bad':'')+(good?' good':''),'data-ok':o.ok?'1':'0',disabled:wr||R.solved||R.reveal,onclick:()=>choose(k)},o.t));
+  });
+  b.append(grid);
+  if(R.msg)b.append(R.msg);
+  if(R.reveal||R.solved){b.append(fb(R.solved?'ok':'info',R.solved?'Correcto':'La respuesta correcta es la marcada',it.e));
+    b.append(h('div',{class:'row',style:'margin-top:10px'},h('button',{class:'btn','data-act':'finish',onclick:finish},'Seguir')));}
+}
+function choose(k){
+  if(R.opts[k].ok){R.solved=true;R.msg=null;}
+  else{R.errs++;R.wrongs.push(k);
+    if(R.wrongs.length>=2){R.reveal=true;R.helped=true;R.msg=null;}
+    else R.msg=fb('bad','No es esa','Releé la consigna y probá con otra.');}
+  rerender();
+}
+
+/* --- ronda rápida: preguntas generadas con los análisis del banco --- */
+let Q=null;
+function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function shuf(arr,rnd){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function sentTxt(it){return txt(it,0,it.k.length-1);}
+function pick3(pool,good,rnd){return shuf(pool.filter(x=>x!==good),rnd).slice(0,3);}
+function genCands(u){
+  const pool=(u==='all'?ITEMS:unitItems(u)).filter(it=>!(it.n&&/^Discutible/.test(it.n)));
+  const C={tipo:[],vf:[],nexo:[],ante:[],se:[],fn:[]};
+  pool.forEach(it=>{
+    (it.props||[]).forEach(p=>{
+      if(p.t==='coord'&&!p.nexo&&p.i===0&&it.props.length<2)return;
+      C.tipo.push({it,p}); C.vf.push({it,p});
+      const n=p.nexo;
+      if(n&&n.s===n.e&&(p.t!=='coord'||n.c==='conj')&&it.k[n.s].w)C.nexo.push({it,p});
+      if(n&&n.c==='rel'&&n.a!=null&&n.s===n.e&&it.k[n.a]&&it.k[n.a].w)C.ante.push({it,p});
+    });
+    (it.prons||[]).forEach(pn=>{if(String(pn.p).indexOf('/')<0)C.se.push({it,pn});});
+    if(it.m==='func')(it.spans||[]).forEach(sp=>{if(String(sp.fn).indexOf('/')<0)C.fn.push({it,sp});});
+  });
+  return C;
+}
+function buildQ(kind,c,rnd){
+  const it=c.it,S=sentTxt(it);
+  if(kind==='tipo'){const p=c.p;
+    return {k:'opt',it,kind,sent:S,q:'¿Qué tipo de proposición es «'+txt(it,p.s,p.e)+'»?',opts:shuf(TYPES,rnd).map(t=>({t:t.t,ok:t.v===p.t})),e:resumen(p,it).join(' ')};}
+  if(kind==='vf'){const p=c.p;const truth=rnd()<0.5;const T=truth?p.t:shuf(TYPES.map(t=>t.v).filter(v=>v!==p.t),rnd)[0];
+    return {k:'opt',it,kind,sent:S,q:'¿Verdadero o falso? «'+txt(it,p.s,p.e)+'» es una proposición '+TYPE_L[T]+'.',opts:[{t:'Verdadero',ok:truth},{t:'Falso',ok:!truth}],e:'En realidad es '+TYPE_L[p.t]+'. '+resumen(p,it).slice(1).join(' ')};}
+  if(kind==='nexo'){const p=c.p,n=p.nexo;
+    return {k:'tap',it,kind,mark:[],q:'Tocá el nexo de «'+txt(it,p.s,p.e)+'».',ans:n.s,e:resumen(p,it).slice(1).join(' ')};}
+  if(kind==='ante'){const p=c.p,n=p.nexo;
+    return {k:'tap',it,kind,mark:[n.s],q:'Tocá el antecedente de «'+it.k[n.s].t+'» (resaltado).',ans:n.a,e:'«'+it.k[n.s].t+'» reemplaza a «'+it.k[n.a].t+'», que es su antecedente.'};}
+  if(kind==='se'){const pn=c.pn,good=alts(pn.p)[0];const keys=Object.keys(LEAF);
+    return {k:'opt',it,kind,sent:S,q:'¿Qué es «'+txt(it,pn.s,pn.e)+'» en esta oración?',opts:shuf([good].concat(pick3(keys,good,rnd)),rnd).map(v=>({t:LEAF[v],ok:v===good})),e:LEAF[good]+'.'};}
+  if(kind==='fn'){const sp=c.sp,good=alts(sp.fn)[0];
+    return {k:'opt',it,kind,sent:S,q:'¿Qué función cumple «'+txt(it,sp.s,sp.e)+'»?',opts:shuf([good].concat(pick3(FN_PALETTE,good,rnd)),rnd).map(v=>({t:FN[v],ok:v===good})),e:(FN_HINT[good]||'')};}
+}
+function genRound(u,seed,n){
+  const rnd=mulberry(seed),C=genCands(u);
+  const kinds=shuf(Object.keys(C).filter(k=>C[k].length),rnd);
+  Object.keys(C).forEach(k=>C[k]=shuf(C[k],rnd));
+  const qs=[],used={};
+  let guard=0;
+  while(qs.length<n&&guard++<200&&kinds.length){
+    const k=kinds[qs.length%kinds.length];
+    let c=C[k].find(x=>!used[x.it.id+k+(x.p?x.p.s+'-'+x.p.e:x.pn?x.pn.s:x.sp?x.sp.s:'')]&&!qs.some(q=>q.it===x.it&&q.kind===k));
+    if(!c){c=C[k].find(x=>!qs.some(q=>q.it===x.it));}
+    if(!c){const i=kinds.indexOf(k);kinds.splice(i,1);if(!kinds.length)break;continue;}
+    const key=c.it.id+k+(c.p?c.p.s+'-'+c.p.e:c.pn?c.pn.s:c.sp?c.sp.s:'');
+    used[key]=1;C[k].splice(C[k].indexOf(c),1);
+    qs.push(buildQ(k,c,rnd));
+  }
+  return qs;
+}
+function startRound(u,seed){
+  const s=seed||Math.floor(Math.random()*1e9)+1;
+  const qs=genRound(u,s,8);
+  if(!qs.length)return;
+  Q={u,seed:s,qs,i:0,errs:0,good:0,wrongs:[],tapWrong:[],solved:false,reveal:false,miss:false,done:false};
+  R=null;
+  if(u!=='all'){store.tab=u;store.view='practica';}else store.tab='inicio';
+  save();render();window.scrollTo(0,0);
+}
+function roundCard(){
+  const card=h('div',{class:'card','data-ex':'round'});
+  const title=Q.u==='all'?'Ronda mixta':'Ronda rápida';
+  card.append(h('div',{class:'exhead'},h('h3',{},title),h('div',{class:'row'},h('button',{class:'tbtn','data-act':'leave',onclick:()=>{Q=null;render();window.scrollTo(0,0);}},'Salir'))));
+  const b=h('div',{});card.append(b);
+  if(Q.done){
+    const best=(store.q||{})[Q.u]||0;
+    b.append(h('div',{class:'res'},h('div',{class:'big'},Q.good===Q.qs.length?'★':'✓'),h('h3',{},Q.good+' de '+Q.qs.length+' a la primera'),h('p',{class:'muted',style:'margin:4px 0 0'},'Mejor resultado en esta ronda: '+best+' de '+Q.qs.length+'.')));
+    b.append(h('div',{class:'row',style:'margin-top:14px'},h('button',{class:'btn','data-act':'again',onclick:()=>startRound(Q.u)},'Otra ronda'),h('button',{class:'btn alt',onclick:()=>{Q=null;render();window.scrollTo(0,0);}},'Volver')));
+    return card;
+  }
+  const x=Q.qs[Q.i];
+  b.append(h('div',{class:'pen',style:'color:var(--muted)'},'Pregunta '+(Q.i+1)+' de '+Q.qs.length));
+  b.append(h('p',{class:'q',style:'font-size:1.2rem'},x.q));
+  const closed=Q.solved||Q.reveal;
+  if(x.k==='opt'){
+    b.append(h('div',{class:'callout',style:'margin:6px 0 10px'},x.sent));
+    const grid=h('div',{class:'opts col1'});
+    x.opts.forEach((o,k)=>{const wr=Q.wrongs.includes(k);const good=closed&&o.ok;
+      grid.append(h('button',{class:'opt'+(wr?' bad':'')+(good?' good':''),'data-ok':o.ok?'1':'0',disabled:wr||closed,onclick:()=>roundAnswer(o.ok,k)},o.t));});
+    b.append(grid);
+  } else {
+    const el=sentEl(x.it,[],i=>{const c=[];if(x.mark.includes(i))c.push('nxok');if(Q.tapWrong.includes(i))c.push('wrong');if(closed&&i===x.ans)c.push('ok');return c;},closed?null:(i=>roundAnswer(i===x.ans,i)));
+    b.append(el);
+  }
+  if(Q.msg&&!closed)b.append(Q.msg);
+  if(closed){b.append(fb(Q.solved?'ok':'info',Q.solved?'Correcto':'La respuesta correcta es la marcada',Q.qs[Q.i].e));
+    b.append(h('div',{class:'row',style:'margin-top:10px'},h('button',{class:'btn','data-act':'rnext',onclick:roundNext},Q.i+1<Q.qs.length?'Siguiente':'Ver resultado')));}
+  return card;
+}
+function roundAnswer(ok,k){
+  const x=Q.qs[Q.i];
+  if(ok){Q.solved=true;Q.msg=null;if(!Q.miss)Q.good++;}
+  else{Q.miss=true;Q.errs++;if(x.k==='opt')Q.wrongs.push(k);else Q.tapWrong.push(k);
+    if(Q.wrongs.length+Q.tapWrong.length>=2){Q.reveal=true;Q.msg=null;}
+    else Q.msg=fb('bad','No es esa','Releé la consigna y probá otra vez.');}
+  rerenderRound();
+}
+function roundNext(){
+  if(Q.i+1<Q.qs.length){Q.i++;Q.wrongs=[];Q.tapWrong=[];Q.solved=false;Q.reveal=false;Q.miss=false;Q.msg=null;}
+  else{Q.done=true;store.q=store.q||{};if((store.q[Q.u]||0)<Q.good)store.q[Q.u]=Q.good;save();}
+  rerenderRound();
+  window.scrollTo(0,0);
+}
+function rerenderRound(){const old=q('[data-ex]');const y=window.scrollY;if(old){old.replaceWith(roundCard());window.scrollTo(0,y);}else render();}
+
+/* --- fin del ejercicio --- */
+function finish(){
+  R.done=true;R.stage='done';
+  const perfect=R.errs===0&&!R.helped;
+  const prev=store.p[R.it.id];
+  store.p[R.it.id]={d:1,p:perfect?1:(prev&&prev.p?1:0),e:R.errs};
+  save();
+  rerender();
+  const t=q('.tabs');if(t){const n=q('.tab[aria-selected="true"] .n',t);if(n)n.textContent=unitDone(R.it.u).join('/');}
+}
+function renderResult(b){
+  const it=R.it,perfect=R.errs===0&&!R.helped;
+  b.append(h('div',{class:'res'},h('div',{class:'big'},perfect?'★':'✓'),h('h3',{},perfect?'¡Sin errores!':'Ejercicio completo'),h('p',{class:'muted',style:'margin:4px 0 0'},perfect?'Lo resolviste bien a la primera.':(R.errs?R.errs+(R.errs===1?' respuesta para repasar.':' respuestas para repasar.'):'Completado con ayuda.')+' Podés repetirlo cuando quieras.')));
+  if(it.m==='props'||it.m==='func'||it.m==='pron'){
+    b.append(sentEl(it,(it.props||[]).map((p,k)=>({s:p.s,e:p.e,c:k,n:k+1,g:p.t==='coord'?'c':'i'})),i=>{const c=[];(it.prons||[]).forEach(pn=>{if(i>=pn.s&&i<=pn.e)c.push('pron');});(it.props||[]).forEach(p=>{if(p.nexo&&i>=p.nexo.s&&i<=p.nexo.e)c.push('nxok');});return c;},null));
+    if(it.props&&it.props.length){b.append(h('div',{class:'pcards'},it.props.map((p,k)=>h('div',{class:'pc',style:'--pc:'+PI_COLORS[k%4]},h('b',{style:'color:var(--pc)'},'Proposición '+(k+1)+': '),'«'+txt(it,p.s,p.e)+'»',h('ul',{class:'sum'},resumen(p).map(s=>h('li',{},s)))))));}
+    if(it.m==='func'){b.append(h('div',{class:'marks'},it.spans.map(s=>h('span',{class:'mk ok'},h('em',{},txt(it,s.s,s.e)+' → '),h('b',{class:'mono'},alts(s.fn)[0])))));}
+    if(it.prons&&it.m==='props'&&it.prons.length)b.append(h('ul',{class:'sum'},it.prons.map(pn=>h('li',{},'«'+txt(it,pn.s,pn.e)+'»: '+LEAF[alts(pn.p)[0]]+'.'))));
+  }
+  if(it.n){const disc=/^Discutible/.test(it.n);b.append(h('div',{class:'fb info',style:'margin-top:12px'},h('b',{class:'t'},disc?'Análisis discutible':'Nota'),disc?it.n.replace(/^Discutible:?\s*/,''):it.n));}
+  const list=unitItems(it.u),idx=list.indexOf(it);
+  const nxt=list.slice(idx+1).find(i=>!stat(i.id))||list.find(i=>!stat(i.id));
+  const row=h('div',{class:'row',style:'margin-top:14px'});
+  if(nxt&&nxt!==it)row.append(h('button',{class:'btn','data-act':'next-ex',onclick:()=>startItem(nxt.id)},'Siguiente ejercicio'));
+  row.append(h('button',{class:'btn alt',onclick:()=>{R=null;render();window.scrollTo(0,0);}},'Volver a la lista'),h('button',{class:'btn alt',onclick:()=>startItem(it.id)},'Repetir'));
+  b.append(row);
+}
+function resumen(p,it0){
+  const it=it0||R.it,L=[];const n=p.nexo;
+  L.push('Es una proposición '+TYPE_L[p.t]+(p.t==='PIA'?(p.sub==='esp'?' especificativa':' explicativa'):p.t==='PIAdv'?' '+ADV_L[p.sub]:p.t==='coord'&&(n||p.ct==='yux')?' '+CT_L[n?n.ct:'yux']:'')+'.');
+  if(n){L.push((p.t==='PIS'&&n.c==='int'?'Pronombre interrogativo: «':'Nexo: «')+txt(it,n.s,n.e)+'»'+(n.c==='rel'?' (relacionante':n.c==='sub'?' (subordinante':n.c==='int'?' (':n.c==='conj'?' (conjunción':' (')+(n.nf?(n.c==='rel'||n.c==='int'?(n.c==='int'?'':', ')+fnName(n.nf).toLowerCase()+' dentro de la proposición':''):'')+')'+(n.a!=null?'. Antecedente: «'+it.k[n.a].t+'».':'.'));}
+  if(p.t==='PIS'){L.push(p.sub==='dd'?'Discurso directo (sin nexo).':'');}
+  if(p.t==='PIS')L.push('Función en la oración: '+fnName(p.f).toLowerCase()+(p.ft?' ('+p.ft+')':'')+'.');
+  if(p.t==='PIAdv')L.push('Función en la oración: '+fnName(ADV_FN[p.sub]).toLowerCase()+'.');
+  return L.filter(Boolean);
+}
+
+/* ---------- teoría: árbol ---------- */
+function renderTreeTheory(el){
+  el.innerHTML='';
+  const nums={N0:1,N0b:'1a',N1:2,N1f:'2a',N2:3,N2f:'3a',N3:4,N4:5};
+  const tree=h('div',{class:'tree'});
+  Object.keys(TREE).forEach(id=>{
+    const nd=TREE[id];const box=h('div',{class:'tn'},h('b',{},nums[id]+'. '+nd.q));
+    const br=h('div',{class:'br2'});
+    nd.o.forEach(o=>{
+      let res;
+      if(nd.code&&nd.code[o.v])res=h('div',{class:'lf'},h('strong',{},o.t+(o.d?' ('+o.d+')':'')),LEAF[nd.code[o.v]]);
+      else res=h('div',{class:'lf',style:'background:var(--surface2)'},h('strong',{},o.t),'ir a la pregunta '+nums[nd.nx[o.v]]);
+      br.append(res);
+    });
+    box.append(br);tree.append(box);
+  });
+  el.append(tree);
+}
+
+/* ---------- ventana auxiliar ---------- */
+function openSheet(which){
+  closeSheet();
+  const ov=h('div',{class:'ov',role:'dialog','aria-modal':'true',onclick:e=>{if(e.target===ov)closeSheet();}});
+  const sh=h('div',{class:'sheet'});
+  ov.append(sh);overlay=ov;
+  const body=h('div',{});
+  const draw=(w)=>{
+    body.innerHTML='';
+    sh.querySelectorAll('.stabs button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.w===w?'true':'false'));
+    if(w==='abrev'){
+      body.append(h('h3',{},'Abrev.'),h('p',{class:'muted'},'Las que usan los cuadernillos y la app. Faltan algunas del análisis interno (n/s, ct, cn…), pendientes de revisión del profesor.'));
+      body.append(h('div',{class:'tbl'},h('table',{},ABREV.map(r=>h('tr',{},h('td',{class:'mono'},r[0]),h('td',{},r[1]))))));
+    } else if(w==='prog'){
+      const tot=ITEMS.length,done=ITEMS.filter(i=>stat(i.id)).length,star=ITEMS.filter(i=>stat(i.id)&&stat(i.id).p).length;
+      let t='Sintaxis, tercer año — progreso\n'+done+' de '+tot+' ejercicios hechos ('+star+' sin errores)\n';
+      UNITS.forEach(u=>{const d=unitDone(u.id);t+=u.name+': '+d[0]+'/'+d[1]+'\n';});
+      body.append(h('h3',{},'Progreso'),h('p',{class:'muted'},'Se guarda sólo en este dispositivo. Si querés mostrárselo al profesor, copiá este resumen.'));
+      const ta=h('textarea',{class:'cp',readonly:true},t);body.append(ta);
+      const msg=h('span',{class:'muted',role:'status'},'');
+      body.append(h('div',{class:'row',style:'margin-top:8px'},h('button',{class:'btn',onclick:()=>{
+        const done=()=>{msg.textContent='Copiado.';};
+        try{navigator.clipboard.writeText(t).then(done,()=>{ta.select();msg.textContent='Seleccionado: copialo con el menú.';});}catch(e){ta.select();msg.textContent='Seleccionado: copialo con el menú.';}
+      }},'Copiar resumen'),msg));
+      const rs=h('div',{class:'row',style:'margin-top:16px'});
+      const btn=h('button',{class:'btn alt',onclick:()=>{
+        if(!btn.dataset.sure){btn.dataset.sure='1';btn.textContent='Tocá de nuevo para borrar todo mi avance';return;}
+        store.p={};store.cur=null;save();R=null;closeSheet();render();
+      }},'Borrar mi avance');
+      rs.append(btn);body.append(rs);
+    } else {
+      const u=UNITS.find(x=>x.id===w);
+      body.append(h('h3',{},u.sub),h('div',{class:'teo',html:TEORIA[w]}));
+      const t=q('#tree-slot',body);if(t)renderTreeTheory(t);
+    }
+  };
+  const tabs=h('div',{class:'stabs'});
+  UNITS.concat([{id:'abrev',name:'Abreviaturas'}]).forEach(u=>tabs.append(h('button',{class:'seg','data-w':u.id,onclick:()=>draw(u.id)},u.name)));
+  sh.append(h('div',{class:'hd'},h('b',{},which==='prog'?'Mi progreso':'Consultar'),h('button',{class:'btn alt',onclick:closeSheet,'aria-label':'Cerrar'},'Cerrar')));
+  if(which!=='prog')sh.append(tabs);
+  sh.append(body);
+  document.body.append(ov);
+  document.addEventListener('keydown',escClose);
+  draw(which);
+}
+function escClose(e){if(e.key==='Escape')closeSheet();}
+function closeSheet(){if(overlay){overlay.remove();overlay=null;document.removeEventListener('keydown',escClose);}}
+
+/* ---------- arranque ---------- */
+load();
+try{const hsh=(location.hash||'').replace('#','');if(hsh==='inicio'||UNITS.some(u=>u.id===hsh)){store.tab=hsh;}}catch(e){}
+if(store.tab!=='inicio'&&!UNITS.some(u=>u.id===store.tab))store.tab='inicio';
+window.__sx={ITEMS,start:startItem,state:()=>({R,Q,store}),setTab,startRound};
+render();
+})();
+
+</script>
+</body></html>
