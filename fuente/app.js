@@ -1,6 +1,7 @@
 (function(){
 'use strict';
-const ITEMS = __ITEMS__;
+const ALL = __ITEMS__;
+const ITEMS = ALL.filter(i=>!i.r);
 const BYID = {}; ITEMS.forEach(i=>BYID[i.id]=i);
 
 /* ---------- vocabulario ---------- */
@@ -655,54 +656,78 @@ let Q=null;
 function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 function shuf(arr,rnd){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function sentTxt(it){return txt(it,0,it.k.length-1);}
-function pick3(pool,good,rnd){return shuf(pool.filter(x=>x!==good),rnd).slice(0,3);}
+const TYPE_OF={pis:'PIS',pia:'PIA',adv:'PIAdv',coo:'coord'};
+const NEXO_RE=/^(que|qué|si|como|cómo|cuando|cuándo|donde|dónde|adonde|quien|quién|quienes|quiénes|cual|cuales|cuyo|cuya|cuyos|cuyas|aunque|porque|pues|mientras|pero|y|o|ni|sino|cuanto|apenas)$/i;
+const SE_G={OD:['OI','REF_OD','REC_OD'],OI:['OD','REF_OI','REC_OI'],REF_OD:['REF_OI','REC_OD','OD'],REF_OI:['REF_OD','REC_OI','OI'],REC_OD:['REC_OI','REF_OD','OD'],REC_OI:['REC_OD','REF_OI','OI'],SCR:['REF_OD','PAS','IMP'],PAS:['IMP','SCR','OI'],IMP:['PAS','SCR','OD']};
+const FN_CORE=['Suj','OD','OI','PSO','PSNO','CAg'],FN_CIRC=['CCL','CCT','CCM','CCCn','CCCa','CCI','CCCo'];
+function sample(arr,n,rnd){return shuf(arr,rnd).slice(0,n);}
+function nexoLike(it){return it.k.filter(t=>t.w&&NEXO_RE.test(t.t)).length>=2;}
+function propCt(p){return p.nexo&&p.nexo.ct?p.nexo.ct:(p.ct==='yux'?'yux':null);}
 function genCands(u){
-  const pool=(u==='all'?ITEMS:unitItems(u)).filter(it=>!(it.n&&/^Discutible/.test(it.n)));
-  const C={tipo:[],vf:[],nexo:[],ante:[],se:[],fn:[]};
+  const pool=ALL.filter(i=>i.r&&(u==='all'||i.u===u));
+  const C={tipo:[],vf:[],nexo:[],ante:[],esp:[],nfun:[],pf:[],pcls:[],advs:[],ctype:[],cuenta:[],se:[],fn:[]};
   pool.forEach(it=>{
     (it.props||[]).forEach(p=>{
-      if(p.t==='coord'&&!p.nexo&&p.i===0&&it.props.length<2)return;
-      C.tipo.push({it,p}); C.vf.push({it,p});
+      if(u!=='all'&&p.t!==TYPE_OF[u])return;
       const n=p.nexo;
-      if(n&&n.s===n.e&&(p.t!=='coord'||n.c==='conj')&&it.k[n.s].w)C.nexo.push({it,p});
-      if(n&&n.c==='rel'&&n.a!=null&&n.s===n.e&&it.k[n.a]&&it.k[n.a].w)C.ante.push({it,p});
+      if(u==='all')C.tipo.push({it,p});
+      if(n&&nexoLike(it))C.nexo.push({it,p});
+      if(p.t==='PIA'){C.esp.push({it,p});C.vf.push({it,p});if(n&&n.a!=null&&it.k[n.a])C.ante.push({it,p});if(n&&n.nf)C.nfun.push({it,p});}
+      if(p.t==='PIS'){C.pf.push({it,p});C.vf.push({it,p});C.pcls.push({it,p});if(n&&(n.c==='rel'||n.c==='int')&&n.nf)C.nfun.push({it,p});}
+      if(p.t==='PIAdv'){C.advs.push({it,p});C.vf.push({it,p});}
+      if(p.t==='coord'&&propCt(p)){C.ctype.push({it,p});C.vf.push({it,p});}
     });
+    if(it.u==='coo'&&it.props&&it.props.length>=2&&(u==='coo'||u==='all'))C.cuenta.push({it});
     (it.prons||[]).forEach(pn=>{if(String(pn.p).indexOf('/')<0)C.se.push({it,pn});});
     if(it.m==='func')(it.spans||[]).forEach(sp=>{if(String(sp.fn).indexOf('/')<0)C.fn.push({it,sp});});
   });
   return C;
 }
+function optsFrom(goods,pool,label,rnd,total){
+  const dis=sample(pool.filter(x=>!goods.includes(x)),Math.max(0,(total||4)-goods.length),rnd);
+  return shuf(goods.concat(dis),rnd).map(v=>({t:label(v),ok:goods.includes(v)}));
+}
 function buildQ(kind,c,rnd){
-  const it=c.it,S=sentTxt(it);
-  if(kind==='tipo'){const p=c.p;
-    return {k:'opt',it,kind,sent:S,q:'¿Qué tipo de proposición es «'+txt(it,p.s,p.e)+'»?',opts:shuf(TYPES,rnd).map(t=>({t:t.t,ok:t.v===p.t})),e:resumen(p,it).join(' ')};}
-  if(kind==='vf'){const p=c.p;const truth=rnd()<0.5;const T=truth?p.t:shuf(TYPES.map(t=>t.v).filter(v=>v!==p.t),rnd)[0];
-    return {k:'opt',it,kind,sent:S,q:'¿Verdadero o falso? «'+txt(it,p.s,p.e)+'» es una proposición '+TYPE_L[T]+'.',opts:[{t:'Verdadero',ok:truth},{t:'Falso',ok:!truth}],e:'En realidad es '+TYPE_L[p.t]+'. '+resumen(p,it).slice(1).join(' ')};}
-  if(kind==='nexo'){const p=c.p,n=p.nexo;
-    return {k:'tap',it,kind,mark:[],q:'Tocá el nexo de «'+txt(it,p.s,p.e)+'».',ans:n.s,e:resumen(p,it).slice(1).join(' ')};}
-  if(kind==='ante'){const p=c.p,n=p.nexo;
-    return {k:'tap',it,kind,mark:[n.s],q:'Tocá el antecedente de «'+it.k[n.s].t+'» (resaltado).',ans:n.a,e:'«'+it.k[n.s].t+'» reemplaza a «'+it.k[n.a].t+'», que es su antecedente.'};}
-  if(kind==='se'){const pn=c.pn,good=alts(pn.p)[0];const keys=Object.keys(LEAF);
-    return {k:'opt',it,kind,sent:S,q:'¿Qué es «'+txt(it,pn.s,pn.e)+'» en esta oración?',opts:shuf([good].concat(pick3(keys,good,rnd)),rnd).map(v=>({t:LEAF[v],ok:v===good})),e:LEAF[good]+'.'};}
-  if(kind==='fn'){const sp=c.sp,good=alts(sp.fn)[0];
-    return {k:'opt',it,kind,sent:S,q:'¿Qué función cumple «'+txt(it,sp.s,sp.e)+'»?',opts:shuf([good].concat(pick3(FN_PALETTE,good,rnd)),rnd).map(v=>({t:FN[v],ok:v===good})),e:(FN_HINT[good]||'')};}
+  const it=c.it,S=sentTxt(it),p=c.p,n=p&&p.nexo,P=p?'«'+txt(it,p.s,p.e)+'»':'';
+  const E=p?resumen(p,it).join(' '):'';
+  const optQ=(q,opts,e)=>({k:'opt',it,kind,sent:S,q,opts,e});
+  if(kind==='tipo')return optQ('¿Qué tipo de proposición es '+P+'?',shuf(TYPES,rnd).map(t=>({t:t.t,ok:t.v===p.t})),E);
+  if(kind==='esp')return optQ('¿Es especificativa o explicativa? '+P,shuf([{t:'Especificativa',ok:p.sub==='esp'},{t:'Explicativa',ok:p.sub==='exp'}],rnd),E);
+  if(kind==='nfun'){const g=alts(n.nf);return optQ('¿Qué función cumple el nexo «'+txt(it,n.s,n.e)+'» dentro de '+P+'?',optsFrom(g,['Suj','OD','PSO','CCL','CCT','CCM','CCCn','CCCa','CCCo','Term','MD'].filter(x=>!g.includes(x)),v=>FN[v]||(v==='MD'?'Modificador directo':v==='Term'?'Término de la preposición':v),rnd),E);}
+  if(kind==='pf'){const g=alts(p.f);return optQ('¿Qué función cumple '+P+' en la oración?',optsFrom(g,PF_PIS,v=>FN[v]||(v==='Apos'?'Aposición':v==='Term'?'Término de la preposición':v),rnd),E);}
+  if(kind==='pcls'){const v=p.sub==='dd'?'dd':n.c;return optQ('Clasificá '+P+' según su nexo.',shuf(PCLS,rnd).map(o=>({t:o.t,ok:o.v===v})),E);}
+  if(kind==='advs'){const o=ADV.map(x=>x.v);return optQ('¿Qué clase de proposición adverbial es '+P+'?',optsFrom([p.sub],o,v=>ADV.find(x=>x.v===v).t,rnd),E);}
+  if(kind==='ctype'){const v=propCt(p);return optQ('¿Cómo está unida '+P+' con la proposición anterior?',optsFrom([v],CT.map(x=>x.v),x=>CT.find(y=>y.v===x).t,rnd),E);}
+  if(kind==='cuenta'){const m=it.props.length;const os=[m-1,m,m+1,m+2].filter(x=>x>=1).slice(0,4);return optQ('¿Cuántas proposiciones coordinadas tiene la oración?',shuf(os,rnd).map(x=>({t:String(x),ok:x===m})),'Son '+m+': '+it.props.map(q=>'«'+txt(it,q.s,q.e)+'»').join('; ')+'.');}
+  if(kind==='vf'){
+    const truth=rnd()<0.5;let claim,real;
+    if(p.t==='PIA'){const w=truth?p.sub:(p.sub==='esp'?'exp':'esp');claim=P+' es una proposición adjetiva '+(w==='esp'?'especificativa':'explicativa')+'.';}
+    else if(p.t==='PIS'){const g=alts(p.f)[0];const w=truth?g:sample(PF_PIS.filter(x=>!alts(p.f).includes(x)),1,rnd)[0];claim=P+' cumple la función de '+fnName(w).toLowerCase()+'.';}
+    else if(p.t==='PIAdv'){const w=truth?p.sub:sample(ADV.map(x=>x.v).filter(x=>x!==p.sub),1,rnd)[0];claim=P+' es una proposición adverbial '+ADV_L[w]+'.';}
+    else{const v=propCt(p);const w=truth?v:sample(CT.map(x=>x.v).filter(x=>x!==v),1,rnd)[0];claim=P+' está unida con la anterior por coordinación '+CT_L[w]+'.';}
+    return optQ('¿Verdadero o falso? '+claim,[{t:'Verdadero',ok:truth},{t:'Falso',ok:!truth}],(truth?'Es verdadero. ':'Es falso. ')+E);}
+  if(kind==='nexo'){const a=[];for(let i=n.s;i<=n.e;i++)a.push(i);return {k:'tap',it,kind,mark:[],q:'Tocá el nexo que introduce '+P+'.',ans:a,e:E};}
+  if(kind==='ante'){return {k:'tap',it,kind,mark:[n.s],q:'Tocá el antecedente de «'+txt(it,n.s,n.e)+'» (resaltado).',ans:[n.a],e:'«'+txt(it,n.s,n.e)+'» reemplaza a «'+it.k[n.a].t+'», que es su antecedente.'};}
+  if(kind==='se'){const pn=c.pn,g=alts(pn.p)[0];return optQ('¿Qué es «'+txt(it,pn.s,pn.e)+'» en esta oración?',shuf([g].concat(SE_G[g]),rnd).map(v=>({t:LEAF[v],ok:v===g})),LEAF[g]+'.'+(it.n?' '+it.n:''));}
+  if(kind==='fn'){const sp=c.sp,g=alts(sp.fn)[0];const grp=FN_CORE.includes(g)?FN_CORE:FN_CIRC;const other=FN_CORE.includes(g)?FN_CIRC:FN_CORE;
+    const ds=sample(grp.filter(x=>x!==g),2,rnd).concat(sample(other,1,rnd));
+    return optQ('¿Qué función cumple «'+txt(it,sp.s,sp.e)+'»?',shuf([g].concat(ds),rnd).map(v=>({t:FN[v],ok:v===g})),FN_HINT[g]||'');}
 }
 function genRound(u,seed,n){
   const rnd=mulberry(seed),C=genCands(u);
   const kinds=shuf(Object.keys(C).filter(k=>C[k].length),rnd);
   Object.keys(C).forEach(k=>C[k]=shuf(C[k],rnd));
-  const qs=[],used={};
-  let guard=0;
-  while(qs.length<n&&guard++<200&&kinds.length){
-    const k=kinds[qs.length%kinds.length];
-    let c=C[k].find(x=>!used[x.it.id+k+(x.p?x.p.s+'-'+x.p.e:x.pn?x.pn.s:x.sp?x.sp.s:'')]&&!qs.some(q=>q.it===x.it&&q.kind===k));
-    if(!c){c=C[k].find(x=>!qs.some(q=>q.it===x.it));}
-    if(!c){const i=kinds.indexOf(k);kinds.splice(i,1);if(!kinds.length)break;continue;}
-    const key=c.it.id+k+(c.p?c.p.s+'-'+c.p.e:c.pn?c.pn.s:c.sp?c.sp.s:'');
-    used[key]=1;C[k].splice(C[k].indexOf(c),1);
-    qs.push(buildQ(k,c,rnd));
-  }
-  return qs;
+  const qs=[];
+  [true,false].forEach(strict=>{
+    let alive=kinds.slice(),i=0,guard=0;
+    while(qs.length<n&&alive.length&&guard++<400){
+      const k=alive[i%alive.length];
+      const idx=C[k].findIndex(x=>!qs.some(q=>q.it===x.it&&(strict||q.kind===k)));
+      if(idx<0){alive.splice(alive.indexOf(k),1);continue;}
+      const c=C[k].splice(idx,1)[0];qs.push(buildQ(k,c,rnd));i++;
+    }
+  });
+  return shuf(qs,rnd);
 }
 function startRound(u,seed){
   const s=seed||Math.floor(Math.random()*1e9)+1;
@@ -735,7 +760,7 @@ function roundCard(){
       grid.append(h('button',{class:'opt'+(wr?' bad':'')+(good?' good':''),'data-ok':o.ok?'1':'0',disabled:wr||closed,onclick:()=>roundAnswer(o.ok,k)},o.t));});
     b.append(grid);
   } else {
-    const el=sentEl(x.it,[],i=>{const c=[];if(x.mark.includes(i))c.push('nxok');if(Q.tapWrong.includes(i))c.push('wrong');if(closed&&i===x.ans)c.push('ok');return c;},closed?null:(i=>roundAnswer(i===x.ans,i)));
+    const el=sentEl(x.it,[],i=>{const c=[];if(x.mark.includes(i))c.push('nxok');if(Q.tapWrong.includes(i))c.push('wrong');if(closed&&x.ans.includes(i))c.push('ok');return c;},closed?null:(i=>roundAnswer(x.ans.includes(i),i)));
     b.append(el);
   }
   if(Q.msg&&!closed)b.append(Q.msg);

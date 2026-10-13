@@ -1,0 +1,183 @@
+#unit rep
+@func rr-rep-01 | Ronda
+[[Mis primos :: fn=Suj]] [[repartieron :: fn=NV]] [[los folletos :: fn=OD]] [[a los vecinos :: fn=OI]] [[por la tarde :: fn=CCT]].
+@func rr-rep-02 | Ronda
+[[La directora :: fn=Suj]] [[parecía :: fn=NV]] [[muy cansada :: fn=PSO]].
+@func rr-rep-03 | Ronda
+[[La puerta :: fn=Suj]] [[fue abierta :: fn=NV]] [[por el portero :: fn=CAg]] [[con una llave vieja :: fn=CCI]].
+@func rr-rep-04 | Ronda
+[[El cartero :: fn=Suj]] [[llegó :: fn=NV]] [[agotado :: fn=PSNO]] [[a la casa de mi tía :: fn=CCL]].
+@func rr-rep-05 | Ronda
+[[Llueve :: fn=NV]] [[desde el viernes :: fn=CCT]] [[en toda la provincia :: fn=CCL]].
+@func rr-rep-06 | Ronda
+[[Mis abuelos :: fn=Suj]] [[viajaron :: fn=NV]] [[con mis tíos :: fn=CCCo]] [[hasta Córdoba :: fn=CCL]].
+@func rr-rep-07 | Ronda
+[[Esas flores :: fn=Suj]] [[crecen :: fn=NV]] [[muy rápido :: fn=CCM]].
+@func rr-rep-08 | Ronda
+[[El gato :: fn=Suj]] [[se :: fn=SCR]] [[escapó :: fn=NV]] [[por la ventana :: fn=CCL]] [[anoche :: fn=CCT]].
+@func rr-rep-09 | Ronda
+[[La cena :: fn=Suj]] [[costó :: fn=NV]] [[mucho :: fn=CCCn]] [[a mis padres :: fn=OI]].
+
+#unit coo
+@props rr-coo-01 | Ronda
+[[Los chicos prepararon el mate y las facturas :: t=coord]] {{y|c=conj; ct=cop; for=next}} [[las chicas buscaron los apuntes :: t=coord]].
+N: El primer «y» une dos objetos directos («el mate» y «las facturas»), no dos proposiciones.
+@props rr-coo-02 | Ronda
+[[El colectivo no pasó en toda la mañana :: t=coord]]; {{o sea|c=conj; ct=exp; for=next}}, [[llegamos tarde otra vez :: t=coord]].
+@props rr-coo-03 | Ronda
+[[Terminás la tarea ahora :: t=coord]] {{o|c=conj; ct=dis; for=next}} [[mañana no salís con tus amigos :: t=coord]].
+@props rr-coo-04 | Ronda
+[[Llegó el invierno :: t=coord]]; [[se vaciaron las plazas :: t=coord; ct=yux]]; [[los kioscos cerraron temprano :: t=coord; ct=yux]].
+@props rr-coo-05 | Ronda
+[[Nadie la llamó por teléfono :: t=coord]], {{sino que|c=conj; ct=adv; for=next}} [[le dejaron una nota bajo la puerta :: t=coord]].
+@props rr-coo-06 | Ronda
+{{Ni|c=conj; ct=cop; for=next}} [[me escribió :: t=coord]] {{ni|c=conj; ct=cop; for=next}} [[me llamó :: t=coord]].
+N: Coordinación copulativa correlativa: el nexo aparece antes de cada proposición.
+@props rr-coo-07 | Ronda
+[[Compré pan, leche y queso en el almacén :: t=coord]] {{y|c=conj; ct=cop; for=next}} [[volví a casa bajo la lluvia :: t=coord]].
+N: El primer «y» une tres objetos directos (pan, leche y queso); sólo el segundo une proposiciones.
+@props rr-coo-08 | Ronda
+[[Hoy cenamos temprano :: t=coord]]; {{sin embargo|c=conj; ct=adv; for=next}}, [[mañana nos quedaremos hasta tarde :: t=coord]].
+@props rr-coo-09 | Ronda
+[[Estudió mucho :: t=coord]] {{y|c=conj; ct=cop; for=next}} [[aprobó :: t=coord]], {{pero|c=conj; ct=adv; for=next}} [[no se alegró :: t=coord]].
+
+#unit pia
+@props rr-pia-01 | Ronda
+El profesor [[{{que|c=rel; nf=Suj; a=profesor}} nos dio Lengua el año pasado :: t=PIA; sub=esp]] se jubiló en marzo.
+@props rr-pia-02 | Ronda
+Me gustó la casa [[{{en la que|c=rel; nf=CCL; a=casa}} vivieron mis abuelos :: t=PIA; sub=esp]].
+@props rr-pia-03 | Ronda
+Conocí a una escritora [[{{cuyos|c=rel; nf=MD; a=escritora}} libros se leen en todo el país :: t=PIA; sub=esp]].
+@props rr-pia-04 | Ronda
+Mi tía Marta, [[{{que|c=rel; nf=Suj; a=Marta}} vive en Rosario :: t=PIA; sub=exp]], vendrá para las fiestas.
+@props rr-pia-05 | Ronda
+Los vecinos, [[{{quienes|c=rel; nf=Suj; a=vecinos}} habían escuchado el ruido :: t=PIA; sub=exp]], llamaron a la policía.
+@props rr-pia-06 | Ronda
+Este es el cuaderno [[{{que|c=rel; nf=OD; a=cuaderno}} perdió Lucía :: t=PIA; sub=esp]].
+@props rr-pia-07 | Ronda
+Dijo [[{{que|c=sub}} no conocía la calle [[{{donde|c=rel; nf=CCL; a=calle}} había ocurrido el accidente :: t=PIA; sub=esp]] :: t=PIS; f=OD]].
+N: Hay dos proposiciones incluidas: la adjetiva («donde…») está dentro de la sustantiva («que…»).
+@props rr-pia-08 | Ronda
+Los amigos [[{{con quienes|c=rel; nf=CCCo/Term; a=amigos}} viajé a Mendoza :: t=PIA; sub=esp]] me mandaron las fotos.
+@props rr-pia-09 | Ronda
+El día [[{{en que|c=rel; nf=CCT; a=día}} se inauguró el club :: t=PIA; sub=esp]] llovió sin parar.
+@props rr-pia-10 | Ronda
+No me gustó el modo [[{{como|c=rel; nf=CCM; a=modo}} me habló :: t=PIA; sub=esp]].
+@props rr-pia-11 | Ronda
+Fuimos a Tigre, [[{{donde|c=rel; nf=CCL; a=Tigre}} pasamos el día entero :: t=PIA; sub=exp]].
+@props rr-pia-12 | Ronda
+Los alumnos [[{{que|c=rel; nf=Suj; a=alumnos}} entregaron el trabajo a tiempo :: t=PIA; sub=esp]] recibirán un punto extra.
+N: Sin comas: sólo reciben el punto extra los alumnos que entregaron a tiempo (especificativa).
+@props rr-pia-13 | Ronda
+Los alumnos, [[{{que|c=rel; nf=Suj; a=alumnos}} entregaron el trabajo a tiempo :: t=PIA; sub=exp]], recibirán un punto extra.
+N: Con comas: todos los alumnos entregaron a tiempo y todos reciben el punto extra (explicativa).
+@props rr-pia-14 | Ronda
+[[Compré los libros [[{{que|c=rel; nf=OD; a=libros}} me recomendó la bibliotecaria :: t=PIA; sub=esp]] :: t=coord]] {{y|c=conj; ct=cop; for=next}} [[los forré enseguida :: t=coord]].
+@props rr-pia-15 | Ronda
+[[Las calles [[{{por las que|c=rel; nf=CCL; a=calles}} caminamos :: t=PIA; sub=esp]] estaban desiertas :: t=coord]], {{pero|c=conj; ct=adv; for=next}} [[no sentimos miedo :: t=coord]].
+
+#unit pis
+@props rr-pis-01 | Ronda
+Mi tía cree [[{{que|c=sub}} los trenes volverán a funcionar el lunes :: t=PIS; f=OD]].
+@props rr-pis-02 | Ronda
+[[{{Quien|c=rel; nf=Suj}} llegue último :: t=PIS; f=Suj]] lavará los platos.
+@props rr-pis-03 | Ronda
+Nadie sabe [[{{cuándo|c=int; nf=CCT}} se acabará la huelga :: t=PIS; f=OD]].
+@props rr-pis-04 | Ronda
+Me pregunto [[{{si|c=sub}} alcanzará la comida :: t=PIS; f=OD]].
+@props rr-pis-05 | Ronda
+La noticia de [[{{que|c=sub}} habían cancelado el viaje :: t=PIS; f=Term]] nos desanimó.
+@props rr-pis-06 | Ronda
+Lo importante es [[{{que|c=sub}} llegues a horario :: t=PIS; f=PSO]].
+@props rr-pis-07 | Ronda
+Te pido una sola cosa: [[{{que|c=sub}} no me mientas :: t=PIS; f=Apos]].
+@props rr-pis-08 | Ronda
+Mi abuela repetía siempre: [[“A cada chancho le llega su San Martín” :: t=PIS; sub=dd; f=OD]].
+@props rr-pis-09 | Ronda
+[[{{Lo que|c=rel; nf=Suj}} más me gustó :: t=PIS; f=Suj]] fue el final.
+N: «Lo que» es sujeto de «gustó» dentro de la proposición, y la proposición entera es sujeto de «fue».
+@props rr-pis-10 | Ronda
+Prefiero [[{{lo que|c=rel; nf=OD}} cocina mi abuela :: t=PIS; f=OD]].
+@props rr-pis-11 | Ronda
+No entiendo [[{{por qué|c=int; nf=CCCa}} se enojó tanto :: t=PIS; f=OD]].
+@props rr-pis-12 | Ronda
+Averiguá [[{{dónde|c=int; nf=CCL}} queda la biblioteca :: t=PIS; f=OD]].
+@props rr-pis-13 | Ronda
+El nene contó [[{{que|c=sub}} había encontrado el reloj [[{{que|c=rel; nf=OD; a=reloj}} su padre había perdido :: t=PIA; sub=esp]] :: t=PIS; f=OD]].
+N: La adjetiva («que su padre había perdido») está dentro de la sustantiva («que había encontrado…»).
+@props rr-pis-14 | Ronda
+Es evidente [[{{que|c=sub}} nadie estudió :: t=PIS; f=Suj]].
+@props rr-pis-15 | Ronda
+[[Sé [[{{que|c=sub}} vendrán :: t=PIS; f=OD]] :: t=coord]] {{pero|c=conj; ct=adv; for=next}} [[no sé [[{{cuándo|c=int; nf=CCT}} llegarán :: t=PIS; f=OD]] :: t=coord]].
+@props rr-pis-16 | Ronda
+Ignoro [[{{quiénes|c=int; nf=Suj}} organizaron la fiesta :: t=PIS; f=OD]].
+@props rr-pis-17 | Ronda
+Nos hablaron de [[{{lo que|c=rel; nf=OD}} habían visto en el viaje :: t=PIS; f=Term]].
+
+#unit pro
+@pron rr-pro-01 | Ronda
+{{Me|p=REF_OD}} miré en el espejo del pasillo.
+@pron rr-pro-02 | Ronda
+Ellos {{se|p=REC_OD}} abrazaron en la puerta.
+@pron rr-pro-03 | Ronda
+Los chicos {{se|p=REC_OI}} escribieron cartas durante años.
+N: El objeto directo es «cartas»; por eso el pronombre recíproco es objeto indirecto.
+@pron rr-pro-04 | Ronda
+{{Se|p=PAS}} vendieron todas las entradas en una hora.
+@pron rr-pro-05 | Ronda
+{{Se|p=IMP}} trabaja mucho en esta oficina.
+@pron rr-pro-06 | Ronda
+Ayer {{me|p=SCR}} caí en la escalera de la escuela.
+@pron rr-pro-07 | Ronda
+{{Te|p=OI}} {{lo|p=OD}} dije mil veces.
+@pron rr-pro-08 | Ronda
+{{Se|p=REF_OI}} cortó el pelo ella misma.
+N: El objeto directo es «el pelo»; el reflejo es objeto indirecto.
+@pron rr-pro-09 | Ronda
+{{Se|p=PAS}} necesitan voluntarios para la kermés.
+@pron rr-pro-10 | Ronda
+En el barrio {{se|p=IMP}} respeta a los mayores.
+@pron rr-pro-11 | Ronda
+{{Nos|p=REC_OD}} vimos todos los fines de semana.
+@pron rr-pro-12 | Ronda
+{{Se|p=OI}} {{la|p=OD}} entregamos a la directora ayer.
+N: «Se» reemplaza a «le» (OI); «la» es objeto directo.
+
+#unit adv
+@props rr-adv-01 | Ronda
+Dejamos las bicicletas [[{{donde|c=rel; nf=CCL}} nos indicó el guardia :: t=PIAdv; sub=loc]].
+@props rr-adv-02 | Ronda
+[[{{Cuando|c=rel; nf=CCT}} suene el timbre :: t=PIAdv; sub=temp]], salgan en orden.
+@props rr-adv-03 | Ronda
+Escribió la carta [[{{como|c=rel; nf=CCM}} le había enseñado su maestro :: t=PIAdv; sub=mod]].
+@props rr-adv-04 | Ronda
+Comé [[{{cuanto|c=rel; nf=CCCn}} quieras :: t=PIAdv; sub=cuant]].
+@props rr-adv-05 | Ronda
+No salimos al patio [[{{porque|c=sub}} llovía a cántaros :: t=PIAdv; sub=caus]].
+@props rr-adv-06 | Ronda
+Estaba tan cansada [[{{que|c=sub}} se durmió en el colectivo :: t=PIAdv; sub=cons]].
+N: Es correlativa de «tan».
+@props rr-adv-07 | Ronda
+[[{{Aunque|c=sub}} nadie la ayudó :: t=PIAdv; sub=conc]], terminó la maqueta a tiempo.
+@props rr-adv-08 | Ronda
+[[{{Si|c=sub}} estudiás con tiempo :: t=PIAdv; sub=cond]], vas a aprobar sin problemas.
+@props rr-adv-09 | Ronda
+Ella tomaba apuntes [[{{mientras|c=rel; nf=CCT}} el profesor explicaba :: t=PIAdv; sub=temp]].
+@props rr-adv-10 | Ronda
+Se movía por la cocina [[{{como si|c=rel; nf=CCM}} fuera su casa :: t=PIAdv; sub=mod]].
+@props rr-adv-11 | Ronda
+[[{{Como|c=sub}} perdimos el último tren :: t=PIAdv; sub=caus]], dormimos en la estación.
+N: Acá «como» no indica modo, sino causa («porque perdimos el último tren»).
+@props rr-adv-12 | Ronda
+Te presto el apunte [[{{si|c=sub}} me lo devolvés mañana :: t=PIAdv; sub=cond]].
+@props rr-adv-13 | Ronda
+[[{{Cuando|c=rel; nf=CCT}} llegamos al club :: t=PIAdv; sub=temp]], nos dijeron [[{{que|c=sub}} el partido estaba suspendido :: t=PIS; f=OD]].
+@props rr-adv-14 | Ronda
+Iremos [[{{adonde|c=rel; nf=CCL}} vos quieras :: t=PIAdv; sub=loc]].
+@props rr-adv-15 | Ronda
+Llovió tanto [[{{que|c=sub}} se inundó el sótano :: t=PIAdv; sub=cons]].
+N: Es correlativa de «tanto».
+@props rr-adv-16 | Ronda
+[[{{Apenas|c=rel; nf=CCT}} terminó la función :: t=PIAdv; sub=temp]], el público aplaudió de pie.
+@props rr-adv-17 | Ronda
+Faltó a clase [[{{ya que|c=sub}} estaba enfermo :: t=PIAdv; sub=caus]].

@@ -1,6 +1,6 @@
 import json, sys
 from playwright.sync_api import sync_playwright
-items=json.load(open('items.json',encoding='utf8'))
+items=[i for i in json.load(open('items.json',encoding='utf8')) if not i.get('r')]
 ADV_FN={'loc':'CCL','temp':'CCT','mod':'CCM','cuant':'CCCn','caus':'CCCa','cons':'CCons','conc':'MNO','cond':'MNO'}
 PATHS={'OD':[['N0','no'],['N0b','OD']],'OI':[['N0','no'],['N0b','OI']],'REF_OD':[['N0','si'],['N1','si'],['N1f','OD']],'REF_OI':[['N0','si'],['N1','si'],['N1f','OI']],'REC_OD':[['N0','si'],['N1','no'],['N2','si'],['N2f','OD']],'REC_OI':[['N0','si'],['N1','no'],['N2','si'],['N2f','OI']],'SCR':[['N0','si'],['N1','no'],['N2','no'],['N3','si']],'PAS':[['N0','si'],['N1','no'],['N2','no'],['N3','no'],['N4','si']],'IMP':[['N0','si'],['N1','no'],['N2','no'],['N3','no'],['N4','no']]}
 def keyfor(k,p):
@@ -60,7 +60,7 @@ with sync_playwright() as pw:
     page.goto('file:///tmp/claude-0/-home-claude/a51cbb54-1725-54b4-9fd7-f1f3d84c5f1d/scratchpad/sx/app/sintaxis.html')
     page.wait_for_timeout(300)
     bad=[]
-    for it in items:
+    for it in [i for i in items if not i.get('r')]:
         try:
             r=solve(page,it)
             if not(r['st'] and r['st']['p']==1): bad.append((it['id'],r))

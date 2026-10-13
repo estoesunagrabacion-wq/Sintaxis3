@@ -84,7 +84,7 @@ def parse_sentence(line, warn):
 def main():
     items = []; unit = None; cur = None; warns = []
     def warn(m): warns.append((cur['id'] if cur else '?', m))
-    for raw in open(SRC, encoding='utf8'):
+    for raw in list(open(SRC, encoding='utf8'))+list(open('datos_r.txt', encoding='utf8')):
         line = raw.rstrip('\n')
         if not line.strip(): continue
         if line.startswith('#unit'):
@@ -93,6 +93,7 @@ def main():
             mode, rest = line[1:].split(' ', 1)
             id_, label = [x.strip() for x in rest.split('|', 1)]
             cur = {'id': id_, 'u': unit, 'm': mode, 'l': label}
+            if id_.startswith('rr-'): cur['r'] = 1
             items.append(cur); continue
         if line.startswith('N:'):
             cur['n'] = line[2:].strip(); continue

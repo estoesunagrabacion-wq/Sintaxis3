@@ -14,7 +14,7 @@ with sync_playwright() as pw:
             for i in range(n):
                 x=page.evaluate("()=>{const q=window.__sx.state().Q;return {k:q.qs[q.i].k,ans:q.qs[q.i].ans}}")
                 if x['k']=='opt': page.click('.opt[data-ok="1"]')
-                else: page.click(f'.sent .w[data-i="{x["ans"]}"]')
+                else: page.click(f'.sent .w[data-i="{x["ans"][0]}"]')
                 page.click('[data-act="rnext"]')
             r=page.evaluate("()=>{const q=window.__sx.state().Q;return [q.done,q.good,q.qs.length]}")
             print(u,seed,n,r,sorted(set(kinds)))
