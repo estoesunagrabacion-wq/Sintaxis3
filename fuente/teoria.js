@@ -33,6 +33,11 @@ coo: `
 <tr><td>Yuxtapuesta</td><td>coma, punto y coma, dos puntos</td><td>Una junto a otra, sin nexo.</td></tr></table></div>
 <h4>Cómo se analiza</h4>
 <p>Se marcan las proposiciones y cada una se analiza como una oración. Ojo: un <em>sujeto compuesto</em> («él y su novia») no es coordinación de proposiciones.</p>
+<h4>Ojo: predicado compuesto no es coordinación</h4>
+<p>Para que haya <b>dos proposiciones coordinadas</b> tiene que haber <b>dos verbos con sujetos distintos</b>. Si los dos verbos comparten el mismo sujeto, es una <b>oración simple bimembre con predicado compuesto</b>.</p>
+<p class="ex"><b>Juan corre y Elena lee.</b> → oración compuesta por coordinación (dos sujetos: <i>Juan</i>, <i>Elena</i>).</p>
+<p class="ex"><b>Juan compró un libro y luego lo leyó en el bar.</b> → oración simple bimembre con predicado compuesto (un solo sujeto, <i>Juan</i>, para «compró» y «leyó»).</p>
+<p>Truco: preguntate «¿quién hace cada verbo?». Si es la misma persona o cosa, no se corta la oración en dos.</p>
 `,
 pia: `
 <p class="lead">Las <b>proposiciones incluidas</b> (antes «subordinadas») están dentro de una oración y tienen <b>dos niveles de análisis</b>: cumplen una función dentro de la oración que las incluye y, además, se analizan por dentro como una oración simple.</p>

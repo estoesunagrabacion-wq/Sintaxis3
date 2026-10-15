@@ -21,25 +21,52 @@
 #unit coo
 @props rr-coo-01 | Ronda
 [[Los chicos prepararon el mate y las facturas :: t=coord]] {{y|c=conj; ct=cop; for=next}} [[las chicas buscaron los apuntes :: t=coord]].
-N: El primer «y» une dos objetos directos («el mate» y «las facturas»), no dos proposiciones.
+N: Dos sujetos distintos («los chicos» y «las chicas»): son dos proposiciones coordinadas. El primer «y» une dos objetos directos («el mate» y «las facturas»), no dos proposiciones.
 @props rr-coo-02 | Ronda
 [[El colectivo no pasó en toda la mañana :: t=coord]]; {{o sea|c=conj; ct=exp; for=next}}, [[llegamos tarde otra vez :: t=coord]].
+N: Dos sujetos distintos («el colectivo» y «nosotros»).
 @props rr-coo-03 | Ronda
-[[Terminás la tarea ahora :: t=coord]] {{o|c=conj; ct=dis; for=next}} [[mañana no salís con tus amigos :: t=coord]].
+{{O|c=conj; ct=dis; for=next}} [[me llamás vos :: t=coord]] {{o|c=conj; ct=dis; for=next}} [[te llamo yo :: t=coord]].
+N: Dos sujetos distintos («vos» y «yo»). Coordinación disyuntiva correlativa: el nexo aparece antes de cada proposición.
 @props rr-coo-04 | Ronda
 [[Llegó el invierno :: t=coord]]; [[se vaciaron las plazas :: t=coord; ct=yux]]; [[los kioscos cerraron temprano :: t=coord; ct=yux]].
+N: Tres sujetos distintos, sin nexo: yuxtaposición.
 @props rr-coo-05 | Ronda
 [[Nadie la llamó por teléfono :: t=coord]], {{sino que|c=conj; ct=adv; for=next}} [[le dejaron una nota bajo la puerta :: t=coord]].
+N: Dos sujetos distintos («nadie» y un sujeto tácito plural).
 @props rr-coo-06 | Ronda
-{{Ni|c=conj; ct=cop; for=next}} [[me escribió :: t=coord]] {{ni|c=conj; ct=cop; for=next}} [[me llamó :: t=coord]].
-N: Coordinación copulativa correlativa: el nexo aparece antes de cada proposición.
+{{Ni|c=conj; ct=cop; for=next}} [[Julia me escribió :: t=coord]] {{ni|c=conj; ct=cop; for=next}} [[Marcos me llamó :: t=coord]].
+N: Dos sujetos distintos («Julia» y «Marcos»). Coordinación copulativa correlativa.
 @props rr-coo-07 | Ronda
-[[Compré pan, leche y queso en el almacén :: t=coord]] {{y|c=conj; ct=cop; for=next}} [[volví a casa bajo la lluvia :: t=coord]].
-N: El primer «y» une tres objetos directos (pan, leche y queso); sólo el segundo une proposiciones.
+[[Mi hermana cena temprano :: t=coord]]; {{sin embargo|c=conj; ct=adv; for=next}}, [[yo me quedo hasta tarde :: t=coord]].
+N: Dos sujetos distintos («mi hermana» y «yo»).
 @props rr-coo-08 | Ronda
-[[Hoy cenamos temprano :: t=coord]]; {{sin embargo|c=conj; ct=adv; for=next}}, [[mañana nos quedaremos hasta tarde :: t=coord]].
-@props rr-coo-09 | Ronda
-[[Estudió mucho :: t=coord]] {{y|c=conj; ct=cop; for=next}} [[aprobó :: t=coord]], {{pero|c=conj; ct=adv; for=next}} [[no se alegró :: t=coord]].
+[[Juan corre :: t=coord]] {{y|c=conj; ct=cop; for=next}} [[Elena lee :: t=coord]].
+N: Dos sujetos distintos («Juan» y «Elena»): dos proposiciones coordinadas.
+@simple rr-coo-s1 | Ronda
+Juan compró un libro y luego lo leyó en el bar.
+N: Un solo sujeto («Juan») para los dos verbos («compró» y «leyó»): oración simple bimembre con predicado compuesto, no dos proposiciones coordinadas.
+@simple rr-coo-s2 | Ronda
+Compré pan, leche y queso en el almacén y volví a casa bajo la lluvia.
+N: Un solo sujeto (tácito, «yo») para «compré» y «volví»: oración simple bimembre con predicado compuesto. Además, «pan, leche y queso» es un objeto directo compuesto.
+@simple rr-coo-s3 | Ronda
+Estudió mucho y aprobó, pero no se alegró.
+N: Un solo sujeto (tácito) para «estudió», «aprobó» y «se alegró»: oración simple bimembre con predicado compuesto.
+@simple rr-coo-s4 | Ronda
+Ni me escribió ni me llamó.
+N: Un solo sujeto (tácito) para «escribió» y «llamó»: oración simple bimembre con predicado compuesto.
+@simple rr-coo-s5 | Ronda
+Terminás la tarea ahora o mañana no salís con tus amigos.
+N: Un solo sujeto (tácito, «vos») para «terminás» y «salís»: oración simple bimembre con predicado compuesto.
+@simple rr-coo-s6 | Ronda
+El nene se levantó, se vistió y salió para la escuela.
+N: Un solo sujeto («el nene») para tres verbos: oración simple bimembre con predicado compuesto.
+@simple rr-coo-s7 | Ronda
+Mi abuela amasó los fideos y preparó el tuco.
+N: Un solo sujeto («mi abuela») para «amasó» y «preparó»: oración simple bimembre con predicado compuesto.
+@simple rr-coo-s8 | Ronda
+Lucía abrió la ventana, miró la calle y cerró las cortinas.
+N: Un solo sujeto («Lucía») para tres verbos: oración simple bimembre con predicado compuesto.
 
 #unit pia
 @props rr-pia-01 | Ronda
@@ -72,7 +99,8 @@ N: Sin comas: sólo reciben el punto extra los alumnos que entregaron a tiempo (
 Los alumnos, [[{{que|c=rel; nf=Suj; a=alumnos}} entregaron el trabajo a tiempo :: t=PIA; sub=exp]], recibirán un punto extra.
 N: Con comas: todos los alumnos entregaron a tiempo y todos reciben el punto extra (explicativa).
 @props rr-pia-14 | Ronda
-[[Compré los libros [[{{que|c=rel; nf=OD; a=libros}} me recomendó la bibliotecaria :: t=PIA; sub=esp]] :: t=coord]] {{y|c=conj; ct=cop; for=next}} [[los forré enseguida :: t=coord]].
+Compré los libros [[{{que|c=rel; nf=OD; a=libros}} me recomendó la bibliotecaria :: t=PIA; sub=esp]] y los forré enseguida.
+N: Predicado compuesto: «compré» y «forré» comparten el mismo sujeto (tácito). Es una oración simple bimembre.
 @props rr-pia-15 | Ronda
 [[Las calles [[{{por las que|c=rel; nf=CCL; a=calles}} caminamos :: t=PIA; sub=esp]] estaban desiertas :: t=coord]], {{pero|c=conj; ct=adv; for=next}} [[no sentimos miedo :: t=coord]].
 
@@ -108,7 +136,8 @@ N: La adjetiva («que su padre había perdido») está dentro de la sustantiva (
 @props rr-pis-14 | Ronda
 Es evidente [[{{que|c=sub}} nadie estudió :: t=PIS; f=Suj]].
 @props rr-pis-15 | Ronda
-[[Sé [[{{que|c=sub}} vendrán :: t=PIS; f=OD]] :: t=coord]] {{pero|c=conj; ct=adv; for=next}} [[no sé [[{{cuándo|c=int; nf=CCT}} llegarán :: t=PIS; f=OD]] :: t=coord]].
+Sé [[{{que|c=sub}} vendrán :: t=PIS; f=OD]] pero no sé [[{{cuándo|c=int; nf=CCT}} llegarán :: t=PIS; f=OD]].
+N: Predicado compuesto: «sé» y «no sé» comparten el mismo sujeto (tácito, «yo»). Es una oración simple bimembre con dos proposiciones incluidas.
 @props rr-pis-16 | Ronda
 Ignoro [[{{quiénes|c=int; nf=Suj}} organizaron la fiesta :: t=PIS; f=OD]].
 @props rr-pis-17 | Ronda
