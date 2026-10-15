@@ -227,3 +227,6 @@ details.tsec[open]{padding-bottom:6px}
   .sent{font-size:1.15rem;line-height:2.15}
   .exhead h3{font-size:1.7rem}
 }
+
+.acts.one{grid-template-columns:1fr;margin-top:8px}
+.chip.done.err{background:var(--warn-bg);border-color:var(--warn);color:var(--warn)}

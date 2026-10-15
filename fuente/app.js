@@ -3,6 +3,7 @@
 const ALL = __ITEMS__;
 const ITEMS = ALL.filter(i=>!i.r);
 const BYID = {}; ITEMS.forEach(i=>BYID[i.id]=i);
+const BYALL = {}; ALL.forEach(i=>BYALL[i.id]=i);
 
 /* ---------- vocabulario ---------- */
 const FN = {Suj:'Sujeto',NV:'Núcleo verbal',OD:'Objeto directo',OI:'Objeto indirecto',PSO:'Predicativo subjetivo obligatorio',PSNO:'Predicativo subjetivo no obligatorio',CAg:'Complemento agente',CCL:'Circunstancial de lugar',CCT:'Circunstancial de tiempo',CCM:'Circunstancial de modo',CCCn:'Circunstancial de cantidad',CCCa:'Circunstancial de causa',CCI:'Circunstancial de instrumento',CCCo:'Circunstancial de compañía',SCR:'Signo de cuasirreflejo',MD:'Modificador directo',Term:'Término',Apos:'Aposición',CCons:'Complemento consecutivo',MNO:'Modificador del núcleo oracional'};
@@ -84,7 +85,7 @@ const TREE_HINT={
 
 /* ---------- almacenamiento ---------- */
 const KEY='sx3-v1';
-let store={p:{},q:{},tab:'inicio',view:'teoria',cur:null};
+let store={p:{},q:{},f:{},tab:'inicio',view:'teoria',cur:null};
 function load(){try{const j=localStorage.getItem(KEY);if(j){const o=JSON.parse(j);if(o&&typeof o==='object')store=Object.assign(store,o);}}catch(e){}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(store));}catch(e){}}
 function stat(id){return store.p[id]||null;}
@@ -208,6 +209,8 @@ function renderHome(){
   if(cont)row.append(h('button',{class:'btn',onclick:()=>{store.tab=cont.u;store.view='practica';startItem(cont.id);}},'Seguir donde quedé: '+UNITS.find(x=>x.id===cont.u).name+' '+cont.l.replace('Ej. ','')));
   else row.append(h('button',{class:'btn',onclick:()=>setTab('rep','teoria')},'Empezar por el repaso'));
   row.append(h('button',{class:'btn alt','data-act':'round-all',onclick:()=>startRound('all')},'Ronda mixta'));
+  const nfa=failedCount('all');
+  if(nfa)row.append(h('button',{class:'btn alt','data-act':'repaso-all',onclick:()=>startRound('all',null,true)},'Repasar lo que fallé ('+nfa+')'));
   w.append(row);
   const idx=h('div',{class:'card sheetp'},h('h3',{},'Índice'));
   const ul=h('ul',{class:'indice'});
@@ -215,7 +218,7 @@ function renderHome(){
     h('div',{class:'l1'},h('span',{class:'nm'},u.name),h('span',{class:'dots2'}),h('span',{class:'cnt'},d[0]+'/'+d[1])),
     h('p',{},u.cu+'. '+u.desc),h('div',{class:'meter'},h('i',{style:'width:'+Math.round(100*d[0]/d[1])+'%'})))));});
   idx.append(ul);w.append(idx);
-  w.append(h('div',{class:'callout',style:'margin-top:16px'},h('b',{},'Prototipo en prueba. '),'Las claves son un borrador a revisar por el profesor; cuando un análisis admite más de una lectura, se marca como «discutible». Tu avance ('+done+' de '+tot+') se guarda en este dispositivo.'));
+  w.append(h('div',{class:'callout',style:'margin-top:16px'},h('b',{},'Prototipo en prueba. '),'Las claves son un borrador a revisar por el profesor; cuando un análisis admite más de una lectura, se marca como «discutible». Tu avance ('+done+' de '+tot+') se guarda en este dispositivo.'+(window.__installable?' Podés instalarla: en el menú del navegador, «Agregar a la pantalla de inicio»; después funciona sin conexión.':'')));
   return w;
 }
 
@@ -230,12 +233,19 @@ function renderList(u){
   else acts.append(h('div',{class:'muted'},'¡Completaste todos los ejercicios!'));
   acts.append(h('button',{class:'btn alt','data-act':'round',onclick:()=>startRound(u.id)},'Ronda rápida'+(bq!=null?' (mejor '+bq+'/8)':'')));
   w.append(acts);
+  const nf=failedCount(u.id),errItems=list.filter(i=>stat(i.id)&&!stat(i.id).p);
+  if(nf||errItems.length){
+    const rv=h('div',{class:'acts one'});
+    if(nf)rv.append(h('button',{class:'btn alt','data-act':'repaso',onclick:()=>startRound(u.id,null,true)},'Repasar lo que fallé en rondas ('+nf+')'));
+    if(errItems.length)rv.append(h('button',{class:'btn alt','data-act':'reintentar',onclick:()=>startItem(errItems[0].id)},'Rehacer ejercicios con errores ('+errItems.length+')'));
+    w.append(rv);
+  }
   const groups=(GROUPS[u.id]||[]).map(([re,title])=>[title,list.filter(i=>re.test(i.id))]).filter(g=>g[1].length);
   const openIdx=Math.max(0,groups.findIndex(g=>next&&g[1].includes(next)));
   groups.forEach(([title,g],gi)=>{
     const chips=h('div',{class:'chips'});
     g.forEach(i=>{const s=stat(i.id);const lab=i.l.replace('Ej. ','').replace('(posible)','pos.').replace('(imposible)','imp.');
-      chips.append(h('button',{class:'chip'+(s?' done':'')+(s&&s.p?' star':'')+(store.cur===i.id?' cur':''),'data-id':i.id,'aria-label':'Ejercicio '+lab+(s?(s.p?', hecho sin errores':', hecho'):''),onclick:()=>startItem(i.id)},lab));});
+      chips.append(h('button',{class:'chip'+(s?(s.p?' done':' done err'):'')+(s&&s.p?' star':'')+(store.cur===i.id?' cur':''),'data-id':i.id,'aria-label':'Ejercicio '+lab+(s?(s.p?', hecho sin errores':', hecho'):''),onclick:()=>startItem(i.id)},lab));});
     const nd=g.filter(i=>stat(i.id)).length;
     const d=h('details',{class:'grp'});if(groups.length<=2||gi===openIdx)d.open=true;
     d.append(h('summary',{},h('span',{class:'gt'},title),h('span',{class:'gc'+(nd===g.length?' full':'')},nd+'/'+g.length)),chips);
@@ -726,6 +736,13 @@ function buildQ(kind,c,rnd){
     const ds=sample(grp.filter(x=>x!==g),2,rnd).concat(sample(other,1,rnd));
     return optQ('¿Qué función cumple «'+txt(it,sp.s,sp.e)+'»?',shuf([g].concat(ds),rnd).map(v=>({t:FN[v],ok:v===g})),FN_HINT[g]||'');}
 }
+function keyOf(kind,c){const r=c.p||c.pn||c.sp;return c.it.id+'|'+kind+'|'+(r&&r.s!=null?r.s:'');}
+function failedCount(u){return Object.keys(store.f||{}).filter(k=>{const it=BYALL[k.split('|')[0]];return it&&(u==='all'||it.u===u);}).length;}
+function genRepaso(u,seed,n){
+  const rnd=mulberry(seed),C=genCands('all'),out=[];
+  Object.keys(C).forEach(kind=>C[kind].forEach(c=>{if(c.it.u!==u&&u!=='all')return;const k=keyOf(kind,c);if(store.f&&store.f[k]){const q=buildQ(kind,c,rnd);q.key=k;out.push(q);}}));
+  return shuf(out,rnd).slice(0,n);
+}
 function genRound(u,seed,n){
   const rnd=mulberry(seed),C=genCands(u);
   const kinds=shuf(Object.keys(C).filter(k=>C[k].length),rnd);
@@ -737,29 +754,29 @@ function genRound(u,seed,n){
       const k=alive[i%alive.length];
       const idx=C[k].findIndex(x=>!qs.some(q=>q.it===x.it&&(strict||q.kind===k)));
       if(idx<0){alive.splice(alive.indexOf(k),1);continue;}
-      const c=C[k].splice(idx,1)[0];qs.push(buildQ(k,c,rnd));i++;
+      const c=C[k].splice(idx,1)[0];const bq=buildQ(k,c,rnd);bq.key=keyOf(k,c);qs.push(bq);i++;
     }
   });
   return shuf(qs,rnd);
 }
-function startRound(u,seed){
+function startRound(u,seed,rep){
   const s=seed||Math.floor(Math.random()*1e9)+1;
-  const qs=genRound(u,s,8);
+  const qs=rep?genRepaso(u,s,8):genRound(u,s,8);
   if(!qs.length)return;
-  Q={u,seed:s,qs,i:0,errs:0,good:0,wrongs:[],tapWrong:[],solved:false,reveal:false,miss:false,done:false};
+  Q={rep:!!rep,u,seed:s,qs,i:0,errs:0,good:0,wrongs:[],tapWrong:[],solved:false,reveal:false,miss:false,done:false};
   R=null;
   if(u!=='all'){store.tab=u;store.view='practica';}else store.tab='inicio';
   save();render();window.scrollTo(0,0);
 }
 function roundCard(){
   const card=h('div',{class:'card','data-ex':'round'});
-  const title=Q.u==='all'?'Ronda mixta':'Ronda rápida';
+  const title=Q.rep?'Repaso de errores':Q.u==='all'?'Ronda mixta':'Ronda rápida';
   card.append(h('div',{class:'exhead'},h('h3',{},title),h('div',{class:'row'},h('button',{class:'tbtn','data-act':'leave',onclick:()=>{Q=null;render();window.scrollTo(0,0);}},'Salir'))));
   const b=h('div',{});card.append(b);
   if(Q.done){
-    const best=(store.q||{})[Q.u]||0;
-    b.append(h('div',{class:'res'},h('div',{class:'big'},Q.good===Q.qs.length?'★':'✓'),h('h3',{},Q.good+' de '+Q.qs.length+' a la primera'),h('p',{class:'muted',style:'margin:4px 0 0'},'Mejor resultado en esta ronda: '+best+' de '+Q.qs.length+'.')));
-    b.append(h('div',{class:'row',style:'margin-top:14px'},h('button',{class:'btn','data-act':'again',onclick:()=>startRound(Q.u)},'Otra ronda'),h('button',{class:'btn alt',onclick:()=>{Q=null;render();window.scrollTo(0,0);}},'Volver')));
+    const best=(store.q||{})[Q.u]||0;const left=failedCount(Q.u);
+    b.append(h('div',{class:'res'},h('div',{class:'big'},Q.good===Q.qs.length?'★':'✓'),h('h3',{},Q.good+' de '+Q.qs.length+' a la primera'),h('p',{class:'muted',style:'margin:4px 0 0'},Q.rep?(left?'Te quedan '+left+' por repasar.':'¡No te quedan errores por repasar!'):'Mejor resultado en esta ronda: '+best+' de '+Q.qs.length+'.')));
+    b.append(h('div',{class:'row',style:'margin-top:14px'},(Q.rep&&!left)?null:h('button',{class:'btn','data-act':'again',onclick:()=>startRound(Q.u,null,Q.rep)},Q.rep?'Seguir repasando':'Otra ronda'),h('button',{class:'btn alt',onclick:()=>{Q=null;render();window.scrollTo(0,0);}},'Volver')));
     return card;
   }
   const x=Q.qs[Q.i];
@@ -783,15 +800,15 @@ function roundCard(){
 }
 function roundAnswer(ok,k){
   const x=Q.qs[Q.i];
-  if(ok){Q.solved=true;Q.msg=null;if(!Q.miss)Q.good++;}
-  else{Q.miss=true;Q.errs++;if(x.k==='opt')Q.wrongs.push(k);else Q.tapWrong.push(k);
+  if(ok){Q.solved=true;Q.msg=null;if(!Q.miss){Q.good++;if(x.key&&store.f&&store.f[x.key]){delete store.f[x.key];save();}}}
+  else{if(!Q.miss&&x.key){store.f=store.f||{};store.f[x.key]=1;save();}Q.miss=true;Q.errs++;if(x.k==='opt')Q.wrongs.push(k);else Q.tapWrong.push(k);
     if(Q.wrongs.length+Q.tapWrong.length>=2){Q.reveal=true;Q.msg=null;}
     else Q.msg=fb('bad','No es esa','Releé la consigna y probá otra vez.');}
   rerenderRound();
 }
 function roundNext(){
   if(Q.i+1<Q.qs.length){Q.i++;Q.wrongs=[];Q.tapWrong=[];Q.solved=false;Q.reveal=false;Q.miss=false;Q.msg=null;}
-  else{Q.done=true;store.q=store.q||{};if((store.q[Q.u]||0)<Q.good)store.q[Q.u]=Q.good;save();}
+  else{Q.done=true;store.q=store.q||{};if(!Q.rep&&(store.q[Q.u]||0)<Q.good)store.q[Q.u]=Q.good;save();}
   rerenderRound();
   window.scrollTo(0,0);
 }
