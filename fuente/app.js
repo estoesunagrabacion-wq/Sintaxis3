@@ -674,7 +674,7 @@ function nexoLike(it){return it.k.filter(t=>t.w&&NEXO_RE.test(t.t)).length>=2;}
 function propCt(p){return p.nexo&&p.nexo.ct?p.nexo.ct:(p.ct==='yux'?'yux':null);}
 function genCands(u){
   const pool=ALL.filter(i=>i.r&&(u==='all'||i.u===u));
-  const C={tipo:[],vf:[],nexo:[],ante:[],esp:[],nfun:[],pf:[],pcls:[],advs:[],ctype:[],cuenta:[],se:[],fn:[]};
+  const C={tipo:[],vf:[],nexo:[],ante:[],esp:[],nfun:[],pf:[],pcls:[],advs:[],ctype:[],cuenta:[],comp:[],se:[],fn:[]};
   pool.forEach(it=>{
     (it.props||[]).forEach(p=>{
       if(u!=='all'&&p.t!==TYPE_OF[u])return;
@@ -687,6 +687,7 @@ function genCands(u){
       if(p.t==='coord'&&propCt(p)){C.ctype.push({it,p});C.vf.push({it,p});}
     });
     if(it.u==='coo'&&it.props&&it.props.length>=2&&(u==='coo'||u==='all'))C.cuenta.push({it});
+    if(it.u==='coo'&&(u==='coo'||u==='all')&&(it.m==='simple'||(it.props||[]).length>=2))C.comp.push({it});
     (it.prons||[]).forEach(pn=>{if(String(pn.p).indexOf('/')<0)C.se.push({it,pn});});
     if(it.m==='func')(it.spans||[]).forEach(sp=>{if(String(sp.fn).indexOf('/')<0)C.fn.push({it,sp});});
   });
@@ -708,6 +709,9 @@ function buildQ(kind,c,rnd){
   if(kind==='advs'){const o=ADV.map(x=>x.v);return optQ('¿Qué clase de proposición adverbial es '+P+'?',optsFrom([p.sub],o,v=>ADV.find(x=>x.v===v).t,rnd),E);}
   if(kind==='ctype'){const v=propCt(p);return optQ('¿Cómo está unida '+P+' con la proposición anterior?',optsFrom([v],CT.map(x=>x.v),x=>CT.find(y=>y.v===x).t,rnd),E);}
   if(kind==='cuenta'){const m=it.props.length;const os=[m-1,m,m+1,m+2].filter(x=>x>=1).slice(0,4);return optQ('¿Cuántas proposiciones coordinadas tiene la oración?',shuf(os,rnd).map(x=>({t:String(x),ok:x===m})),'Son '+m+': '+it.props.map(q=>'«'+txt(it,q.s,q.e)+'»').join('; ')+'.');}
+  if(kind==='comp'){const simple=it.m==='simple';
+    const e=simple?(it.n||'Un solo sujeto para los dos verbos: oración simple bimembre con predicado compuesto.'):('Cada verbo tiene su propio sujeto: son '+it.props.length+' proposiciones coordinadas.'+(it.n?' '+it.n:''));
+    return optQ('¿Cómo se clasifica esta oración?',shuf([{t:'Oración compuesta por coordinación',ok:!simple},{t:'Oración simple bimembre con predicado compuesto',ok:simple},{t:'Oración compuesta por subordinación',ok:false}],rnd),e);}
   if(kind==='vf'){
     const truth=rnd()<0.5;let claim,real;
     if(p.t==='PIA'){const w=truth?p.sub:(p.sub==='esp'?'exp':'esp');claim=P+' es una proposición adjetiva '+(w==='esp'?'especificativa':'explicativa')+'.';}
