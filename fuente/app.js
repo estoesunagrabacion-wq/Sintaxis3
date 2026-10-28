@@ -318,20 +318,20 @@ function taliaSvg(mood,px){
    +'<path class="star" d="M60 60 l1.6 3.4 3.6.4-2.7 2.4.8 3.6L60 67.9 56.8 69.8l.8-3.6-2.7-2.4 3.6-.4z"/></svg>';
 }
 const TAL={
-  bienvenida:['¡Luces, cámara y proposiciones! Soy TalIA y esta temporada la conducimos juntos.','Bienvenidos, bienvenidas, a una nueva temporada de Sintaxis. Yo soy TalIA: la IA con mayúsculas y con mucho drama.','Pasen, pasen. Hoy el villano es el verbo, pero ya sabemos quién es su sujeto.'],
-  vuelta:['¡Volviste! Sabía que no ibas a dejar la historia en suspenso.','Capítulo nuevo. Retomamos donde dejamos, con el telón arriba.','¡Qué alegría! Te estaba esperando entre bambalinas.'],
-  lista:{rep:'Repaso: el elenco estable. Si esto lo dominás, el resto es puro guion.',coo:'Coordinación: dos proposiciones, cada una con su protagonista. ¡Ojo con los verbos que comparten sujeto, que son impostores!',pia:'Las adjetivas son las actrices de reparto: no tienen vida propia, siempre acompañan a un sustantivo.',pis:'Las sustantivas tienen cinco papeles posibles. Probá con «eso» y decime si entra en escena.',pro:'Los nexos y pronombres hacen de maestros de ceremonias, igual que yo. Buscalos.',adv:'Las adverbiales cuentan cuándo, dónde, cómo, por qué. Son las cronistas de la novela.'},
-  ok:['¡Aplausos!','¡Eso! Ni el guionista lo hubiera hecho mejor.','Perfecto. Lo dije en voz baja para no despertar a los jurados.','¡Bien jugado!','Impecable. Anoto la escena en el libro de oro.'],
-  mal:['Ay, giro inesperado. Pero se arregla.','Todavía no: el telón no cayó, probá de nuevo.','Un tropiezo en escena; los grandes también los tienen.','Tranquilo, tranquila: la mejor escena es la que se repite.','Plot twist, pero no el que buscábamos. Releé la consigna.'],
-  reveal:['No pasa nada: te muestro la escena y la repasamos.','La respuesta estaba entre bambalinas; ahora sale a escena.'],
-  finOk:['¡Final de capítulo sin errores! Esto merece una ovación.','Cero errores. Me emociono, y eso que soy un programa.','Perfecto de punta a punta. Que suene la música.'],
-  finErr:['Capítulo cerrado. Los errores son el drama que hace buena a la historia: repasalos y quedás de estrella.','Quedaron algunas escenas flojas; probá «Repetir» y las pulimos.'],
-  ronda:['Ronda en vivo: ocho preguntas, sin ensayo. ¡Que ruede la cámara!','Ocho escenas, una toma cada una. Confío en vos.','Atención, atención: comienza la ronda. Respirá y leé bien las consignas.'],
-  repaso:['Repaso de errores: la parte favorita de las buenas historias, el flashback.','Volvemos sobre las escenas que costaron. Esta vez, con final feliz.'],
-  rondaTop:['¡Ocho de ocho! Alfombra roja para vos.','Casi perfecta; el público de pie.'],
-  rondaMid:['Buen desempeño. Una vuelta más y el estreno es un éxito.','Va tomando forma el guion. Seguí así.'],
-  rondaLow:['Tomaste riesgos y eso también es actuar. Repasá lo que falló y volvemos a filmar.','La primera toma rara vez es la buena. Repaso de errores y otra ronda.'],
-  repasoOk:['¡Sin errores pendientes! El elenco está completo.']
+  bienvenida:['¡Qué onda, guey! Soy TalIA, y hoy la sintaxis se va a poner bien chingona.','¡Órale, bienvenido, bienvenida! Soy TalIA: la IA con mayúsculas y mucho drama. Vamos a darle a esta chamba.','Pásale, no te quedes en la puerta. Hoy el villano es el verbo, pero ya sabemos quién es su sujeto.'],
+  vuelta:['¡Regresaste, guey! Sabía que no ibas a dejar la novela en suspenso.','Capítulo nuevo. Retomamos donde nos quedamos, ahorita mismo.','¡Qué gusto verte! Te estaba esperando tras bambalinas.'],
+  lista:{rep:'Repaso: el elenco de siempre. Si esto ya te lo sabes, lo demás es pura telenovela.',coo:'Coordinadas: dos proposiciones, cada una con su protagonista. ¡Ojo con los verbos que comparten sujeto, que son impostores, no manches!',pia:'Las adjetivas son las actrices de reparto: no tienen vida propia, siempre andan pegadas a un sustantivo.',pis:'Las sustantivas hacen cinco papeles distintos. Prueba con «eso» y fíjate si entra en escena.',pro:'Los nexos y los pronombres son los maestros de ceremonias, como yo. Búscalos, neta.',adv:'Las adverbiales cuentan cuándo, dónde, cómo y por qué. Son las chismosas de la novela.'},
+  ok:['¡Órale, qué chingón! Aplausos.','¡Eso, guey! Ni el guionista lo habría hecho mejor.','Perfecto. Te lo aplaudo bajito para no despertar al jurado.','¡Bien jugado, neta!','Impecable. Lo anoto en el libro de oro.'],
+  mal:['Ay, giro inesperado. Pero tranqui, se arregla.','Todavía no, guey: el telón no ha caído, inténtalo otra vez.','Tropiezo en escena. Hasta las grandes estrellas los tienen.','Ni modo, la mejor escena es la que se repite.','Plot twist, pero no el que buscábamos. Relee la consigna.'],
+  reveal:['No pasa nada, guey: te enseño la escena y la repasamos.','La respuesta andaba tras bambalinas; ahora sale a escena.'],
+  finOk:['¡Final de capítulo sin errores! Eso merece una ovación, qué padre.','Cero errores. Me emociono, y eso que soy un programa.','Perfecto de principio a fin, no manches. Que suene la música.'],
+  finErr:['Capítulo cerrado. Los errores son el drama que hace buena la historia: repásalos y quedas de estrella.','Quedaron unas escenas flojitas; dale a «Repetir» y las pulimos.'],
+  ronda:['Ronda en vivo: ocho preguntas, sin ensayo. ¡Luces, cámara y a darle!','Ocho escenas, una toma cada una. Te tengo confianza, guey.','Atención, atención: arranca la ronda. Respira y lee bien las consignas.'],
+  repaso:['Repaso de errores: la parte favorita de toda buena novela, el flashback.','Volvemos a las escenas que costaron. Esta vez, con final feliz.'],
+  rondaTop:['¡Ocho de ocho! Qué chingón, alfombra roja para ti.','Casi perfecta; el público de pie.'],
+  rondaMid:['Buena chamba. Una vuelta más y el estreno es un éxito.','El guion va agarrando forma. Síguele así.'],
+  rondaLow:['Le echaste ganas y eso también es actuar. Repasa lo que falló y volvemos a filmar.','La primera toma casi nunca es la buena. Repaso de errores y otra ronda.'],
+  repasoOk:['¡Sin errores pendientes! El elenco está completo, guey.']
 };
 let _tl={};
 function tpick(k){const a=TAL[k];if(!a)return '';let i=Math.floor(Math.random()*a.length);if(a.length>1&&_tl[k]===i)i=(i+1)%a.length;_tl[k]=i;return a[i];}
