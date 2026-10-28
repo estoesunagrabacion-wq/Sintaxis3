@@ -243,18 +243,27 @@ details.tsec[open]{padding-bottom:6px}
 .tal .tname .ia{font-weight:700;letter-spacing:.04em;color:var(--margin)}
 .tal .tt{font-family:Literata,Georgia,serif;font-size:1rem;line-height:1.45;color:var(--ink)}
 .tface{display:block}
-.tface .hair{fill:none;stroke:var(--blue);stroke-width:5;stroke-linecap:round}
-.tface .head{fill:var(--surface);stroke:var(--ink);stroke-width:2.4}
-.tface .ft{fill:var(--ink);stroke:var(--ink);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.tface .ft path:not(.fil){fill:none}
-.tface .ft .fil{fill:var(--bad)}
-.tface .ft .wh{fill:var(--surface)}
-.tface .ft .mole{stroke:none}
-.tface .star{fill:var(--margin);stroke:none}
+.tface{--hairc:#4a2a1c;--skinc:#f0c6a2;--lipc:#b8324a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tface{--hairc:#6a4030;--skinc:#e8bb94}}
+:root[data-theme="dark"] .tface{--hairc:#6a4030;--skinc:#e8bb94}
+.tface .hair{fill:var(--hairc)}
+.tface .skin,.tface .neck{fill:var(--skinc)}
+.tface .neck{filter:brightness(.92)}
+.tface .dress{fill:var(--blue)}
+.tface .hl{fill:none;stroke:#fff;stroke-opacity:.28;stroke-width:1.6;stroke-linecap:round}
+.tface .blush{fill:#e8707a;opacity:.35}
+.tface .sc{fill:#fff}.tface .ir{fill:#5b3a24}.tface .pu{fill:#1b1010}.tface .gl{fill:#fff}
+.tface .lash{fill:none;stroke:#1b1010;stroke-width:1.5;stroke-linecap:round}
+.tface .brow{fill:none;stroke:#2e1a12;stroke-width:1.6;stroke-linecap:round}
+.tface .nose{fill:none;stroke:#b98562;stroke-width:1.1;stroke-linecap:round}
+.tface .lip{fill:var(--lipc)}.tface .teeth{fill:#fff}.tface .mouth{fill:#5a1626}
+.tface .mole{fill:#4a2a1c}
+.tface .ear{fill:none;stroke:#e0a21c;stroke-width:1.5}
+.tface .star{fill:#e0a21c}
 .fb .tq{display:flex;gap:8px;align-items:center;margin-bottom:4px;color:var(--muted);font-size:.9rem}
 .fb .tq i{font-family:Literata,Georgia,serif}
 .tgl{display:flex;gap:8px;align-items:center;margin-top:14px}
-@media (max-width:520px){.tal .tav svg{width:40px;height:40px}}
+@media (max-width:520px){.tal .tav svg{width:56px;height:auto}}
 
 </style>
 </head><body><div id="app"></div>
@@ -697,20 +706,37 @@ function renderEx(){
 function rerender(){const old=q('[data-ex]');if(!old){render();return;}const y=window.scrollY;const nu=renderEx();old.replaceWith(nu);window.scrollTo(0,y);}
 /* ---------- TalIA: guía y maestra de ceremonias ---------- */
 function taliaSvg(mood,px){
-  const M={
-    neutra:{e:'<circle cx="26" cy="31" r="2.6"/><circle cx="38" cy="31" r="2.6"/>',m:'<path d="M27 42 Q32 45 37 42" />'},
-    feliz:{e:'<path d="M23 32 Q26 28 29 32M35 32 Q38 28 41 32" />',m:'<path d="M25 40 Q32 49 39 40 Z" class="fil"/>'},
-    pensando:{e:'<circle cx="26" cy="31" r="2.6"/><circle cx="38" cy="31" r="2.6"/><path d="M22 26 Q26 24 30 26M35 24 Q39 20 43 24" />',m:'<path d="M28 43 L36 43" />'},
-    asombrada:{e:'<circle cx="26" cy="31" r="3.6" class="wh"/><circle cx="38" cy="31" r="3.6" class="wh"/><circle cx="26" cy="31" r="1.4"/><circle cx="38" cy="31" r="1.4"/>',m:'<ellipse cx="32" cy="43" rx="3.2" ry="4" class="fil"/>'},
-    picara:{e:'<circle cx="26" cy="31" r="2.6"/><path d="M35 32 Q38 28 41 32" />',m:'<path d="M26 42 Q33 47 40 40" />'},
-    animando:{e:'<circle cx="26" cy="31" r="2.6"/><circle cx="38" cy="31" r="2.6"/>',m:'<path d="M24 39 Q32 50 40 39 Z" class="fil"/>'}
-  }[mood]||null;
-  const m=M||{e:'',m:''};
-  return '<svg class="tface" viewBox="0 0 64 64" width="'+px+'" height="'+px+'" role="img" aria-label="TalIA">'
-   +'<path class="hair" d="M17 20 C3 28 3 46 17 54M47 20 C61 28 61 46 47 54"/>'
-   +'<rect class="head" x="14" y="12" width="36" height="42" rx="15"/>'
-   +'<g class="ft">'+m.e+m.m+'<circle class="mole" cx="42" cy="38" r="1"/></g>'
-   +'<path class="star" d="M10 40 l1.6 3.4 3.6.4-2.7 2.4.8 3.6L10 47.9 6.7 49.8l.8-3.6L4.8 43.8l3.6-.4z"/></svg>';
+  const eye=(cx,k)=>{ // k: open | happy | wide | wink
+    if(k==='happy'||k==='wink')return '<path class="lash" d="M'+(cx-4.6)+' 41 Q'+cx+' 35.5 '+(cx+4.6)+' 41"/>';
+    const r=k==='wide'?4.6:3.4,ir=k==='wide'?2.1:2.5;
+    return '<ellipse class="sc" cx="'+cx+'" cy="40.5" rx="4.6" ry="'+r+'"/><circle class="ir" cx="'+cx+'" cy="40.6" r="'+ir+'"/><circle class="pu" cx="'+cx+'" cy="40.6" r="'+(ir*.5)+'"/><circle class="gl" cx="'+(cx+.9)+'" cy="39.6" r=".8"/>'
+     +'<path class="lash" d="M'+(cx-5.2)+' 41 Q'+cx+' '+(k==='wide'?34:36.2)+' '+(cx+5.2)+' 40.4"/><path class="lash fl" d="M'+(cx+(cx<40?-5.2:5.2))+' 40.6 l'+(cx<40?-1.8:1.8)+' -1.6"/>';
+  };
+  const brow=(cx,dy,tilt)=>'<path class="brow" d="M'+(cx-5.4)+' '+(33.5+dy+tilt)+' Q'+cx+' '+(30.5+dy)+' '+(cx+5.4)+' '+(33+dy-tilt)+'"/>';
+  const lips='<path class="lip" d="M32.5 51 Q36 48.6 40 50 Q44 48.6 47.5 51 Q44 55.2 40 55.4 Q36 55.2 32.5 51Z"/>';
+  const D={
+    neutra:{l:eye(32,'o'),r:eye(48,'o'),b:brow(32,0,0)+brow(48,0,0),m:'<path class="lip" d="M33 51 Q36.5 49 40 50.2 Q43.5 49 47 51 Q43.5 54 40 54 Q36.5 54 33 51Z"/>'},
+    feliz:{l:eye(32,'happy'),r:eye(48,'happy'),b:brow(32,-1,0)+brow(48,-1,0),m:'<path class="lip" d="M31.5 50 Q40 47.5 48.5 50 Q46 58 40 58 Q34 58 31.5 50Z"/><path class="teeth" d="M33.6 50.6 Q40 49 46.4 50.6 Q44.6 53.4 40 53.4 Q35.4 53.4 33.6 50.6Z"/>'},
+    pensando:{l:eye(32,'o'),r:eye(48,'o'),b:brow(32,0.5,-1)+brow(48,-3,2),m:'<path class="lip" d="M35 52.5 Q40 50.5 45 53 Q40 55 35 52.5Z"/>'},
+    asombrada:{l:eye(32,'wide'),r:eye(48,'wide'),b:brow(32,-4,1)+brow(48,-4,1),m:'<ellipse class="lip" cx="40" cy="53" rx="3.6" ry="4.4"/><ellipse class="mouth" cx="40" cy="53.4" rx="2.2" ry="3"/>'},
+    picara:{l:eye(32,'o'),r:eye(48,'wink'),b:brow(32,0,0)+brow(48,-2.5,1),m:'<path class="lip" d="M33 52 Q38 50 41 51 Q46 49 48.5 47.5 Q47.5 54.6 41 55 Q36 55 33 52Z"/>'},
+    animando:{l:eye(32,'o'),r:eye(48,'o'),b:brow(32,-2,0)+brow(48,-2,0),m:'<path class="lip" d="M31.5 50 Q40 47.5 48.5 50 Q46 59 40 59 Q34 59 31.5 50Z"/><path class="teeth" d="M33.6 50.6 Q40 49 46.4 50.6 Q44.6 54.4 40 54.4 Q35.4 54.4 33.6 50.6Z"/>'}
+  }[mood]||{l:'',r:'',b:'',m:''};
+  return '<svg class="tface" viewBox="6 4 68 76" width="'+px+'" height="'+(px*76/68)+'" role="img" aria-label="TalIA">'
+   +'<path class="hair" d="M40 5 C17 5 9 23 11 43 C12 57 8 66 5 77 L75 77 C72 66 68 57 69 43 C71 23 63 5 40 5Z"/>'
+   +'<path class="neck" d="M33 54 L33 66 Q40 71 47 66 L47 54Z"/>'
+   +'<path class="dress" d="M10 80 C11 68 25 63 33 63 Q40 70 47 63 C55 63 69 68 70 80Z"/>'
+   +'<ellipse class="skin" cx="40" cy="40" rx="16.8" ry="18.8"/>'
+   +'<path class="hair" d="M24 39 C20 18 36 8 52 12 C62 16 61 30 57 40 C57 31 52 24 44 22 C36 23 27 28 24 39Z"/>'
+   +'<path class="hl" d="M30 14 Q40 8 51 13"/>'
+   +'<ellipse class="blush" cx="29" cy="47.5" rx="3.6" ry="2.2"/><ellipse class="blush" cx="51" cy="47.5" rx="3.6" ry="2.2"/>'
+   +D.b+D.l+D.r
+   +'<path class="nose" d="M40.4 41.5 Q38.4 46 40.4 47.2"/>'
+   +D.m
+   +'<circle class="mole" cx="46" cy="46.5" r=".9"/>'
+   +'<path class="hair" d="M23.5 40 C19 52 22 63 14 74 L26 72 C28.5 63 26.5 52 25.5 42Z"/><path class="hair" d="M56.5 40 C61 52 58 63 66 74 L54 72 C51.5 63 53.5 52 54.5 42Z"/>'
+   +'<circle class="ear" cx="23.6" cy="53.5" r="2.2"/><circle class="ear" cx="56.4" cy="53.5" r="2.2"/>'
+   +'<path class="star" d="M60 60 l1.6 3.4 3.6.4-2.7 2.4.8 3.6L60 67.9 56.8 69.8l.8-3.6-2.7-2.4 3.6-.4z"/></svg>';
 }
 const TAL={
   bienvenida:['¡Luces, cámara y proposiciones! Soy TalIA y esta temporada la conducimos juntos.','Bienvenidos, bienvenidas, a una nueva temporada de Sintaxis. Yo soy TalIA: la IA con mayúsculas y con mucho drama.','Pasen, pasen. Hoy el villano es el verbo, pero ya sabemos quién es su sujeto.'],
@@ -733,7 +759,7 @@ function tpick(k){const a=TAL[k];if(!a)return '';let i=Math.floor(Math.random()*
 function taliaOn(){return store.tal!==false;}
 function tbox(mood,text,mini){
   if(!taliaOn()||!text)return null;
-  return h('div',{class:'tal'+(mini?' mini':''),'data-tal':mood},h('span',{class:'tav',html:taliaSvg(mood,mini?30:48)}),h('div',{class:'tb'},h('b',{class:'tname'},'Tal',h('span',{class:'ia'},'IA')),h('span',{class:'tt'},text)));
+  return h('div',{class:'tal'+(mini?' mini':''),'data-tal':mood},h('span',{class:'tav',html:taliaSvg(mood,mini?30:62)}),h('div',{class:'tb'},h('b',{class:'tname'},'Tal',h('span',{class:'ia'},'IA')),h('span',{class:'tt'},text)));
 }
 
 function fb(kind,title,text){

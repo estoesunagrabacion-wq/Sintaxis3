@@ -239,15 +239,24 @@ details.tsec[open]{padding-bottom:6px}
 .tal .tname .ia{font-weight:700;letter-spacing:.04em;color:var(--margin)}
 .tal .tt{font-family:Literata,Georgia,serif;font-size:1rem;line-height:1.45;color:var(--ink)}
 .tface{display:block}
-.tface .hair{fill:none;stroke:var(--blue);stroke-width:5;stroke-linecap:round}
-.tface .head{fill:var(--surface);stroke:var(--ink);stroke-width:2.4}
-.tface .ft{fill:var(--ink);stroke:var(--ink);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.tface .ft path:not(.fil){fill:none}
-.tface .ft .fil{fill:var(--bad)}
-.tface .ft .wh{fill:var(--surface)}
-.tface .ft .mole{stroke:none}
-.tface .star{fill:var(--margin);stroke:none}
+.tface{--hairc:#4a2a1c;--skinc:#f0c6a2;--lipc:#b8324a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tface{--hairc:#6a4030;--skinc:#e8bb94}}
+:root[data-theme="dark"] .tface{--hairc:#6a4030;--skinc:#e8bb94}
+.tface .hair{fill:var(--hairc)}
+.tface .skin,.tface .neck{fill:var(--skinc)}
+.tface .neck{filter:brightness(.92)}
+.tface .dress{fill:var(--blue)}
+.tface .hl{fill:none;stroke:#fff;stroke-opacity:.28;stroke-width:1.6;stroke-linecap:round}
+.tface .blush{fill:#e8707a;opacity:.35}
+.tface .sc{fill:#fff}.tface .ir{fill:#5b3a24}.tface .pu{fill:#1b1010}.tface .gl{fill:#fff}
+.tface .lash{fill:none;stroke:#1b1010;stroke-width:1.5;stroke-linecap:round}
+.tface .brow{fill:none;stroke:#2e1a12;stroke-width:1.6;stroke-linecap:round}
+.tface .nose{fill:none;stroke:#b98562;stroke-width:1.1;stroke-linecap:round}
+.tface .lip{fill:var(--lipc)}.tface .teeth{fill:#fff}.tface .mouth{fill:#5a1626}
+.tface .mole{fill:#4a2a1c}
+.tface .ear{fill:none;stroke:#e0a21c;stroke-width:1.5}
+.tface .star{fill:#e0a21c}
 .fb .tq{display:flex;gap:8px;align-items:center;margin-bottom:4px;color:var(--muted);font-size:.9rem}
 .fb .tq i{font-family:Literata,Georgia,serif}
 .tgl{display:flex;gap:8px;align-items:center;margin-top:14px}
-@media (max-width:520px){.tal .tav svg{width:40px;height:40px}}
+@media (max-width:520px){.tal .tav svg{width:56px;height:auto}}
