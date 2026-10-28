@@ -235,6 +235,27 @@ details.tsec[open]{padding-bottom:6px}
 .acts.one{grid-template-columns:1fr;margin-top:8px}
 .chip.done.err{background:var(--warn-bg);border-color:var(--warn);color:var(--warn)}
 
+/* ---------- TalIA ---------- */
+.tal{display:flex;gap:12px;align-items:flex-start;margin:0 0 14px}
+.tal .tav{flex:none;line-height:0}
+.tal .tb{position:relative;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:4px 12px 12px 12px;padding:8px 12px;min-width:0}
+.tal .tname{display:block;font-family:Caveat,cursive;font-size:1.25rem;line-height:1;color:var(--blue)}
+.tal .tname .ia{font-weight:700;letter-spacing:.04em;color:var(--margin)}
+.tal .tt{font-family:Literata,Georgia,serif;font-size:1rem;line-height:1.45;color:var(--ink)}
+.tface{display:block}
+.tface .hair{fill:none;stroke:var(--blue);stroke-width:5;stroke-linecap:round}
+.tface .head{fill:var(--surface);stroke:var(--ink);stroke-width:2.4}
+.tface .ft{fill:var(--ink);stroke:var(--ink);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tface .ft path:not(.fil){fill:none}
+.tface .ft .fil{fill:var(--bad)}
+.tface .ft .wh{fill:var(--surface)}
+.tface .ft .mole{stroke:none}
+.tface .star{fill:var(--margin);stroke:none}
+.fb .tq{display:flex;gap:8px;align-items:center;margin-bottom:4px;color:var(--muted);font-size:.9rem}
+.fb .tq i{font-family:Literata,Georgia,serif}
+.tgl{display:flex;gap:8px;align-items:center;margin-top:14px}
+@media (max-width:520px){.tal .tav svg{width:40px;height:40px}}
+
 </style>
 </head><body><div id="app"></div>
 <script>
@@ -595,6 +616,7 @@ function renderHome(){
     h('div',{class:'s',html:'El hombre <span class="pia">(<span class="nx">que</span> la contrató)</span> era un alto jefe.'}),
     h('div',{class:'note pen'},'↑ incluida adjetiva: «que» reemplaza a «hombre»'),
     h('div',{class:'note pen'},'Vos marcás, tocás y respondés; la app corrige.')));
+  w.append(tbox('feliz',tpick(done?'vuelta':'bienvenida')));
   const cont=store.cur&&BYID[store.cur];
   const row=h('div',{class:'row',style:'margin:4px 0 14px'});
   if(cont)row.append(h('button',{class:'btn',onclick:()=>{store.tab=cont.u;store.view='practica';startItem(cont.id);}},'Seguir donde quedé: '+UNITS.find(x=>x.id===cont.u).name+' '+cont.l.replace('Ej. ','')));
@@ -623,6 +645,7 @@ function renderList(u){
   if(next)acts.append(h('button',{class:'btn',onclick:()=>startItem(next.id)},'Seguir con '+next.l.replace('Ej. ','Ej. ')));
   else acts.append(h('div',{class:'muted'},'¡Completaste todos los ejercicios!'));
   acts.append(h('button',{class:'btn alt','data-act':'round',onclick:()=>startRound(u.id)},'Ronda rápida'+(bq!=null?' (mejor '+bq+'/8)':'')));
+  w.append(tbox('picara',TAL.lista[u.id]));
   w.append(acts);
   const nf=failedCount(u.id),errItems=list.filter(i=>stat(i.id)&&!stat(i.id).p);
   if(nf||errItems.length){
@@ -672,7 +695,55 @@ function renderEx(){
   return card;
 }
 function rerender(){const old=q('[data-ex]');if(!old){render();return;}const y=window.scrollY;const nu=renderEx();old.replaceWith(nu);window.scrollTo(0,y);}
-function fb(kind,title,text){return h('div',{class:'fb '+kind,role:'status'},title?h('b',{class:'t'},title):null,text);}
+/* ---------- TalIA: guía y maestra de ceremonias ---------- */
+function taliaSvg(mood,px){
+  const M={
+    neutra:{e:'<circle cx="26" cy="31" r="2.6"/><circle cx="38" cy="31" r="2.6"/>',m:'<path d="M27 42 Q32 45 37 42" />'},
+    feliz:{e:'<path d="M23 32 Q26 28 29 32M35 32 Q38 28 41 32" />',m:'<path d="M25 40 Q32 49 39 40 Z" class="fil"/>'},
+    pensando:{e:'<circle cx="26" cy="31" r="2.6"/><circle cx="38" cy="31" r="2.6"/><path d="M22 26 Q26 24 30 26M35 24 Q39 20 43 24" />',m:'<path d="M28 43 L36 43" />'},
+    asombrada:{e:'<circle cx="26" cy="31" r="3.6" class="wh"/><circle cx="38" cy="31" r="3.6" class="wh"/><circle cx="26" cy="31" r="1.4"/><circle cx="38" cy="31" r="1.4"/>',m:'<ellipse cx="32" cy="43" rx="3.2" ry="4" class="fil"/>'},
+    picara:{e:'<circle cx="26" cy="31" r="2.6"/><path d="M35 32 Q38 28 41 32" />',m:'<path d="M26 42 Q33 47 40 40" />'},
+    animando:{e:'<circle cx="26" cy="31" r="2.6"/><circle cx="38" cy="31" r="2.6"/>',m:'<path d="M24 39 Q32 50 40 39 Z" class="fil"/>'}
+  }[mood]||null;
+  const m=M||{e:'',m:''};
+  return '<svg class="tface" viewBox="0 0 64 64" width="'+px+'" height="'+px+'" role="img" aria-label="TalIA">'
+   +'<path class="hair" d="M17 20 C3 28 3 46 17 54M47 20 C61 28 61 46 47 54"/>'
+   +'<rect class="head" x="14" y="12" width="36" height="42" rx="15"/>'
+   +'<g class="ft">'+m.e+m.m+'<circle class="mole" cx="42" cy="38" r="1"/></g>'
+   +'<path class="star" d="M10 40 l1.6 3.4 3.6.4-2.7 2.4.8 3.6L10 47.9 6.7 49.8l.8-3.6L4.8 43.8l3.6-.4z"/></svg>';
+}
+const TAL={
+  bienvenida:['¡Luces, cámara y proposiciones! Soy TalIA y esta temporada la conducimos juntos.','Bienvenidos, bienvenidas, a una nueva temporada de Sintaxis. Yo soy TalIA: la IA con mayúsculas y con mucho drama.','Pasen, pasen. Hoy el villano es el verbo, pero ya sabemos quién es su sujeto.'],
+  vuelta:['¡Volviste! Sabía que no ibas a dejar la historia en suspenso.','Capítulo nuevo. Retomamos donde dejamos, con el telón arriba.','¡Qué alegría! Te estaba esperando entre bambalinas.'],
+  lista:{rep:'Repaso: el elenco estable. Si esto lo dominás, el resto es puro guion.',coo:'Coordinación: dos proposiciones, cada una con su protagonista. ¡Ojo con los verbos que comparten sujeto, que son impostores!',pia:'Las adjetivas son las actrices de reparto: no tienen vida propia, siempre acompañan a un sustantivo.',pis:'Las sustantivas tienen cinco papeles posibles. Probá con «eso» y decime si entra en escena.',pro:'Los nexos y pronombres hacen de maestros de ceremonias, igual que yo. Buscalos.',adv:'Las adverbiales cuentan cuándo, dónde, cómo, por qué. Son las cronistas de la novela.'},
+  ok:['¡Aplausos!','¡Eso! Ni el guionista lo hubiera hecho mejor.','Perfecto. Lo dije en voz baja para no despertar a los jurados.','¡Bien jugado!','Impecable. Anoto la escena en el libro de oro.'],
+  mal:['Ay, giro inesperado. Pero se arregla.','Todavía no: el telón no cayó, probá de nuevo.','Un tropiezo en escena; los grandes también los tienen.','Tranquilo, tranquila: la mejor escena es la que se repite.','Plot twist, pero no el que buscábamos. Releé la consigna.'],
+  reveal:['No pasa nada: te muestro la escena y la repasamos.','La respuesta estaba entre bambalinas; ahora sale a escena.'],
+  finOk:['¡Final de capítulo sin errores! Esto merece una ovación.','Cero errores. Me emociono, y eso que soy un programa.','Perfecto de punta a punta. Que suene la música.'],
+  finErr:['Capítulo cerrado. Los errores son el drama que hace buena a la historia: repasalos y quedás de estrella.','Quedaron algunas escenas flojas; probá «Repetir» y las pulimos.'],
+  ronda:['Ronda en vivo: ocho preguntas, sin ensayo. ¡Que ruede la cámara!','Ocho escenas, una toma cada una. Confío en vos.','Atención, atención: comienza la ronda. Respirá y leé bien las consignas.'],
+  repaso:['Repaso de errores: la parte favorita de las buenas historias, el flashback.','Volvemos sobre las escenas que costaron. Esta vez, con final feliz.'],
+  rondaTop:['¡Ocho de ocho! Alfombra roja para vos.','Casi perfecta; el público de pie.'],
+  rondaMid:['Buen desempeño. Una vuelta más y el estreno es un éxito.','Va tomando forma el guion. Seguí así.'],
+  rondaLow:['Tomaste riesgos y eso también es actuar. Repasá lo que falló y volvemos a filmar.','La primera toma rara vez es la buena. Repaso de errores y otra ronda.'],
+  repasoOk:['¡Sin errores pendientes! El elenco está completo.']
+};
+let _tl={};
+function tpick(k){const a=TAL[k];if(!a)return '';let i=Math.floor(Math.random()*a.length);if(a.length>1&&_tl[k]===i)i=(i+1)%a.length;_tl[k]=i;return a[i];}
+function taliaOn(){return store.tal!==false;}
+function tbox(mood,text,mini){
+  if(!taliaOn()||!text)return null;
+  return h('div',{class:'tal'+(mini?' mini':''),'data-tal':mood},h('span',{class:'tav',html:taliaSvg(mood,mini?30:48)}),h('div',{class:'tb'},h('b',{class:'tname'},'Tal',h('span',{class:'ia'},'IA')),h('span',{class:'tt'},text)));
+}
+
+function fb(kind,title,text){
+  let q=null;
+  if(taliaOn()&&title&&(kind==='bad'||kind==='ok'||(kind==='info'&&/^La respuesta/.test(title)))){
+    const ev=kind==='ok'?'ok':kind==='bad'?'mal':'reveal';
+    q=h('div',{class:'tq'},h('span',{class:'tav',html:taliaSvg(kind==='ok'?'feliz':kind==='bad'?'pensando':'animando',26)}),h('i',{},tpick(ev)));
+  }
+  return h('div',{class:'fb '+kind,role:'status'},q,title?h('b',{class:'t'},title):null,text);
+}
 
 /* --- marcado de proposiciones --- */
 function renderMark(b){
@@ -1165,6 +1236,15 @@ function roundCard(){
   card.append(h('div',{class:'exhead'},h('h3',{},title),h('div',{class:'row'},h('button',{class:'tbtn','data-act':'leave',onclick:()=>{Q=null;render();window.scrollTo(0,0);}},'Salir'))));
   const b=h('div',{});card.append(b);
   if(Q.done){
+    const n=Q.good,tot=Q.qs.length;const lf=failedCount(Q.u);
+    const k=Q.rep?(lf?'repaso':'repasoOk'):(n===tot?'rondaTop':n>=tot-2?'rondaTop':n>=tot/2?'rondaMid':'rondaLow');
+    const sp=tbox(n===tot?'animando':n>=tot/2?'feliz':'pensando',tpick(k==='rondaTop'&&n<tot?'rondaMid':k));
+    if(sp)b.append(sp);
+  } else if(Q.i===0&&!Q.solved&&!Q.miss){
+    if(!Q.say)Q.say=tpick(Q.rep?'repaso':'ronda');
+    const sp=tbox('animando',Q.say);if(sp)b.append(sp);
+  }
+  if(Q.done){
     const best=(store.q||{})[Q.u]||0;const left=failedCount(Q.u);
     b.append(h('div',{class:'res'},h('div',{class:'big'},Q.good===Q.qs.length?'★':'✓'),h('h3',{},Q.good+' de '+Q.qs.length+' a la primera'),h('p',{class:'muted',style:'margin:4px 0 0'},Q.rep?(left?'Te quedan '+left+' por repasar.':'¡No te quedan errores por repasar!'):'Mejor resultado en esta ronda: '+best+' de '+Q.qs.length+'.')));
     b.append(h('div',{class:'row',style:'margin-top:14px'},(Q.rep&&!left)?null:h('button',{class:'btn','data-act':'again',onclick:()=>startRound(Q.u,null,Q.rep)},Q.rep?'Seguir repasando':'Otra ronda'),h('button',{class:'btn alt',onclick:()=>{Q=null;render();window.scrollTo(0,0);}},'Volver')));
@@ -1217,6 +1297,7 @@ function finish(){
 }
 function renderResult(b){
   const it=R.it,perfect=R.errs===0&&!R.helped;
+  const sp=tbox(perfect?'animando':'feliz',tpick(perfect?'finOk':'finErr'));if(sp)b.append(sp);
   b.append(h('div',{class:'res'},h('div',{class:'big'},perfect?'★':'✓'),h('h3',{},perfect?'¡Sin errores!':'Ejercicio completo'),h('p',{class:'muted',style:'margin:4px 0 0'},perfect?'Lo resolviste bien a la primera.':(R.errs?R.errs+(R.errs===1?' respuesta para repasar.':' respuestas para repasar.'):'Completado con ayuda.')+' Podés repetirlo cuando quieras.')));
   if(it.m==='props'||it.m==='func'||it.m==='pron'){
     b.append(sentEl(it,(it.props||[]).map((p,k)=>({s:p.s,e:p.e,c:k,n:k+1,g:p.t==='coord'?'c':'i'})),i=>{const c=[];(it.prons||[]).forEach(pn=>{if(i>=pn.s&&i<=pn.e)c.push('pron');});(it.props||[]).forEach(p=>{if(p.nexo&&i>=p.nexo.s&&i<=p.nexo.e)c.push('nxok');});return c;},null));
@@ -1248,7 +1329,7 @@ function renderTreeTheory(el){
   const nums={N0:1,N0b:'1a',N1:2,N1f:'2a',N2:3,N2f:'3a',N3:4,N4:5};
   const tree=h('div',{class:'tree'});
   Object.keys(TREE).forEach(id=>{
-    const nd=TREE[id];const box=h('div',{class:'tn'},h('b',{},nums[id]+'. '+nd.q));
+    const nd=TREE[id];const box=h('div',{class:'tname'},h('b',{},nums[id]+'. '+nd.q));
     const br=h('div',{class:'br2'});
     nd.o.forEach(o=>{
       let res;
@@ -1285,6 +1366,7 @@ function openSheet(which){
         const done=()=>{msg.textContent='Copiado.';};
         try{navigator.clipboard.writeText(t).then(done,()=>{ta.select();msg.textContent='Seleccionado: copialo con el menú.';});}catch(e){ta.select();msg.textContent='Seleccionado: copialo con el menú.';}
       }},'Copiar resumen'),msg));
+      body.append(h('label',{class:'tgl'},h('input',{type:'checkbox',checked:taliaOn()?true:null,onchange:e=>{store.tal=e.target.checked;save();render();}}),' TalIA me acompaña (su cara y sus comentarios)'));
       const rs=h('div',{class:'row',style:'margin-top:16px'});
       const btn=h('button',{class:'btn alt',onclick:()=>{
         if(!btn.dataset.sure){btn.dataset.sure='1';btn.textContent='Tocá de nuevo para borrar todo mi avance';return;}
@@ -1313,7 +1395,7 @@ function closeSheet(){if(overlay){overlay.remove();overlay=null;document.removeE
 load();
 try{const hsh=(location.hash||'').replace('#','');if(hsh==='inicio'||UNITS.some(u=>u.id===hsh)){store.tab=hsh;}}catch(e){}
 if(store.tab!=='inicio'&&!UNITS.some(u=>u.id===store.tab))store.tab='inicio';
-window.__sx={ITEMS,start:startItem,state:()=>({R,Q,store}),setTab,startRound};
+window.__sx={taliaSvg,ITEMS,start:startItem,state:()=>({R,Q,store}),setTab,startRound};
 render();
 })();
 
