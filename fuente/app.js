@@ -223,6 +223,7 @@ function renderHome(){
   const nfa=failedCount('all');
   if(nfa)row.append(h('button',{class:'btn alt','data-act':'repaso-all',onclick:()=>startRound('all',null,true)},'Repasar lo que fallé ('+nfa+')'));
   w.append(row);
+  {const sg=suggest();const se=sg&&sugEl(sg);if(se)w.append(se);}
   w.append(chalCard());
   const idx=h('div',{class:'card sheetp'},h('h3',{},'Índice'));
   const ul=h('ul',{class:'indice'});
@@ -284,6 +285,7 @@ function renderEx(){
     undoBtn(),
     h('button',{class:'tbtn','data-noundo':'1',onclick:()=>{R=null;render();}},'← Lista'),
     h('button',{class:'tbtn','data-noundo':'1',onclick:()=>startItem(it.id)},'Reiniciar'))));
+  {const nt=noteEl();if(nt)card.append(nt);}
   const body=h('div',{});
   card.append(body);
   if(R.done)renderResult(body);
@@ -298,13 +300,13 @@ function rerender(){const old=q('[data-ex]');if(!old){render();return;}const y=w
 /* ---------- deshacer ---------- */
 let UNDO=[];
 function snapState(){
-  return JSON.stringify({R,Q,p:store.p,f:store.f,q:store.q,cur:store.cur},(k,v)=>k==='msg'?undefined:(k==='it'&&v&&typeof v==='object'&&v.id?{__it:v.id}:v));
+  return JSON.stringify({R,Q,p:store.p,f:store.f,q:store.q,sk:store.sk,fe:store.fe,cur:store.cur},(k,v)=>k==='msg'?undefined:(k==='it'&&v&&typeof v==='object'&&v.id?{__it:v.id}:v));
 }
 function undoLast(){
   const s=UNDO.pop();if(!s)return;
   const prevU=Q&&Q.chal?(Q.undos||0):0;
   const o=JSON.parse(s,(k,v)=>v&&typeof v==='object'&&v.__it?BYALL[v.__it]:v);
-  R=o.R;Q=o.Q;store.p=o.p||{};store.f=o.f||{};store.q=o.q||{};store.cur=o.cur;
+  R=o.R;Q=o.Q;store.p=o.p||{};store.f=o.f||{};store.q=o.q||{};store.sk=o.sk||{};store.fe=o.fe||{};store.cur=o.cur;NOTE=null;
   if(Q&&Q.chal)Q.undos=prevU+1;
   save();const y=window.scrollY;render();window.scrollTo(0,y);
 }
@@ -413,6 +415,111 @@ function openTutorial(){
   });
 }
 
+/* ---------- habilidades, seguimiento y sugerencias ---------- */
+const SK=[
+ {id:1,n:'Tipo de sujeto',u:'rep',re:null},{id:2,n:'Núcleo y modificadores del sujeto',u:'rep',re:null},{id:3,n:'Predicado verbal simple y compuesto',u:'rep',re:null},
+ {id:4,n:'Objeto directo',u:'rep',re:/Objeto directo/},{id:5,n:'Objeto indirecto',u:'rep',re:/Objeto indirecto/},{id:6,n:'Predicativo subjetivo',u:'rep',re:/Predicativo/},
+ {id:7,n:'Complemento agente y voz pasiva',u:'rep',re:/agente/},{id:8,n:'Circunstanciales',u:'rep',re:/Circunstanciales/},{id:9,n:'Signo de cuasirreflejo',u:'rep',re:/Otros elementos/},
+ {id:10,n:'Coordinación o predicado compuesto',u:'coo',re:/Ojo: predicado/},{id:11,n:'Contar proposiciones coordinadas',u:'coo',re:/Cómo se analiza/},{id:12,n:'Clase de coordinación',u:'coo',re:/Cómo se analiza/},
+ {id:13,n:'Nexo relacionante y antecedente',u:'pia',re:/Nexos relacionantes/},{id:14,n:'Función del relativo en su proposición',u:'pia',re:/Nexos relacionantes/},{id:15,n:'Especificativa o explicativa',u:'pia',re:/Especificativas/},
+ {id:16,n:'Función de la proposición sustantiva',u:'pis',re:/Cómo reconocer/},{id:17,n:'Clase de nexo',u:'pis',re:/Cómo reconocer/},{id:18,n:'Discurso indirecto, queísmo y dequeísmo',u:'pis',re:/Queísmo/},
+ {id:19,n:'Objeto directo e indirecto con pronombres',u:'pro',re:/Árbol/},{id:20,n:'Reflexivos y recíprocos',u:'pro',re:/Árbol/},{id:21,n:'Cuasirreflejo, pasiva con «se» e impersonal',u:'pro',re:/Árbol/},
+ {id:22,n:'Clases de proposición adverbial',u:'adv',re:/A\. Con función/},{id:23,n:'Consecutivas',u:'adv',re:/B\. Sin función/},{id:24,n:'Concesivas',u:'adv',re:/B\. Sin función/},
+ {id:25,n:'Condicionales',u:'adv',re:/Correlaciones/},{id:26,n:'Función del nexo adverbial',u:'adv',re:/No confundir/},
+ {id:27,n:'Tipo de proposición',u:'coo',re:null},{id:28,n:'Delimitar proposiciones',u:'coo',re:null}
+];
+const SKBY={};SK.forEach(s=>SKBY[s.id]=s);
+function advSk(sub){return {cons:23,conc:24,cond:25}[sub]||22;}
+function fnSk(fn){fn=String(fn).split('/')[0];
+  if(fn==='Suj')return 1;if(['NS','MD','MI','Apos'].includes(fn))return 2;if(['NV','PVS','PVC'].includes(fn))return 3;
+  if(fn==='OD')return 4;if(fn==='OI')return 5;if(fn==='PSO'||fn==='PSNO')return 6;if(fn==='CAg')return 7;if(fn==='SCR')return 9;
+  if(/^CC/.test(fn))return 8;return null;}
+function leafSk(l){return /^(OD|OI)$/.test(l)?19:/^(REF|REC)/.test(l)?20:21;}
+function choiceSk(id){return /^pia-2/.test(id)?14:/^pis-4/.test(id)?18:/^pis-5/.test(id)?17:/^adv-b/.test(id)?25:/^adv-e/.test(id)?26:null;}
+function stepSk(k,p){const t=p&&p.t;
+  switch(k){case 'type':return 27;case 'ctype':return 12;case 'esp':return 15;case 'pcls':return 17;case 'nfunc':return 14;case 'ante':return 13;
+    case 'nclass':case 'nexo':return t==='PIAdv'?26:t==='PIS'?17:t==='PIA'?13:12;
+    case 'adv':return advSk(p&&p.sub);case 'pfunc':return t==='PIAdv'?advSk(p.sub):16;}
+  return null;}
+function skillOfQ(kind,c){const p=c.p,t=p&&p.t;
+  switch(kind){case 'tipo':return 27;case 'vf':return t==='PIA'?15:t==='PIS'?16:t==='PIAdv'?advSk(p.sub):12;
+    case 'nexo':return t==='PIAdv'?26:t==='PIS'?17:13;case 'ante':return 13;case 'esp':return 15;case 'nfun':return 14;case 'pf':return 16;case 'pcls':return 17;
+    case 'advs':return advSk(p.sub);case 'ctype':return 12;case 'cuenta':return 11;case 'comp':return 10;
+    case 'se':return leafSk(alts(c.pn.p)[0]);case 'fn':return fnSk(c.sp.fn);case 'sj':return 1;case 'ns':case 'mod':return 2;case 'pv':return 3;}
+  return null;}
+const buildQ=(kind,c,rnd)=>{const q=buildQ0(kind,c,rnd);if(q)q.sk=skillOfQ(kind,c);return q;};
+
+const SES={};let NOTE=null;
+function skRate(o){const r=(o.r||[]).slice(-6);return r.length?r.reduce((a,b)=>a+b,0)/r.length:0;}
+function skLevel(o){if(!o||o.a<3)return 'pocos datos';const r=skRate(o);return r>=.8&&o.a>=4?'firme':r<.5?'a repasar':'en camino';}
+function track(s,ok,it){
+  if(!s||!SKBY[s])return;
+  if(it&&it.n&&/^Discutible/.test(it.n))return;
+  store.sk=store.sk||{};const o=store.sk[s]||(store.sk[s]={a:0,c:0,r:[],t:0,w:0});
+  o.a++;if(ok)o.c++;o.r.push(ok?1:0);if(o.r.length>8)o.r.shift();o.t=Date.now();
+  if(!ok&&it&&it.id){store.fe=store.fe||{};store.fe[it.id]=(store.fe[it.id]||0)+1;}
+  const ss=SES[s]||(SES[s]={miss:0});
+  if(ok){ss.miss=0;if(o.w&&skLevel(o)==='firme'&&!ss.cele){o.w=0;ss.cele=1;NOTE={k:'ok',s};}}
+  else{ss.miss++;if(o.a>=3&&skRate(o)<.5)o.w=1;if(ss.miss>=2&&!ss.shown){ss.shown=1;NOTE={k:'help',s};}}
+  save();
+}
+function trStep(ps,k,p,ok){ps.tr=ps.tr||{};if(ps.tr[k])return;ps.tr[k]=1;track(stepSk(k,p),ok,R.it);}
+function refreshEx(){if(Q)rerenderRound();else if(R)rerender();}
+function openTheory(s){
+  const k=SKBY[s];openSheet(k.u);
+  if(!k.re)return;
+  setTimeout(()=>{const hs=[...document.querySelectorAll('.teo h4')];const t=hs.find(x=>k.re.test(x.textContent));if(t){t.scrollIntoView({block:'start'});t.classList.add('flash');}},60);
+}
+function noteEl(){
+  if(!NOTE||!taliaOn())return null;
+  NOTE.shown=(NOTE.shown||0)+1;if(NOTE.shown>4){NOTE=null;return null;}
+  const k=SKBY[NOTE.s],help=NOTE.k==='help';
+  const text=help?'Oye, «'+k.n+'» se te está atorando. No pasa nada: ¿quieres darle una releída a la teoría?':'¡Qué chingón! Ya dominas «'+k.n+'».';
+  const el=tbox(help?'pensando':'animando',text,true);
+  const row=h('div',{class:'row',style:'margin-top:6px'},help?h('button',{class:'btn','data-noundo':'1',onclick:()=>openTheory(NOTE.s)},'Ver la teoría de esto'):null,h('button',{class:'btn alt','data-noundo':'1',onclick:()=>{NOTE=null;refreshEx();}},help?'Seguir':'Gracias'));
+  el.querySelector('.tb').append(row);el.classList.add('tnote');return el;
+}
+function suggest(){
+  const sk=store.sk||{};let best=null;
+  SK.forEach(s=>{const o=sk[s.id];if(!o||o.a<3||!canFocus(s.id))return;const r=skRate(o);
+    if(r<.5&&(!best||best.k!=='weak'||r<best.r))best={k:'weak',s:s.id,r,o};});
+  if(best)return {s:best.s,text:'Te está costando «'+SKBY[best.s].n+'» (aciertos a la primera en lo reciente: '+best.o.r.slice(-6).reduce((a,b)=>a+b,0)+' de '+best.o.r.slice(-6).length+'). ¿Hacemos una práctica corta de seis preguntas?'};
+  let stale=null;
+  SK.forEach(s=>{const o=sk[s.id];if(o&&o.a>=4&&canFocus(s.id)&&skLevel(o)==='firme'&&Date.now()-o.t>10*864e5&&(!stale||o.t<stale.o.t))stale={s:s.id,o};});
+  if(stale)return {s:stale.s,text:'Hace rato que no repasas «'+SKBY[stale.s].n+'». Una práctica cortita para que no se te olvide.'};
+  return null;
+}
+function sugEl(sg){
+  const el=tbox('pensando',sg.text);if(!el)return null;
+  el.querySelector('.tb').append(h('div',{class:'row',style:'margin-top:6px'},h('button',{class:'btn','data-act':'focus','data-noundo':'1',onclick:()=>startFocus(sg.s)},'Practicar esto'),SKBY[sg.s].re?h('button',{class:'btn alt','data-noundo':'1',onclick:()=>openTheory(sg.s)},'Ver la teoría'):null));
+  return el;
+}
+const FOCN={};
+function canFocus(s){if(FOCN[s]===undefined)FOCN[s]=genFocus(s,1,6).length;return FOCN[s]>=3;}
+function startFocus(s){startRound('all',null,false,{focus:s});}
+function genFocus(s,seed,n){
+  const rnd=mulberry(seed),C=genCands('all');let pool=[];
+  Object.keys(C).forEach(k=>C[k].forEach(c=>{if(skillOfQ(k,c)===s)pool.push({k,c});}));
+  pool=shuf(pool,rnd);const out=[],seen={};
+  [true,false].forEach(strict=>pool.forEach(x=>{if(out.length>=n)return;if(x.used)return;if(strict&&seen[x.c.it.id])return;x.used=1;seen[x.c.it.id]=1;const q=buildQ(x.k,x.c,rnd);q.key=keyOf(x.k,x.c);out.push(q);}));
+  return shuf(out,rnd);
+}
+function skSummary(){
+  const rows=SK.filter(s=>store.sk&&store.sk[s.id]);let t='';
+  if(rows.length){t+='\nHabilidades (aciertos a la primera / intentos):\n';rows.forEach(s=>{const o=store.sk[s.id];t+='- '+s.n+': '+o.c+'/'+o.a+' ('+skLevel(o)+')\n';});}
+  const fe=Object.entries(store.fe||{}).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  if(fe.length)t+='\nPreguntas más falladas: '+fe.map(x=>x[0]+' ('+x[1]+')').join(', ')+'\n';
+  return t;
+}
+function skMap(){
+  const w=h('div',{class:'skm'},h('h4',{},'Mis habilidades'));
+  const rows=SK.filter(s=>store.sk&&store.sk[s.id]);
+  if(!rows.length){w.append(h('p',{class:'muted'},'Todavía no hay datos: van apareciendo a medida que practiques.'));return w;}
+  rows.forEach(s=>{const o=store.sk[s.id],lv=skLevel(o),r=Math.round(100*skRate(o));
+    w.append(h('div',{class:'skr'},h('div',{class:'skn'},s.n),h('div',{class:'skb lv-'+lv.replace(/ /g,'')},h('i',{style:'width:'+(o.a<3?10:Math.max(8,r))+'%'})),h('div',{class:'skl'},lv+' · '+o.c+'/'+o.a)));});
+  return w;
+}
+
 /* ---------- TalIA: guía y maestra de ceremonias ---------- */
 function taliaSvg(mood,px){
   const eye=(cx,k)=>{ // k: open | happy | wide | wink
@@ -509,6 +616,7 @@ function checkMarks(){
   R.marks.forEach(m=>{const k=keys.find(p=>p.s===m.s&&p.e===m.e);if(k)m.ok=true;else bad.push(m);});
   const matched=keys.filter(p=>R.marks.some(m=>m.ok&&m.s===p.s&&m.e===p.e));
   const missing=keys.length-matched.length;
+  if(!R.t28){R.t28=1;track(28,!bad.length&&!missing,it);}
   if(!bad.length&&!missing){
     // ordenar marcas por posición para numerar
     R.marks.sort((a,b)=>a.s-b.s||b.e-a.e);
@@ -708,6 +816,7 @@ function onTapStep(i){
   if(!R.it.k[i].w)return;
   if(st.k==='nexo'){const j=ps.sel.indexOf(i);if(j>=0)ps.sel.splice(j,1);else ps.sel.push(i);ps.msg=null;rerender();}
   else if(st.k==='ante'){
+    trStep(ps,'ante',p,i===p.nexo.a);
     if(i===p.nexo.a){ps.anteOk=true;ps.sum.push(sumLine('ante',p));advance(p,ps);}
     else miss(p,ps,'ante','«'+R.it.k[i].t+'» no es el antecedente. '+hintFor('ante',p));
   }
@@ -715,6 +824,7 @@ function onTapStep(i){
 function confirmNexo(p,ps){
   const n=p.nexo;const want=[];for(let i=n.s;i<=n.e;i++)want.push(i);
   const got=ps.sel.slice().sort((a,b)=>a-b);
+  trStep(ps,'nexo',p,want.length===got.length&&want.every((x,i)=>x===got[i]));
   if(want.length===got.length&&want.every((x,i)=>x===got[i])){ps.nexoOk=true;ps.sum.push(sumLine('nexo',p));ps.sel=[];advance(p,ps);}
   else{ps.sel=[];miss(p,ps,'nexo','Esa selección no es el nexo. '+hintFor('nexo',p));}
 }
@@ -726,6 +836,7 @@ function miss(p,ps,k,text){
 }
 function pick(p,ps,st,v){
   const key=keyFor(st.k,p);
+  trStep(ps,st.k,p,alts(key).includes(v));
   if(alts(key).includes(v)){
     ps.sum.push(sumLine(st.k,p));
     if(st.k==='type')ps.typed=true;
@@ -790,6 +901,7 @@ function treeGo(v,code){
   if(nd.code&&nd.code[v]){
     const leaf=nd.code[v];
     const it=R.it,pn=it.prons[pr.i];
+    track(leafSk(leaf),!Object.keys(pr.w).some(k=>pr.w[k].length),it);
     pr.sum.push('«'+txt(it,pn.s,pn.e)+'»: '+LEAF[leaf]+'.');
     pr.i++;pr.node='N0';pr.w={};pr.msg=null;
     if(pr.i>=it.prons.length){pr.cur=false;finish();return;}
@@ -808,6 +920,7 @@ function renderFunc(b){
     const g=h('div',{class:'opts col1'});
     SJ_OPTS.forEach(o=>{const wr=R.sjw.includes(o.v),good=R.sjrev&&o.v===it.sj;
       g.append(h('button',{class:'opt'+(wr?' bad':'')+(good?' good':''),'data-sj':o.v,disabled:wr||R.sjrev,onclick:()=>{
+        if(!R.sjt){R.sjt=1;track(1,o.v===it.sj,it);}
         if(o.v===it.sj){R.sjOk=true;R.sjw=[];R.msg=fb('ok','Correcto',sjExpl(it));}
         else{R.errs++;R.sjw.push(o.v);
           if(R.sjw.length>=2){R.helped=true;R.sjOk=true;R.msg=fb('info','La respuesta es: '+SJ_OPTS.find(x=>x.v===it.sj).t,sjExpl(it));}
@@ -849,6 +962,7 @@ function checkFunc(){
   R.marks.forEach(m=>{ if(m.ok)return;
     const same=it.spans.filter(s=>s.s===m.s&&s.e===m.e);
     const k=same.find(s=>alts(s.fn).includes(m.fn));
+    track(fnSk(k?m.fn:(same[0]?same[0].fn:m.fn)),!!k,it);
     if(k){m.ok=true;}
     else if(same.length){wrong++;m.bad='fn';parts.push(h('div',{},'«'+txt(it,m.s,m.e)+'»: la extensión está bien, pero no es '+FN[m.fn].toLowerCase()+'. '+(FN_HINT[alts(same[0].fn)[0]]||'')));}
     else{wrong++;m.bad='span';parts.push(h('div',{},'«'+txt(it,m.s,m.e)+'» no coincide con ningún constituyente de la oración. Revisá dónde empieza y dónde termina.'));}
@@ -878,6 +992,7 @@ function renderChoice(b){
     b.append(h('div',{class:'row',style:'margin-top:10px'},h('button',{class:'btn','data-act':'finish',onclick:finish},'Seguir')));}
 }
 function choose(k){
+  if(!R.trk){R.trk=1;track(choiceSk(R.it.id),R.opts[k].ok,R.it);}
   if(R.opts[k].ok){R.solved=true;R.msg=null;}
   else{R.errs++;R.wrongs.push(k);
     if(R.wrongs.length>=2){R.reveal=true;R.helped=true;R.msg=null;}
@@ -899,7 +1014,7 @@ function nexoLike(it){return it.k.filter(t=>t.w&&NEXO_RE.test(t.t)).length>=2;}
 function propCt(p){return p.nexo&&p.nexo.ct?p.nexo.ct:(p.ct==='yux'?'yux':null);}
 function genCands(u){
   const pool=ALL.filter(i=>i.r&&(u==='all'||i.u===u));
-  const C={tipo:[],vf:[],nexo:[],ante:[],esp:[],nfun:[],pf:[],pcls:[],advs:[],ctype:[],cuenta:[],comp:[],se:[],fn:[],sj:[],ns:[],mod:[]};
+  const C={tipo:[],vf:[],nexo:[],ante:[],esp:[],nfun:[],pf:[],pcls:[],advs:[],ctype:[],cuenta:[],comp:[],se:[],fn:[],sj:[],ns:[],mod:[],pv:[]};
   pool.forEach(it=>{
     (it.props||[]).forEach(p=>{
       if(u!=='all'&&p.t!==TYPE_OF[u])return;
@@ -915,6 +1030,7 @@ function genCands(u){
     if(it.u==='coo'&&(u==='coo'||u==='all')&&(it.m==='simple'||(it.props||[]).length>=2))C.comp.push({it});
     (it.prons||[]).forEach(pn=>{if(String(pn.p).indexOf('/')<0)C.se.push({it,pn});});
     if(it.m==='func')(it.spans||[]).forEach(sp=>{if(String(sp.fn).indexOf('/')<0&&!['PVS','PVC','NS','MD','MI','Apos'].includes(sp.fn))C.fn.push({it,sp});});
+    if(it.m==='func'&&(it.spans||[]).some(s=>s.fn==='PVS'||s.fn==='PVC'))C.pv.push({it});
     if(it.m==='func'&&it.sj){C.sj.push({it});const ns=(it.spans||[]).filter(s=>s.fn==='NS');if(ns.length===1)C.ns.push({it,sp:ns[0]});const ap=(it.spans||[]).filter(s=>s.fn==='MI'||s.fn==='Apos');ap.forEach(sp=>C.mod.push({it,sp}));}
   });
   return C;
@@ -923,7 +1039,7 @@ function optsFrom(goods,pool,label,rnd,total){
   const dis=sample(pool.filter(x=>!goods.includes(x)),Math.max(0,(total||4)-goods.length),rnd);
   return shuf(goods.concat(dis),rnd).map(v=>({t:label(v),ok:goods.includes(v)}));
 }
-function buildQ(kind,c,rnd){
+function buildQ0(kind,c,rnd){
   const it=c.it,S=sentTxt(it),p=c.p,n=p&&p.nexo,P=p?'«'+txt(it,p.s,p.e)+'»':'';
   const E=p?resumen(p,it).join(' '):'';
   const optQ=(q,opts,e)=>({k:'opt',it,kind,sent:S,q,opts,e});
@@ -948,6 +1064,7 @@ function buildQ(kind,c,rnd){
   if(kind==='nexo'){const a=[];for(let i=n.s;i<=n.e;i++)a.push(i);return {k:'tap',it,kind,mark:[],q:'Tocá el nexo que introduce '+P+'.',ans:a,e:E};}
   if(kind==='ante'){return {k:'tap',it,kind,mark:[n.s],q:'Tocá el antecedente de «'+txt(it,n.s,n.e)+'» (resaltado).',ans:[n.a],e:'«'+txt(it,n.s,n.e)+'» reemplaza a «'+it.k[n.a].t+'», que es su antecedente.'};}
   if(kind==='se'){const pn=c.pn,g=alts(pn.p)[0];return optQ('¿Qué es «'+txt(it,pn.s,pn.e)+'» en esta oración?',shuf([g].concat(SE_G[g]),rnd).map(v=>({t:LEAF[v],ok:v===g})),LEAF[g]+'.'+(it.n?' '+it.n:''));}
+  if(kind==='pv'){const sp=!it.spans.some(s=>s.fn==='PVC');return optQ('¿Cómo es el predicado verbal de esta oración?',shuf([{t:'Predicado verbal simple',ok:sp},{t:'Predicado verbal compuesto',ok:!sp}],rnd),sp?'Tiene un solo núcleo verbal.':'Tiene dos o más núcleos verbales que comparten el mismo sujeto.');}
   if(kind==='sj')return optQ('¿Cómo es el sujeto de esta oración?',shuf(SJ_OPTS,rnd).map(o=>({t:o.t,ok:o.v===it.sj})),sjExpl(it));
   if(kind==='ns'){const sj=it.spans.find(s=>s.fn==='Suj');const m=[];if(sj)for(let i=sj.s;i<=sj.e;i++)m.push(i);const a=[];for(let i=c.sp.s;i<=c.sp.e;i++)a.push(i);
     return {k:'tap',it,kind,mark:m,q:'Tocá el núcleo del sujeto (el sujeto está resaltado).',ans:a,e:'El núcleo es «'+txt(it,c.sp.s,c.sp.e)+'»: es la palabra principal del sujeto.'};}
@@ -981,25 +1098,27 @@ function genRound(u,seed,n){
 }
 function startRound(u,seed,rep,opt){
   const s=seed||Math.floor(Math.random()*1e9)+1;
-  const qs=rep?genRepaso(u,s,8):genRound(u,s,(opt&&opt.n)||8);
+  const qs=opt&&opt.focus?genFocus(opt.focus,s,6):rep?genRepaso(u,s,8):genRound(u,s,(opt&&opt.n)||8);
   if(!qs.length)return;
-  UNDO.length=0;Q={rep:!!rep,chal:(opt&&opt.code)||null,pts:0,streak:0,undos:0,u,seed:s,qs,i:0,errs:0,good:0,wrongs:[],tapWrong:[],solved:false,reveal:false,miss:false,done:false};
+  UNDO.length=0;NOTE=null;Q={focus:(opt&&opt.focus)||null,rep:!!rep,chal:(opt&&opt.code)||null,pts:0,streak:0,undos:0,u,seed:s,qs,i:0,errs:0,good:0,wrongs:[],tapWrong:[],solved:false,reveal:false,miss:false,done:false};
   R=null;
   if(u!=='all'){store.tab=u;store.view='practica';}else store.tab='inicio';
   save();render();window.scrollTo(0,0);
 }
 function roundCard(){
   const card=h('div',{class:'card','data-ex':'round'});
-  const title=Q.chal?'Desafío':Q.rep?'Repaso de errores':Q.u==='all'?'Ronda mixta':'Ronda rápida';
+  const title=Q.chal?'Desafío':Q.focus?'Práctica enfocada':Q.rep?'Repaso de errores':Q.u==='all'?'Ronda mixta':'Ronda rápida';
   card.append(h('div',{class:'exhead'},h('h3',{},title),h('div',{class:'row'},undoBtn(),h('button',{class:'tbtn','data-noundo':'1','data-act':'leave',onclick:()=>{Q=null;render();window.scrollTo(0,0);}},'Salir'))));
+  {const nt=noteEl();if(nt)card.append(nt);}
   const b=h('div',{});card.append(b);
   if(Q.done){
     const n=Q.good,tot=Q.qs.length;const lf=failedCount(Q.u);
     const k=Q.chal?(chalScore()>=150?'rondaTop':chalScore()>=90?'rondaMid':'rondaLow'):Q.rep?(lf?'repaso':'repasoOk'):(n===tot?'rondaTop':n>=tot-2?'rondaTop':n>=tot/2?'rondaMid':'rondaLow');
     const sp=tbox(n===tot?'animando':n>=tot/2?'feliz':'pensando',tpick(k==='rondaTop'&&n<tot?'rondaMid':k));
     if(sp)b.append(sp);
+    const sg=suggest();if(sg&&!Q.focus){const se=sugEl(sg);if(se)b.append(se);}
   } else if(Q.i===0&&!Q.solved&&!Q.miss){
-    if(!Q.say)Q.say=tpick(Q.chal?'chal':Q.rep?'repaso':'ronda');
+    if(!Q.say)Q.say=Q.focus?'Práctica corta de «'+SKBY[Q.focus].n+'»: seis preguntas solo de esto.':tpick(Q.chal?'chal':Q.rep?'repaso':'ronda');
     const sp=tbox('animando',Q.say);if(sp)b.append(sp);
   }
   if(Q.done){
@@ -1014,8 +1133,8 @@ function roundCard(){
       return card;
     }
     const best=(store.q||{})[Q.u]||0;const left=failedCount(Q.u);
-    b.append(h('div',{class:'res'},h('div',{class:'big'},Q.good===Q.qs.length?'★':'✓'),h('h3',{},Q.good+' de '+Q.qs.length+' a la primera'),h('p',{class:'muted',style:'margin:4px 0 0'},Q.rep?(left?'Te quedan '+left+' por repasar.':'¡No te quedan errores por repasar!'):'Mejor resultado en esta ronda: '+best+' de '+Q.qs.length+'.')));
-    b.append(h('div',{class:'row',style:'margin-top:14px'},(Q.rep&&!left)?null:h('button',{class:'btn','data-act':'again',onclick:()=>startRound(Q.u,null,Q.rep)},Q.rep?'Seguir repasando':'Otra ronda'),h('button',{class:'btn alt',onclick:()=>{Q=null;render();window.scrollTo(0,0);}},'Volver')));
+    b.append(h('div',{class:'res'},h('div',{class:'big'},Q.good===Q.qs.length?'★':'✓'),h('h3',{},Q.good+' de '+Q.qs.length+' a la primera'),h('p',{class:'muted',style:'margin:4px 0 0'},Q.rep?(left?'Te quedan '+left+' por repasar.':'¡No te quedan errores por repasar!'):(Q.focus?'Práctica de «'+SKBY[Q.focus].n+'».':'Mejor resultado en esta ronda: '+best+' de '+Q.qs.length+'.'))));
+    b.append(h('div',{class:'row',style:'margin-top:14px'},(Q.rep&&!left)?null:h('button',{class:'btn','data-act':'again',onclick:()=>Q.focus?startFocus(Q.focus):startRound(Q.u,null,Q.rep)},Q.rep?'Seguir repasando':'Otra ronda'),h('button',{class:'btn alt',onclick:()=>{Q=null;render();window.scrollTo(0,0);}},'Volver')));
     return card;
   }
   const x=Q.qs[Q.i];
@@ -1039,6 +1158,7 @@ function roundCard(){
 }
 function roundAnswer(ok,k){
   const x=Q.qs[Q.i];
+  if(!x.tr){x.tr=1;track(x.sk,ok,x.it);}
   if(ok){Q.solved=true;Q.msg=null;if(!Q.miss){Q.good++;Q.streak=(Q.streak||0)+1;Q.pts=(Q.pts||0)+10+Math.min(Q.streak-1,4)*2;if(x.key&&store.f&&store.f[x.key]){delete store.f[x.key];save();}}else Q.pts=(Q.pts||0)+3;}
   else{if(!Q.miss)Q.streak=0;if(!Q.miss&&x.key){store.f=store.f||{};store.f[x.key]=1;save();}Q.miss=true;Q.errs++;if(x.k==='opt')Q.wrongs.push(k);else Q.tapWrong.push(k);
     if(Q.wrongs.length+Q.tapWrong.length>=2){Q.reveal=true;Q.msg=null;}
@@ -1047,7 +1167,7 @@ function roundAnswer(ok,k){
 }
 function roundNext(){
   if(Q.i+1<Q.qs.length){Q.i++;Q.wrongs=[];Q.tapWrong=[];Q.solved=false;Q.reveal=false;Q.miss=false;Q.msg=null;}
-  else{Q.done=true;store.q=store.q||{};if(Q.chal){store.ch=store.ch||{};const sc=chalScore(),o=store.ch[Q.chal];if(!o||o.best<sc)store.ch[Q.chal]={best:sc};}else if(!Q.rep&&(store.q[Q.u]||0)<Q.good)store.q[Q.u]=Q.good;save();}
+  else{Q.done=true;store.q=store.q||{};if(Q.chal){store.ch=store.ch||{};const sc=chalScore(),o=store.ch[Q.chal];if(!o||o.best<sc)store.ch[Q.chal]={best:sc};}else if(!Q.rep&&!Q.focus&&(store.q[Q.u]||0)<Q.good)store.q[Q.u]=Q.good;save();}
   rerenderRound();
   window.scrollTo(0,0);
 }
@@ -1066,6 +1186,7 @@ function finish(){
 function renderResult(b){
   const it=R.it,perfect=R.errs===0&&!R.helped;
   const sp=tbox(perfect?'animando':'feliz',tpick(perfect?'finOk':'finErr'));if(sp)b.append(sp);
+  {const sg=suggest();const se=sg&&sugEl(sg);if(se)b.append(se);}
   b.append(h('div',{class:'res'},h('div',{class:'big'},perfect?'★':'✓'),h('h3',{},perfect?'¡Sin errores!':'Ejercicio completo'),h('p',{class:'muted',style:'margin:4px 0 0'},perfect?'Lo resolviste bien a la primera.':(R.errs?R.errs+(R.errs===1?' respuesta para repasar.':' respuestas para repasar.'):'Completado con ayuda.')+' Podés repetirlo cuando quieras.')));
   if(it.m==='props'||it.m==='func'||it.m==='pron'){
     b.append(sentEl(it,(it.props||[]).map((p,k)=>({s:p.s,e:p.e,c:k,n:k+1,g:p.t==='coord'?'c':'i'})),i=>{const c=[];(it.prons||[]).forEach(pn=>{if(i>=pn.s&&i<=pn.e)c.push('pron');});(it.props||[]).forEach(p=>{if(p.nexo&&i>=p.nexo.s&&i<=p.nexo.e)c.push('nxok');});return c;},null));
@@ -1127,7 +1248,9 @@ function openSheet(which){
       const tot=ITEMS.length,done=ITEMS.filter(i=>stat(i.id)).length,star=ITEMS.filter(i=>stat(i.id)&&stat(i.id).p).length;
       let t='Sintaxis, tercer año — progreso\n'+done+' de '+tot+' ejercicios hechos ('+star+' sin errores)\n';
       UNITS.forEach(u=>{const d=unitDone(u.id);t+=u.name+': '+d[0]+'/'+d[1]+'\n';});
+      t+=skSummary();
       body.append(h('h3',{},'Progreso'),h('p',{class:'muted'},'Se guarda sólo en este dispositivo. Si querés mostrárselo al profesor, copiá este resumen.'));
+      body.append(skMap());
       const ta=h('textarea',{class:'cp',readonly:true},t);body.append(ta);
       const msg=h('span',{class:'muted',role:'status'},'');
       body.append(h('div',{class:'row',style:'margin-top:8px'},h('button',{class:'btn',onclick:()=>{
@@ -1138,7 +1261,7 @@ function openSheet(which){
       const rs=h('div',{class:'row',style:'margin-top:16px'});
       const btn=h('button',{class:'btn alt',onclick:()=>{
         if(!btn.dataset.sure){btn.dataset.sure='1';btn.textContent='Tocá de nuevo para borrar todo mi avance';return;}
-        store.p={};store.cur=null;save();R=null;closeSheet();render();
+        store.p={};store.sk={};store.fe={};store.cur=null;save();R=null;closeSheet();render();
       }},'Borrar mi avance');
       rs.append(btn);body.append(rs);
     } else {
