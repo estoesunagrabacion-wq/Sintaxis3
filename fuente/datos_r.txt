@@ -9,6 +9,7 @@
 [[El cartero :: fn=Suj]] [[llegó :: fn=NV]] [[agotado :: fn=PSNO]] [[a la casa de mi tía :: fn=CCL]].
 @func rr-rep-05 | Ronda
 [[Llueve :: fn=NV]] [[desde el viernes :: fn=CCT]] [[en toda la provincia :: fn=CCL]].
+N: Es una oración unimembre (verbo meteorológico): no tiene sujeto ni predicado, por eso no se marca predicado verbal.
 @func rr-rep-06 | Ronda
 [[Mis abuelos :: fn=Suj]] [[viajaron :: fn=NV]] [[con mis tíos :: fn=CCCo]] [[hasta Córdoba :: fn=CCL]].
 @func rr-rep-07 | Ronda
