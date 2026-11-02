@@ -272,6 +272,19 @@ details.tsec[open]{padding-bottom:6px}
 .opts.pal .opt{padding:8px 10px;font-size:.92rem;line-height:1.2}
 .opts.pal .opt small{display:block;opacity:.65}
 
+/* ---------- desafío, tutorial, deshacer ---------- */
+.chal{margin-top:16px}
+.fl{display:block;font-size:.92rem;color:var(--muted);margin-top:8px}
+.fl input{display:block;width:100%;box-sizing:border-box;margin-top:4px;padding:9px 10px;border:1px solid var(--line);border-radius:4px;background:var(--surface);color:var(--ink);font:inherit}
+.tbtn[disabled]{opacity:.4;cursor:default}
+.tubody{margin-top:10px;font-size:1rem;line-height:1.5}
+.tubody p{margin:0 0 10px}
+.dots3{display:flex;gap:6px;flex:1;justify-content:center}
+.dots3 i{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.dots3 i.on{background:var(--blue)}
+.exhead .row{flex-wrap:wrap;justify-content:flex-end}
+.tbl th{text-align:left;padding:4px 8px}
+
 </style>
 </head><body><div id="app"></div>
 <script>
@@ -584,7 +597,8 @@ function renderTop(){
     h('div',{class:'tools'},
       h('button',{class:'tbtn',onclick:()=>openSheet(curUnit()||'pis')},'Teoría'),
       h('button',{class:'tbtn',onclick:()=>openSheet('abrev')},'Abrev.'),
-      h('button',{class:'tbtn',onclick:()=>openSheet('prog')},'Progreso'))));
+      h('button',{class:'tbtn',onclick:()=>openSheet('prog')},'Progreso'),
+      h('button',{class:'tbtn','aria-label':'Cómo se usa',onclick:openTutorial},'?'))));
   const tabs=h('div',{class:'tabs',role:'tablist'});
   const all=[{id:'inicio',name:'Inicio'}].concat(UNITS);
   all.forEach(u=>{
@@ -641,6 +655,7 @@ function renderHome(){
     h('div',{class:'note pen'},'↑ incluida adjetiva: «que» reemplaza a «hombre»'),
     h('div',{class:'note pen'},'Vos marcás, tocás y respondés; la app corrige.')));
   w.append(tbox('feliz',tpick(done?'vuelta':'bienvenida')));
+  if(!store.tuto)w.append(h('div',{class:'row',style:'margin:-4px 0 14px'},h('button',{class:'btn','data-act':'tuto',onclick:openTutorial},'Ver el tutorial (2 minutos)'),h('button',{class:'btn alt',onclick:()=>{store.tuto=1;save();render();}},'Ya sé usarla')));
   const cont=store.cur&&BYID[store.cur];
   const row=h('div',{class:'row',style:'margin:4px 0 14px'});
   if(cont)row.append(h('button',{class:'btn',onclick:()=>{store.tab=cont.u;store.view='practica';startItem(cont.id);}},'Seguir donde quedé: '+UNITS.find(x=>x.id===cont.u).name+' '+cont.l.replace('Ej. ','')));
@@ -649,6 +664,7 @@ function renderHome(){
   const nfa=failedCount('all');
   if(nfa)row.append(h('button',{class:'btn alt','data-act':'repaso-all',onclick:()=>startRound('all',null,true)},'Repasar lo que fallé ('+nfa+')'));
   w.append(row);
+  w.append(chalCard());
   const idx=h('div',{class:'card sheetp'},h('h3',{},'Índice'));
   const ul=h('ul',{class:'indice'});
   UNITS.forEach(u=>{const d=unitDone(u.id);ul.append(h('li',{},h('button',{class:'irow','data-tab':u.id,style:'--tc:var(--u-'+u.id+')',onclick:()=>setTab(u.id,'teoria')},
@@ -696,7 +712,7 @@ function renderList(u){
 /* ---------- ejercicios ---------- */
 function startItem(id){
   const it=BYID[id];store.cur=id;store.tab=it.u;store.view='practica';save();
-  Q=null;R={it,errs:0,helped:false,checks:0,msg:null,done:false};
+  Q=null;UNDO.length=0;R={it,errs:0,helped:false,checks:0,msg:null,done:false};
   if(it.m==='props'){R.stage='mark';R.marks=[];R.first=null;R.pi=0;R.ps=it.props.map(()=>null);R.badMsgs=[];}
   else if(it.m==='pron'){R.stage='pron';initPron();}
   else if(it.m==='func'){R.stage='func';R.marks=[];R.first=null;R.pending=null;R.sjOk=!it.sj;R.sjw=[];}
@@ -706,8 +722,9 @@ function startItem(id){
 function renderEx(){
   const it=R.it;const card=h('div',{class:'card','data-ex':it.id});
   card.append(h('div',{class:'exhead'},h('div',{},h('h3',{},it.l),ctx()),h('div',{class:'row'},
-    h('button',{class:'tbtn',onclick:()=>{R=null;render();}},'← Lista'),
-    h('button',{class:'tbtn',onclick:()=>startItem(it.id)},'Reiniciar'))));
+    undoBtn(),
+    h('button',{class:'tbtn','data-noundo':'1',onclick:()=>{R=null;render();}},'← Lista'),
+    h('button',{class:'tbtn','data-noundo':'1',onclick:()=>startItem(it.id)},'Reiniciar'))));
   const body=h('div',{});
   card.append(body);
   if(R.done)renderResult(body);
@@ -719,6 +736,124 @@ function renderEx(){
   return card;
 }
 function rerender(){const old=q('[data-ex]');if(!old){render();return;}const y=window.scrollY;const nu=renderEx();old.replaceWith(nu);window.scrollTo(0,y);}
+/* ---------- deshacer ---------- */
+let UNDO=[];
+function snapState(){
+  return JSON.stringify({R,Q,p:store.p,f:store.f,q:store.q,cur:store.cur},(k,v)=>k==='msg'?undefined:(k==='it'&&v&&typeof v==='object'&&v.id?{__it:v.id}:v));
+}
+function undoLast(){
+  const s=UNDO.pop();if(!s)return;
+  const prevU=Q&&Q.chal?(Q.undos||0):0;
+  const o=JSON.parse(s,(k,v)=>v&&typeof v==='object'&&v.__it?BYALL[v.__it]:v);
+  R=o.R;Q=o.Q;store.p=o.p||{};store.f=o.f||{};store.q=o.q||{};store.cur=o.cur;
+  if(Q&&Q.chal)Q.undos=prevU+1;
+  save();const y=window.scrollY;render();window.scrollTo(0,y);
+}
+function undoBtn(){
+  return h('button',{class:'tbtn','data-undo':'1',disabled:UNDO.length?null:true,'aria-label':'Deshacer la última elección',onclick:undoLast},'↶ Deshacer'+((Q&&Q.chal)?' (−2)':''));
+}
+document.addEventListener('click',e=>{
+  if(!(R||Q)||!e.target||!e.target.closest)return;
+  const t=e.target.closest('button,.w');
+  if(!t||t.disabled||!t.closest('[data-ex]')||t.closest('[data-undo]'))return;
+  if(t.getAttribute('data-noundo')){UNDO.length=0;return;}
+  UNDO.push(snapState());if(UNDO.length>30)UNDO.shift();
+},true);
+
+/* ---------- paneles ---------- */
+function openPanel(title,build){
+  closeSheet();
+  const ov=h('div',{class:'ov',role:'dialog','aria-modal':'true',onclick:e=>{if(e.target===ov)closeSheet();}});
+  const sh=h('div',{class:'sheet'});ov.append(sh);overlay=ov;
+  sh.append(h('div',{class:'hd'},h('b',{},title),h('button',{class:'btn alt',onclick:closeSheet,'aria-label':'Cerrar'},'Cerrar')));
+  const body=h('div',{});sh.append(body);build(body);
+  document.body.append(ov);document.addEventListener('keydown',escClose);
+}
+
+/* ---------- desafío con puntaje ---------- */
+const APPV='7';
+function todayCode(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function cleanNick(s){return String(s||'').replace(/[|\n]/g,' ').trim().slice(0,16)||'Sin nombre';}
+function cleanCode(s){return String(s||'').replace(/[|\n]/g,' ').trim().slice(0,24)||todayCode();}
+function chalScore(){return Math.max(0,(Q.pts||0)-2*(Q.undos||0));}
+function chalChk(nick,code,sc){return (hash(nick.toLowerCase()+'|'+code.toLowerCase()+'|'+sc+'|sx3')%46656).toString(36).toUpperCase().padStart(3,'0');}
+function chalCodeStr(nick,code,sc){return nick+' | '+code+' | '+sc+' | '+chalChk(nick,code,sc);}
+function startChal(){
+  const code=cleanCode(store.chcode),nick=cleanNick(store.nick);
+  store.nick=nick;store.chcode=code;save();
+  startRound('all',hash(code.toLowerCase()+'|v'+APPV)+1,false,{n:12,code});
+}
+function chalCard(){
+  const c=h('div',{class:'card chal'});
+  const code=h('input',{type:'text',id:'chcode',maxlength:'24',value:store.chcode||todayCode(),'aria-label':'Código del desafío',autocomplete:'off'});
+  const nick=h('input',{type:'text',id:'chnick',maxlength:'16',value:store.nick||'',placeholder:'Tu nombre o apodo','aria-label':'Tu nombre',autocomplete:'off'});
+  code.oninput=()=>{store.chcode=code.value;save();upd();};nick.oninput=()=>{store.nick=nick.value;save();};
+  const best=h('p',{class:'muted',style:'margin:6px 0 0'});
+  const upd=()=>{const b=(store.ch||{})[cleanCode(code.value)];best.textContent=b?'Tu mejor puntaje con este código: '+b.best+' puntos.':'';};
+  upd();
+  c.append(h('h3',{},'Desafío con puntaje'),
+    h('p',{class:'muted',style:'margin:0 0 10px'},'Todos los que escriban el mismo código reciben las mismas 12 preguntas. Al final se obtiene un código de resultado para mostrárselo al profesor.'),
+    h('label',{class:'fl'},'Tu nombre o apodo',nick),h('label',{class:'fl'},'Código del desafío (por defecto, la fecha de hoy)',code),best,
+    h('div',{class:'row',style:'margin-top:10px'},h('button',{class:'btn','data-act':'chal',onclick:startChal},'Empezar el desafío'),h('button',{class:'btn alt',onclick:openTabla},'Tabla del curso')));
+  return c;
+}
+function openTabla(){
+  openPanel('Tabla del curso',body=>{
+    body.append(h('p',{class:'muted'},'Pegá un código de resultado por línea (el profesor los junta). La tabla los ordena de mayor a menor. «✓» indica que el código no fue alterado; es una ayuda contra errores de tipeo, no una seguridad total.'));
+    const ta=h('textarea',{class:'cp',placeholder:'Ana | 2026-11-02 | 154 | 3KF\nLeo | 2026-11-02 | 132 | 0AB',style:'min-height:110px'});
+    const out=h('div',{style:'margin-top:10px'});
+    const go=()=>{
+      const rows=ta.value.split('\n').map(l=>l.split('|').map(x=>x.trim())).filter(a=>a.length>=4&&a[0]&&/^\d+$/.test(a[2]))
+        .map(a=>({n:a[0],c:a[1],s:parseInt(a[2],10),ok:chalChk(a[0],a[1],a[2])===a[3].toUpperCase()}));
+      rows.sort((a,b)=>b.s-a.s);
+      out.innerHTML='';
+      if(!rows.length){out.append(h('p',{class:'muted'},'No encontré códigos con el formato «nombre | desafío | puntos | clave».'));return;}
+      out.append(h('div',{class:'tbl'},h('table',{},h('tr',{},['Puesto','Nombre','Desafío','Puntos',''].map(x=>h('th',{},x))),rows.map((r,i)=>h('tr',{},h('td',{},String(i+1)+(i<3?['  🥇','  🥈','  🥉'][i]:'')),h('td',{},r.n),h('td',{class:'mono'},r.c),h('td',{},String(r.s)),h('td',{title:r.ok?'Verificado':'No coincide la clave'},r.ok?'✓':'?'))))));
+    };
+    body.append(ta,h('div',{class:'row',style:'margin-top:8px'},h('button',{class:'btn',onclick:go},'Ordenar')),out);
+  });
+}
+
+/* ---------- tutorial ---------- */
+function openTutorial(){
+  store.tuto=1;save();
+  let i=0;
+  const demoIt=BYID['rep-1c'];
+  const TU=[
+    {m:'feliz',t:'Hola, soy TalIA',s:'Te enseño a usar esto en dos minutos.',b:()=>h('div',{},h('p',{},'Esta aplicación te ayuda a estudiar en casa lo que vemos en clase. Cada ejercicio se corrige al instante, y tu avance se guarda en este aparato, sin cuentas ni contraseñas.'))},
+    {m:'animando',t:'Cada tema, una pestaña',s:'Arriba están todas.',b:()=>h('div',{},h('p',{},'Repaso, Coordinadas, Adjetivas, Sustantivas, Pronombres y Adverbiales. En cada una hay dos vistas: ',h('b',{},'Teoría'),' (el resumen del cuadernillo) y ',h('b',{},'Práctica'),' (los ejercicios).'),h('p',{},'El botón «Teoría» de la barra de arriba abre ese resumen en cualquier momento, incluso en medio de un ejercicio.'))},
+    {m:'picara',t:'Marca lo que te piden',s:'Pruébalo aquí mismo.',b:()=>{
+      const w=h('div',{});const a=demoIt.k.findIndex(t=>t.t==='es'),z=demoIt.k.findIndex(t=>t.t==='simpático');
+      let first=null,done=false;const msg=h('p',{class:'help',role:'status'},'Toca la primera palabra del predicado («es») y después la última («simpático»).');
+      const host=h('div',{});
+      const draw=()=>{host.innerHTML='';host.append(sentEl(demoIt,done?[{s:a,e:z,c:0,n:1,g:'c'}]:[],i2=>first===i2?['sel']:[],done?null:(i2=>{
+        if(first==null){first=i2;msg.textContent='Ahora toca donde termina.';}
+        else{const s=Math.min(first,i2),e=Math.max(first,i2);first=null;
+          if(s===a&&e===z){done=true;msg.textContent='¡Eso! Ese tramo es el predicado. En un ejercicio de verdad, la app te preguntaría qué función cumple.';}
+          else msg.textContent='Casi: prueba de nuevo, desde «es» hasta «simpático».';}
+        draw();})));};
+      draw();w.append(host,msg);return w;}},
+    {m:'feliz',t:'Elige y comprueba',s:'Verde bien, rojo no es.',b:()=>h('div',{},h('p',{},'Después de marcar un tramo, la app te pregunta qué función cumple: toca la opción que creas correcta. Si fallas, te da una pista y puedes intentar otra vez.'),h('p',{},'Si te trabas, tras tres intentos aparece «Mostrame la respuesta». Cuenta como ayuda, no pasa nada.'))},
+    {m:'pensando',t:'Equivocarse se puede',s:'Todo tiene vuelta atrás.',b:()=>h('div',{},h('p',{},'Si tocaste algo sin querer, usa ',h('b',{},'↶ Deshacer'),', arriba a la derecha de cada ejercicio: vuelve un paso atrás cada vez que lo toques, incluso una respuesta ya dada.'),h('p',{},'Una marca que todavía no es correcta también se quita con la «×» que tiene al lado. En el Desafío, cada Deshacer cuesta 2 puntos.'))},
+    {m:'animando',t:'Rondas y repaso',s:'Para practicar de a poco.',b:()=>h('div',{},h('p',{},h('b',{},'Ronda rápida'),': 8 preguntas de un tema. ',h('b',{},'Ronda mixta'),': 8 preguntas de todos los temas.'),h('p',{},'Lo que falles se guarda. Con «Repasar lo que fallé» vuelves solo a esas preguntas hasta dominarlas.'))},
+    {m:'asombrada',t:'Desafío con puntaje',s:'Para competir con el curso.',b:()=>h('div',{},h('p',{},'En el inicio escribes tu nombre y un código. ',h('b',{},'Mismo código, mismas 12 preguntas'),' para todos. Puntos: 10 por acierto a la primera, +2 por cada acierto seguido (hasta +8), 3 si aciertas en el segundo intento, 0 si necesitas ver la respuesta.'),h('p',{},'Al final se genera un código de resultado: se lo muestras al profesor y él arma la «Tabla del curso».'))},
+    {m:'feliz',t:'Tu progreso',s:'Y listo.',b:()=>h('div',{},h('p',{},'El botón «Progreso» copia un resumen para mostrárselo al profesor, y ahí mismo puedes apagarme si prefieres estudiar sin mí.'),h('p',{},'Si abres la app desde el navegador del celular, puedes agregarla a la pantalla de inicio y usarla sin internet. ¡A darle!'))}
+  ];
+  openPanel('Cómo se usa',body=>{
+    const draw=()=>{
+      body.innerHTML='';const st=TU[i];
+      body.append(h('div',{class:'tal'},h('span',{class:'tav',html:taliaSvg(st.m,62)}),h('div',{class:'tb'},h('b',{class:'tname'},st.t),h('span',{class:'tt'},st.s))));
+      body.append(h('div',{class:'tubody'},st.b()));
+      const dots=h('div',{class:'dots3','aria-hidden':'true'},TU.map((_,k)=>h('i',{class:k===i?'on':''})));
+      const row=h('div',{class:'row',style:'margin-top:14px;align-items:center'},
+        i>0?h('button',{class:'btn alt',onclick:()=>{i--;draw();}},'Anterior'):null,dots,
+        i<TU.length-1?h('button',{class:'btn',onclick:()=>{i++;draw();}},'Siguiente'):h('button',{class:'btn',onclick:()=>{closeSheet();render();}},'Empezar'));
+      body.append(row);
+    };
+    draw();
+  });
+}
+
 /* ---------- TalIA: guía y maestra de ceremonias ---------- */
 function taliaSvg(mood,px){
   const eye=(cx,k)=>{ // k: open | happy | wide | wink
@@ -767,6 +902,7 @@ const TAL={
   rondaTop:['¡Ocho de ocho! Qué chingón, alfombra roja para ti.','Casi perfecta; el público de pie.'],
   rondaMid:['Buena chamba. Una vuelta más y el estreno es un éxito.','El guion va agarrando forma. Síguele así.'],
   rondaLow:['Le echaste ganas y eso también es actuar. Repasa lo que falló y volvemos a filmar.','La primera toma casi nunca es la buena. Repaso de errores y otra ronda.'],
+  chal:['Desafío en marcha: doce preguntas, mismas para todos. ¡A ganarle al curso!'],
   repasoOk:['¡Sin errores pendientes! El elenco está completo, guey.']
 };
 let _tl={};
@@ -1284,37 +1420,47 @@ function genRound(u,seed,n){
   });
   return shuf(qs,rnd);
 }
-function startRound(u,seed,rep){
+function startRound(u,seed,rep,opt){
   const s=seed||Math.floor(Math.random()*1e9)+1;
-  const qs=rep?genRepaso(u,s,8):genRound(u,s,8);
+  const qs=rep?genRepaso(u,s,8):genRound(u,s,(opt&&opt.n)||8);
   if(!qs.length)return;
-  Q={rep:!!rep,u,seed:s,qs,i:0,errs:0,good:0,wrongs:[],tapWrong:[],solved:false,reveal:false,miss:false,done:false};
+  UNDO.length=0;Q={rep:!!rep,chal:(opt&&opt.code)||null,pts:0,streak:0,undos:0,u,seed:s,qs,i:0,errs:0,good:0,wrongs:[],tapWrong:[],solved:false,reveal:false,miss:false,done:false};
   R=null;
   if(u!=='all'){store.tab=u;store.view='practica';}else store.tab='inicio';
   save();render();window.scrollTo(0,0);
 }
 function roundCard(){
   const card=h('div',{class:'card','data-ex':'round'});
-  const title=Q.rep?'Repaso de errores':Q.u==='all'?'Ronda mixta':'Ronda rápida';
-  card.append(h('div',{class:'exhead'},h('h3',{},title),h('div',{class:'row'},h('button',{class:'tbtn','data-act':'leave',onclick:()=>{Q=null;render();window.scrollTo(0,0);}},'Salir'))));
+  const title=Q.chal?'Desafío':Q.rep?'Repaso de errores':Q.u==='all'?'Ronda mixta':'Ronda rápida';
+  card.append(h('div',{class:'exhead'},h('h3',{},title),h('div',{class:'row'},undoBtn(),h('button',{class:'tbtn','data-noundo':'1','data-act':'leave',onclick:()=>{Q=null;render();window.scrollTo(0,0);}},'Salir'))));
   const b=h('div',{});card.append(b);
   if(Q.done){
     const n=Q.good,tot=Q.qs.length;const lf=failedCount(Q.u);
-    const k=Q.rep?(lf?'repaso':'repasoOk'):(n===tot?'rondaTop':n>=tot-2?'rondaTop':n>=tot/2?'rondaMid':'rondaLow');
+    const k=Q.chal?(chalScore()>=150?'rondaTop':chalScore()>=90?'rondaMid':'rondaLow'):Q.rep?(lf?'repaso':'repasoOk'):(n===tot?'rondaTop':n>=tot-2?'rondaTop':n>=tot/2?'rondaMid':'rondaLow');
     const sp=tbox(n===tot?'animando':n>=tot/2?'feliz':'pensando',tpick(k==='rondaTop'&&n<tot?'rondaMid':k));
     if(sp)b.append(sp);
   } else if(Q.i===0&&!Q.solved&&!Q.miss){
-    if(!Q.say)Q.say=tpick(Q.rep?'repaso':'ronda');
+    if(!Q.say)Q.say=tpick(Q.chal?'chal':Q.rep?'repaso':'ronda');
     const sp=tbox('animando',Q.say);if(sp)b.append(sp);
   }
   if(Q.done){
+    if(Q.chal){
+      const sc=chalScore(),nick=cleanNick(store.nick),cs=chalCodeStr(nick,Q.chal,sc);
+      b.append(h('div',{class:'res'},h('div',{class:'big'},sc),h('h3',{},'puntos'),h('p',{class:'muted',style:'margin:4px 0 0'},Q.good+' de '+Q.qs.length+' a la primera'+(Q.undos?' · '+Q.undos+' deshacer (−'+2*Q.undos+')':'')+'.')));
+      const ta=h('textarea',{class:'cp',readonly:true,style:'min-height:48px'},cs);
+      const msg=h('span',{class:'muted',role:'status'},'');
+      b.append(h('p',{class:'help'},'Tu código de resultado (mostráselo al profesor):'),ta,h('div',{class:'row',style:'margin-top:8px'},h('button',{class:'btn',onclick:()=>{
+        const ok=()=>{msg.textContent='Copiado.';};try{navigator.clipboard.writeText(cs).then(ok,()=>{ta.select();msg.textContent='Seleccionado: copialo con el menú.';});}catch(e){ta.select();msg.textContent='Seleccionado: copialo con el menú.';}},'data-noundo':'1'},'Copiar código'),msg));
+      b.append(h('div',{class:'row',style:'margin-top:14px'},h('button',{class:'btn alt','data-noundo':'1',onclick:openTabla},'Tabla del curso'),h('button',{class:'btn alt','data-noundo':'1',onclick:()=>{Q=null;render();window.scrollTo(0,0);}},'Volver')));
+      return card;
+    }
     const best=(store.q||{})[Q.u]||0;const left=failedCount(Q.u);
     b.append(h('div',{class:'res'},h('div',{class:'big'},Q.good===Q.qs.length?'★':'✓'),h('h3',{},Q.good+' de '+Q.qs.length+' a la primera'),h('p',{class:'muted',style:'margin:4px 0 0'},Q.rep?(left?'Te quedan '+left+' por repasar.':'¡No te quedan errores por repasar!'):'Mejor resultado en esta ronda: '+best+' de '+Q.qs.length+'.')));
     b.append(h('div',{class:'row',style:'margin-top:14px'},(Q.rep&&!left)?null:h('button',{class:'btn','data-act':'again',onclick:()=>startRound(Q.u,null,Q.rep)},Q.rep?'Seguir repasando':'Otra ronda'),h('button',{class:'btn alt',onclick:()=>{Q=null;render();window.scrollTo(0,0);}},'Volver')));
     return card;
   }
   const x=Q.qs[Q.i];
-  b.append(h('div',{class:'pen',style:'color:var(--muted)'},'Pregunta '+(Q.i+1)+' de '+Q.qs.length));
+  b.append(h('div',{class:'pen',style:'color:var(--muted)'},'Pregunta '+(Q.i+1)+' de '+Q.qs.length+(Q.chal?' · '+chalScore()+' puntos':'')));
   b.append(h('p',{class:'q',style:'font-size:1.2rem'},x.q));
   const closed=Q.solved||Q.reveal;
   if(x.k==='opt'){
@@ -1334,15 +1480,15 @@ function roundCard(){
 }
 function roundAnswer(ok,k){
   const x=Q.qs[Q.i];
-  if(ok){Q.solved=true;Q.msg=null;if(!Q.miss){Q.good++;if(x.key&&store.f&&store.f[x.key]){delete store.f[x.key];save();}}}
-  else{if(!Q.miss&&x.key){store.f=store.f||{};store.f[x.key]=1;save();}Q.miss=true;Q.errs++;if(x.k==='opt')Q.wrongs.push(k);else Q.tapWrong.push(k);
+  if(ok){Q.solved=true;Q.msg=null;if(!Q.miss){Q.good++;Q.streak=(Q.streak||0)+1;Q.pts=(Q.pts||0)+10+Math.min(Q.streak-1,4)*2;if(x.key&&store.f&&store.f[x.key]){delete store.f[x.key];save();}}else Q.pts=(Q.pts||0)+3;}
+  else{if(!Q.miss)Q.streak=0;if(!Q.miss&&x.key){store.f=store.f||{};store.f[x.key]=1;save();}Q.miss=true;Q.errs++;if(x.k==='opt')Q.wrongs.push(k);else Q.tapWrong.push(k);
     if(Q.wrongs.length+Q.tapWrong.length>=2){Q.reveal=true;Q.msg=null;}
     else Q.msg=fb('bad','No es esa','Releé la consigna y probá otra vez.');}
   rerenderRound();
 }
 function roundNext(){
   if(Q.i+1<Q.qs.length){Q.i++;Q.wrongs=[];Q.tapWrong=[];Q.solved=false;Q.reveal=false;Q.miss=false;Q.msg=null;}
-  else{Q.done=true;store.q=store.q||{};if(!Q.rep&&(store.q[Q.u]||0)<Q.good)store.q[Q.u]=Q.good;save();}
+  else{Q.done=true;store.q=store.q||{};if(Q.chal){store.ch=store.ch||{};const sc=chalScore(),o=store.ch[Q.chal];if(!o||o.best<sc)store.ch[Q.chal]={best:sc};}else if(!Q.rep&&(store.q[Q.u]||0)<Q.good)store.q[Q.u]=Q.good;save();}
   rerenderRound();
   window.scrollTo(0,0);
 }

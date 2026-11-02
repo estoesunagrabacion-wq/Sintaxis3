@@ -267,3 +267,16 @@ details.tsec[open]{padding-bottom:6px}
 .opts.pal{grid-template-columns:repeat(2,minmax(0,1fr))}
 .opts.pal .opt{padding:8px 10px;font-size:.92rem;line-height:1.2}
 .opts.pal .opt small{display:block;opacity:.65}
+
+/* ---------- desafío, tutorial, deshacer ---------- */
+.chal{margin-top:16px}
+.fl{display:block;font-size:.92rem;color:var(--muted);margin-top:8px}
+.fl input{display:block;width:100%;box-sizing:border-box;margin-top:4px;padding:9px 10px;border:1px solid var(--line);border-radius:4px;background:var(--surface);color:var(--ink);font:inherit}
+.tbtn[disabled]{opacity:.4;cursor:default}
+.tubody{margin-top:10px;font-size:1rem;line-height:1.5}
+.tubody p{margin:0 0 10px}
+.dots3{display:flex;gap:6px;flex:1;justify-content:center}
+.dots3 i{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.dots3 i.on{background:var(--blue)}
+.exhead .row{flex-wrap:wrap;justify-content:flex-end}
+.tbl th{text-align:left;padding:4px 8px}
