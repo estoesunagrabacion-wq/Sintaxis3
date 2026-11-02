@@ -106,6 +106,14 @@ def main():
         cur['k'] = toks
         if cur['m'] == 'func':
             cur['spans'] = [{'s': p['s'], 'e': p['e'], 'fn': p['fn']} for p in props]
+            # predicado verbal: todo lo que no es sujeto (simple si hay un solo NV, compuesto si hay más)
+            non = [p for p in cur['spans'] if p['fn'] != 'Suj']
+            if non:
+                nv = sum(1 for p in non if p['fn'].split('/')[0] == 'NV')
+                ps, pe = min(p['s'] for p in non), max(p['e'] for p in non)
+                for p in cur['spans']:
+                    if p['fn'] == 'Suj' and ps <= p['s'] <= pe: warns.append((cur['id'], 'sujeto dentro del predicado'))
+                cur['spans'].append({'s': ps, 'e': pe, 'fn': 'PVC' if nv >= 2 else 'PVS'})
         else:
             cur['props'] = props
             if prons: cur['prons'] = prons

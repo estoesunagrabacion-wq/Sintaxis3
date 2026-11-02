@@ -133,7 +133,7 @@ adv: `
 const ABREV = [
  ['OSB / OU / OC','oración simple bimembre / unimembre / compuesta'],
  ['ses · st','sujeto expreso simple · sujeto tácito'],
- ['pvs','predicado verbal simple'],
+ ['pvs · pvc','predicado verbal simple · compuesto (un solo núcleo verbal · dos o más con el mismo sujeto)'],
  ['n · md · mi · t','núcleo · modificador directo · modificador indirecto · término'],
  ['vn · NV','núcleo verbal'],
  ['OD · OI','objeto directo · objeto indirecto'],

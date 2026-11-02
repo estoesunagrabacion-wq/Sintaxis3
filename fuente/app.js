@@ -6,7 +6,7 @@ const BYID = {}; ITEMS.forEach(i=>BYID[i.id]=i);
 const BYALL = {}; ALL.forEach(i=>BYALL[i.id]=i);
 
 /* ---------- vocabulario ---------- */
-const FN = {Suj:'Sujeto',NV:'Núcleo verbal',OD:'Objeto directo',OI:'Objeto indirecto',PSO:'Predicativo subjetivo obligatorio',PSNO:'Predicativo subjetivo no obligatorio',CAg:'Complemento agente',CCL:'Circunstancial de lugar',CCT:'Circunstancial de tiempo',CCM:'Circunstancial de modo',CCCn:'Circunstancial de cantidad',CCCa:'Circunstancial de causa',CCI:'Circunstancial de instrumento',CCCo:'Circunstancial de compañía',SCR:'Signo de cuasirreflejo',MD:'Modificador directo',Term:'Término',Apos:'Aposición',CCons:'Complemento consecutivo',MNO:'Modificador del núcleo oracional'};
+const FN = {Suj:'Sujeto',NV:'Núcleo verbal',OD:'Objeto directo',OI:'Objeto indirecto',PSO:'Predicativo subjetivo obligatorio',PSNO:'Predicativo subjetivo no obligatorio',CAg:'Complemento agente',CCL:'Circunstancial de lugar',CCT:'Circunstancial de tiempo',CCM:'Circunstancial de modo',CCCn:'Circunstancial de cantidad',CCCa:'Circunstancial de causa',CCI:'Circunstancial de instrumento',CCCo:'Circunstancial de compañía',SCR:'Signo de cuasirreflejo',MD:'Modificador directo',Term:'Término',Apos:'Aposición',CCons:'Complemento consecutivo',MNO:'Modificador del núcleo oracional',PVS:'Predicado verbal simple',PVC:'Predicado verbal compuesto'};
 const FN_HINT = {
  Suj:'Concuerda con el verbo: si cambiás su número, cambia el verbo.',
  NV:'Es el verbo conjugado (con sus auxiliares, si los tiene).',
@@ -16,9 +16,11 @@ const FN_HINT = {
  PSNO:'Modifica al verbo y al sujeto (concuerda con él), pero el verbo no es copulativo.',
  CAg:'Aparece en voz pasiva, con «por»; en voz activa pasa a ser el sujeto.',
  CCL:'Responde a ¿dónde?',CCT:'Responde a ¿cuándo?',CCM:'Responde a ¿cómo?',CCCn:'Responde a ¿cuánto?',CCCa:'Responde a ¿por qué?',CCI:'Responde a ¿con qué?',CCCo:'Responde a ¿con quién?',
+ PVS:'Es todo lo que dice algo del sujeto: el verbo con todos sus modificadores. Es simple si tiene un solo núcleo verbal.',
+ PVC:'Tiene dos o más núcleos verbales que comparten el mismo sujeto, unidos por un nexo o una coma.',
  SCR:'Es el «se» (o me, te, nos) que coincide con el sujeto pero no es reflejo ni recíproco.'
 };
-const FN_PALETTE = ['Suj','NV','OD','OI','PSO','PSNO','CAg','CCL','CCT','CCM','CCCn','CCCa','CCI','CCCo','SCR'];
+const FN_PALETTE = ['Suj','PVS','PVC','NV','OD','OI','PSO','PSNO','CAg','CCL','CCT','CCM','CCCn','CCCa','CCI','CCCo','SCR'];
 const NF_OPTS = ['Suj','OD','OI','PSO','CCL','CCT','CCM','CCCn','CCCa','CCCo','MD','Term'];
 const PF_PIS = ['Suj','OD','PSO','Apos','Term'];
 const PF_ADV = ['CCL','CCT','CCM','CCCn','CCCa','CCons','MNO'];
@@ -671,7 +673,7 @@ function treeGo(v,code){
 function renderFunc(b){
   const it=R.it;
   b.append(h('p',{class:'q'},'Analizá la oración'));
-  b.append(h('p',{class:'help'},'Tocá la primera y la última palabra de cada constituyente y elegí su función. Marcá el verbo (núcleo verbal) y todos sus modificadores. Hay '+it.spans.length+' para marcar.'));
+  b.append(h('p',{class:'help'},'Tocá la primera y la última palabra de cada constituyente y elegí su función. Marcá el sujeto, el predicado verbal completo (simple si tiene un solo verbo, compuesto si tiene más de uno), el verbo (núcleo verbal) y todos sus modificadores. Hay '+it.spans.length+' para marcar.'));
   const spans=R.marks.map((m,k)=>({s:m.s,e:m.e,c:k,n:k+1,g:'c'}));
   if(R.pending)spans.push({s:R.pending.s,e:R.pending.e,c:R.marks.length,n:'?',g:'c'});
   b.append(sentEl(it,spans,i=>R.first===i?['sel']:[],onTapFunc));
@@ -766,7 +768,7 @@ function genCands(u){
     if(it.u==='coo'&&it.props&&it.props.length>=2&&(u==='coo'||u==='all'))C.cuenta.push({it});
     if(it.u==='coo'&&(u==='coo'||u==='all')&&(it.m==='simple'||(it.props||[]).length>=2))C.comp.push({it});
     (it.prons||[]).forEach(pn=>{if(String(pn.p).indexOf('/')<0)C.se.push({it,pn});});
-    if(it.m==='func')(it.spans||[]).forEach(sp=>{if(String(sp.fn).indexOf('/')<0)C.fn.push({it,sp});});
+    if(it.m==='func')(it.spans||[]).forEach(sp=>{if(String(sp.fn).indexOf('/')<0&&sp.fn!=='PVS'&&sp.fn!=='PVC')C.fn.push({it,sp});});
   });
   return C;
 }
