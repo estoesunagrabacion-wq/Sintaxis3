@@ -6,7 +6,7 @@ const BYID = {}; ITEMS.forEach(i=>BYID[i.id]=i);
 const BYALL = {}; ALL.forEach(i=>BYALL[i.id]=i);
 
 /* ---------- vocabulario ---------- */
-const FN = {Suj:'Sujeto',NV:'Núcleo verbal',OD:'Objeto directo',OI:'Objeto indirecto',PSO:'Predicativo subjetivo obligatorio',PSNO:'Predicativo subjetivo no obligatorio',CAg:'Complemento agente',CCL:'Circunstancial de lugar',CCT:'Circunstancial de tiempo',CCM:'Circunstancial de modo',CCCn:'Circunstancial de cantidad',CCCa:'Circunstancial de causa',CCI:'Circunstancial de instrumento',CCCo:'Circunstancial de compañía',SCR:'Signo de cuasirreflejo',MD:'Modificador directo',Term:'Término',Apos:'Aposición',CCons:'Complemento consecutivo',MNO:'Modificador del núcleo oracional',PVS:'Predicado verbal simple',PVC:'Predicado verbal compuesto'};
+const FN = {Suj:'Sujeto',NV:'Núcleo verbal',OD:'Objeto directo',OI:'Objeto indirecto',PSO:'Predicativo subjetivo obligatorio',PSNO:'Predicativo subjetivo no obligatorio',CAg:'Complemento agente',CCL:'Circunstancial de lugar',CCT:'Circunstancial de tiempo',CCM:'Circunstancial de modo',CCCn:'Circunstancial de cantidad',CCCa:'Circunstancial de causa',CCI:'Circunstancial de instrumento',CCCo:'Circunstancial de compañía',SCR:'Signo de cuasirreflejo',MD:'Modificador directo',Term:'Término',Apos:'Aposición',CCons:'Complemento consecutivo',MNO:'Modificador del núcleo oracional',PVS:'Predicado verbal simple',PVC:'Predicado verbal compuesto',NS:'Núcleo del sujeto',MI:'Modificador indirecto'};
 const FN_HINT = {
  Suj:'Concuerda con el verbo: si cambiás su número, cambia el verbo.',
  NV:'Es el verbo conjugado (con sus auxiliares, si los tiene).',
@@ -16,11 +16,17 @@ const FN_HINT = {
  PSNO:'Modifica al verbo y al sujeto (concuerda con él), pero el verbo no es copulativo.',
  CAg:'Aparece en voz pasiva, con «por»; en voz activa pasa a ser el sujeto.',
  CCL:'Responde a ¿dónde?',CCT:'Responde a ¿cuándo?',CCM:'Responde a ¿cómo?',CCCn:'Responde a ¿cuánto?',CCCa:'Responde a ¿por qué?',CCI:'Responde a ¿con qué?',CCCo:'Responde a ¿con quién?',
+ NS:'Es la palabra principal del sujeto (sustantivo o pronombre) y concuerda con el verbo. Si el sujeto es compuesto, tiene más de un núcleo.',
+ MD:'Modifica al núcleo sin preposición: artículos, posesivos, demostrativos y adjetivos.',
+ MI:'Modifica al núcleo con una preposición: «de sangre», «del bosque».',
+ Apos:'Explica al núcleo con otro sustantivo y suele ir entre comas.',
  PVS:'Es todo lo que dice algo del sujeto: el verbo con todos sus modificadores. Es simple si tiene un solo núcleo verbal.',
  PVC:'Tiene dos o más núcleos verbales que comparten el mismo sujeto, unidos por un nexo o una coma.',
  SCR:'Es el «se» (o me, te, nos) que coincide con el sujeto pero no es reflejo ni recíproco.'
 };
-const FN_PALETTE = ['Suj','PVS','PVC','NV','OD','OI','PSO','PSNO','CAg','CCL','CCT','CCM','CCCn','CCCa','CCI','CCCo','SCR'];
+const FN_GROUPS = [['Sujeto',['Suj','NS','MD','MI','Apos']],['Predicado verbal',['PVS','PVC','NV']],['Modificadores del verbo',['OD','OI','PSO','PSNO','CAg','SCR']],['Circunstanciales',['CCL','CCT','CCM','CCCn','CCCa','CCI','CCCo']]];
+const SJ_OPTS=[{v:'ses',t:'Sujeto expreso simple'},{v:'sec',t:'Sujeto expreso compuesto'},{v:'st',t:'Sujeto tácito'},{v:'ninguno',t:'No tiene sujeto (oración unimembre)'}];
+function sjExpl(it){return {ses:'El sujeto aparece en la oración y tiene un solo núcleo.',sec:'El sujeto aparece en la oración y tiene dos núcleos unidos por un nexo.',st:'El sujeto no aparece en la oración, pero se deduce del verbo: «'+(it.stp||'él')+'».',ninguno:'No hay sujeto posible: es una oración unimembre.'}[it.sj];}
 const NF_OPTS = ['Suj','OD','OI','PSO','CCL','CCT','CCM','CCCn','CCCa','CCCo','MD','Term'];
 const PF_PIS = ['Suj','OD','PSO','Apos','Term'];
 const PF_ADV = ['CCL','CCT','CCM','CCCn','CCCa','CCons','MNO'];
@@ -265,7 +271,7 @@ function startItem(id){
   Q=null;R={it,errs:0,helped:false,checks:0,msg:null,done:false};
   if(it.m==='props'){R.stage='mark';R.marks=[];R.first=null;R.pi=0;R.ps=it.props.map(()=>null);R.badMsgs=[];}
   else if(it.m==='pron'){R.stage='pron';initPron();}
-  else if(it.m==='func'){R.stage='func';R.marks=[];R.first=null;R.pending=null;}
+  else if(it.m==='func'){R.stage='func';R.marks=[];R.first=null;R.pending=null;R.sjOk=!it.sj;R.sjw=[];}
   else if(it.m==='choice'){R.stage='choice';R.opts=seeded(it.o,hash(it.id));R.wrongs=[];R.reveal=false;R.solved=false;}
   render();window.scrollTo(0,0);
 }
@@ -673,7 +679,22 @@ function treeGo(v,code){
 function renderFunc(b){
   const it=R.it;
   b.append(h('p',{class:'q'},'Analizá la oración'));
-  b.append(h('p',{class:'help'},'Tocá la primera y la última palabra de cada constituyente y elegí su función. Marcá el sujeto, el predicado verbal completo (simple si tiene un solo verbo, compuesto si tiene más de uno), el verbo (núcleo verbal) y todos sus modificadores. Hay '+it.spans.length+' para marcar.'));
+  if(!R.sjOk){
+    b.append(sentEl(it,[],()=>[],null));
+    b.append(h('p',{class:'help'},'Primero: ¿cómo es el sujeto de esta oración?'));
+    const g=h('div',{class:'opts col1'});
+    SJ_OPTS.forEach(o=>{const wr=R.sjw.includes(o.v),good=R.sjrev&&o.v===it.sj;
+      g.append(h('button',{class:'opt'+(wr?' bad':'')+(good?' good':''),'data-sj':o.v,disabled:wr||R.sjrev,onclick:()=>{
+        if(o.v===it.sj){R.sjOk=true;R.sjw=[];R.msg=fb('ok','Correcto',sjExpl(it));}
+        else{R.errs++;R.sjw.push(o.v);
+          if(R.sjw.length>=2){R.helped=true;R.sjOk=true;R.msg=fb('info','La respuesta es: '+SJ_OPTS.find(x=>x.v===it.sj).t,sjExpl(it));}
+          else R.msg=fb('bad','No es esa','Releé la oración: ¿aparece el sujeto? ¿cuántos núcleos tiene?');}
+        rerender();}},o.t));});
+    b.append(g);if(R.msg)b.append(R.msg);
+    return;
+  }
+  b.append(h('p',{class:'help'},h('b',{},SJ_OPTS.find(x=>x.v===it.sj).t),it.sj==='st'?' ('+(it.stp||'él')+').':'.',' Ahora marcá cada constituyente.'));
+  b.append(h('p',{class:'help'},'Tocá la primera y la última palabra de cada constituyente y elegí su función. Marcá el sujeto y sus partes, el predicado completo, el verbo y sus modificadores. Hay '+it.spans.length+' para marcar. Un mismo tramo puede llevar dos marcas (por ejemplo, sujeto y núcleo).'));
   const spans=R.marks.map((m,k)=>({s:m.s,e:m.e,c:k,n:k+1,g:'c'}));
   if(R.pending)spans.push({s:R.pending.s,e:R.pending.e,c:R.marks.length,n:'?',g:'c'});
   b.append(sentEl(it,spans,i=>R.first===i?['sel']:[],onTapFunc));
@@ -682,8 +703,10 @@ function renderFunc(b){
   b.append(ml);
   if(R.pending){
     b.append(h('p',{class:'q'},'¿Qué función cumple «'+txt(it,R.pending.s,R.pending.e)+'»?'));
-    const grid=h('div',{class:'opts'});
-    FN_PALETTE.forEach(c=>grid.append(h('button',{class:'opt','data-v':c,onclick:()=>{R.marks.push({s:R.pending.s,e:R.pending.e,fn:c,ok:false});R.pending=null;R.msg=null;rerender();}},FN[c],h('small',{},c))));
+    const grid=h('div',{class:'opts pal'});
+    FN_GROUPS.forEach(([gt,cs])=>{grid.append(h('p',{class:'help gh'},gt));cs.forEach(c=>grid.append(h('button',{class:'opt','data-v':c,onclick:()=>{
+      const P=R.pending;if(R.marks.some(m=>m.s===P.s&&m.e===P.e&&m.fn===c)){R.msg=fb('info','','Ya marcaste ese tramo con esa función.');R.pending=null;rerender();return;}
+      R.marks.push({s:P.s,e:P.e,fn:c,ok:false});R.pending=null;R.msg=null;rerender();}},FN[c],h('small',{},c))));});
     b.append(grid,h('div',{class:'row',style:'margin-top:8px'},h('button',{class:'btn alt',onclick:()=>{R.pending=null;rerender();}},'Cancelar')));
   } else if(R.first!=null)b.append(h('p',{class:'help'},'Empieza en «'+it.k[R.first].t+'». Tocá donde termina.'));
   if(R.msg)b.append(R.msg);
@@ -695,16 +718,16 @@ function onTapFunc(i){
   if(R.pending)return;
   if(R.first==null)R.first=i;
   else{const s=Math.min(R.first,i),e=Math.max(R.first,i);R.first=null;
-    if(R.marks.some(m=>m.s===s&&m.e===e)){R.msg=fb('info','','Ese tramo ya está marcado.');}
-    else R.pending={s,e};}
+    R.pending={s,e};}
   R.msg=R.pending?null:R.msg;rerender();
 }
 function checkFunc(){
   const it=R.it;R.checks++;const parts=[];let wrong=0;
   R.marks.forEach(m=>{ if(m.ok)return;
-    const k=it.spans.find(s=>s.s===m.s&&s.e===m.e);
-    if(k&&alts(k.fn).includes(m.fn)){m.ok=true;}
-    else if(k){wrong++;m.bad='fn';parts.push(h('div',{},'«'+txt(it,m.s,m.e)+'»: la extensión está bien, pero no es '+FN[m.fn].toLowerCase()+'. '+(FN_HINT[alts(k.fn)[0]]||'')));}
+    const same=it.spans.filter(s=>s.s===m.s&&s.e===m.e);
+    const k=same.find(s=>alts(s.fn).includes(m.fn));
+    if(k){m.ok=true;}
+    else if(same.length){wrong++;m.bad='fn';parts.push(h('div',{},'«'+txt(it,m.s,m.e)+'»: la extensión está bien, pero no es '+FN[m.fn].toLowerCase()+'. '+(FN_HINT[alts(same[0].fn)[0]]||'')));}
     else{wrong++;m.bad='span';parts.push(h('div',{},'«'+txt(it,m.s,m.e)+'» no coincide con ningún constituyente de la oración. Revisá dónde empieza y dónde termina.'));}
   });
   const okc=R.marks.filter(m=>m.ok).length;const missing=it.spans.length-okc-wrong;
@@ -753,7 +776,7 @@ function nexoLike(it){return it.k.filter(t=>t.w&&NEXO_RE.test(t.t)).length>=2;}
 function propCt(p){return p.nexo&&p.nexo.ct?p.nexo.ct:(p.ct==='yux'?'yux':null);}
 function genCands(u){
   const pool=ALL.filter(i=>i.r&&(u==='all'||i.u===u));
-  const C={tipo:[],vf:[],nexo:[],ante:[],esp:[],nfun:[],pf:[],pcls:[],advs:[],ctype:[],cuenta:[],comp:[],se:[],fn:[]};
+  const C={tipo:[],vf:[],nexo:[],ante:[],esp:[],nfun:[],pf:[],pcls:[],advs:[],ctype:[],cuenta:[],comp:[],se:[],fn:[],sj:[],ns:[],mod:[]};
   pool.forEach(it=>{
     (it.props||[]).forEach(p=>{
       if(u!=='all'&&p.t!==TYPE_OF[u])return;
@@ -768,7 +791,8 @@ function genCands(u){
     if(it.u==='coo'&&it.props&&it.props.length>=2&&(u==='coo'||u==='all'))C.cuenta.push({it});
     if(it.u==='coo'&&(u==='coo'||u==='all')&&(it.m==='simple'||(it.props||[]).length>=2))C.comp.push({it});
     (it.prons||[]).forEach(pn=>{if(String(pn.p).indexOf('/')<0)C.se.push({it,pn});});
-    if(it.m==='func')(it.spans||[]).forEach(sp=>{if(String(sp.fn).indexOf('/')<0&&sp.fn!=='PVS'&&sp.fn!=='PVC')C.fn.push({it,sp});});
+    if(it.m==='func')(it.spans||[]).forEach(sp=>{if(String(sp.fn).indexOf('/')<0&&!['PVS','PVC','NS','MD','MI','Apos'].includes(sp.fn))C.fn.push({it,sp});});
+    if(it.m==='func'&&it.sj){C.sj.push({it});const ns=(it.spans||[]).filter(s=>s.fn==='NS');if(ns.length===1)C.ns.push({it,sp:ns[0]});const ap=(it.spans||[]).filter(s=>s.fn==='MI'||s.fn==='Apos');ap.forEach(sp=>C.mod.push({it,sp}));}
   });
   return C;
 }
@@ -801,6 +825,10 @@ function buildQ(kind,c,rnd){
   if(kind==='nexo'){const a=[];for(let i=n.s;i<=n.e;i++)a.push(i);return {k:'tap',it,kind,mark:[],q:'Tocá el nexo que introduce '+P+'.',ans:a,e:E};}
   if(kind==='ante'){return {k:'tap',it,kind,mark:[n.s],q:'Tocá el antecedente de «'+txt(it,n.s,n.e)+'» (resaltado).',ans:[n.a],e:'«'+txt(it,n.s,n.e)+'» reemplaza a «'+it.k[n.a].t+'», que es su antecedente.'};}
   if(kind==='se'){const pn=c.pn,g=alts(pn.p)[0];return optQ('¿Qué es «'+txt(it,pn.s,pn.e)+'» en esta oración?',shuf([g].concat(SE_G[g]),rnd).map(v=>({t:LEAF[v],ok:v===g})),LEAF[g]+'.'+(it.n?' '+it.n:''));}
+  if(kind==='sj')return optQ('¿Cómo es el sujeto de esta oración?',shuf(SJ_OPTS,rnd).map(o=>({t:o.t,ok:o.v===it.sj})),sjExpl(it));
+  if(kind==='ns'){const sj=it.spans.find(s=>s.fn==='Suj');const m=[];if(sj)for(let i=sj.s;i<=sj.e;i++)m.push(i);const a=[];for(let i=c.sp.s;i<=c.sp.e;i++)a.push(i);
+    return {k:'tap',it,kind,mark:m,q:'Tocá el núcleo del sujeto (el sujeto está resaltado).',ans:a,e:'El núcleo es «'+txt(it,c.sp.s,c.sp.e)+'»: es la palabra principal del sujeto.'};}
+  if(kind==='mod'){const g=c.sp.fn;return optQ('En el sujeto, «'+txt(it,c.sp.s,c.sp.e)+'» es...',shuf([{t:'Modificador indirecto',ok:g==='MI'},{t:'Aposición',ok:g==='Apos'},{t:'Modificador directo',ok:false},{t:'Núcleo del sujeto',ok:false}],rnd),FN_HINT[g]);}
   if(kind==='fn'){const sp=c.sp,g=alts(sp.fn)[0];const grp=FN_CORE.includes(g)?FN_CORE:FN_CIRC;const other=FN_CORE.includes(g)?FN_CIRC:FN_CORE;
     const ds=sample(grp.filter(x=>x!==g),2,rnd).concat(sample(other,1,rnd));
     return optQ('¿Qué función cumple «'+txt(it,sp.s,sp.e)+'»?',shuf([g].concat(ds),rnd).map(v=>({t:FN[v],ok:v===g})),FN_HINT[g]||'');}

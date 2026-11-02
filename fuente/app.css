@@ -260,3 +260,10 @@ details.tsec[open]{padding-bottom:6px}
 .fb .tq i{font-family:Literata,Georgia,serif}
 .tgl{display:flex;gap:8px;align-items:center;margin-top:14px}
 @media (max-width:520px){.tal .tav svg{width:56px;height:auto}}
+
+.opts .gh{grid-column:1/-1;margin:8px 0 0;font-family:Caveat,cursive;font-size:1.25rem;color:var(--margin)}
+.opts .gh:first-child{margin-top:0}
+
+.opts.pal{grid-template-columns:repeat(2,minmax(0,1fr))}
+.opts.pal .opt{padding:8px 10px;font-size:.92rem;line-height:1.2}
+.opts.pal .opt small{display:block;opacity:.65}

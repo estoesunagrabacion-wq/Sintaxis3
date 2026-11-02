@@ -1,23 +1,66 @@
 #unit rep
 @func rr-rep-01 | Ronda
 [[Mis primos :: fn=Suj]] [[repartieron :: fn=NV]] [[los folletos :: fn=OD]] [[a los vecinos :: fn=OI]] [[por la tarde :: fn=CCT]].
+SJ: ses
++ [[Mis :: fn=MD]] [[primos :: fn=NS]] repartieron los folletos a los vecinos por la tarde.
 @func rr-rep-02 | Ronda
 [[La directora :: fn=Suj]] [[parecía :: fn=NV]] [[muy cansada :: fn=PSO]].
+SJ: ses
++ [[La :: fn=MD]] [[directora :: fn=NS]] parecía muy cansada.
 @func rr-rep-03 | Ronda
 [[La puerta :: fn=Suj]] [[fue abierta :: fn=NV]] [[por el portero :: fn=CAg]] [[con una llave vieja :: fn=CCI]].
+SJ: ses
++ [[La :: fn=MD]] [[puerta :: fn=NS]] fue abierta por el portero con una llave vieja.
 @func rr-rep-04 | Ronda
 [[El cartero :: fn=Suj]] [[llegó :: fn=NV]] [[agotado :: fn=PSNO]] [[a la casa de mi tía :: fn=CCL]].
+SJ: ses
++ [[El :: fn=MD]] [[cartero :: fn=NS]] llegó agotado a la casa de mi tía.
 @func rr-rep-05 | Ronda
 [[Llueve :: fn=NV]] [[desde el viernes :: fn=CCT]] [[en toda la provincia :: fn=CCL]].
+SJ: ninguno
 N: Es una oración unimembre (verbo meteorológico): no tiene sujeto ni predicado, por eso no se marca predicado verbal.
 @func rr-rep-06 | Ronda
 [[Mis abuelos :: fn=Suj]] [[viajaron :: fn=NV]] [[con mis tíos :: fn=CCCo]] [[hasta Córdoba :: fn=CCL]].
+SJ: ses
++ [[Mis :: fn=MD]] [[abuelos :: fn=NS]] viajaron con mis tíos hasta Córdoba.
 @func rr-rep-07 | Ronda
 [[Esas flores :: fn=Suj]] [[crecen :: fn=NV]] [[muy rápido :: fn=CCM]].
+SJ: ses
++ [[Esas :: fn=MD]] [[flores :: fn=NS]] crecen muy rápido.
 @func rr-rep-08 | Ronda
 [[El gato :: fn=Suj]] [[se :: fn=SCR]] [[escapó :: fn=NV]] [[por la ventana :: fn=CCL]] [[anoche :: fn=CCT]].
+SJ: ses
++ [[El :: fn=MD]] [[gato :: fn=NS]] se escapó por la ventana anoche.
 @func rr-rep-09 | Ronda
 [[La cena :: fn=Suj]] [[costó :: fn=NV]] [[mucho :: fn=CCCn]] [[a mis padres :: fn=OI]].
+SJ: ses
++ [[La :: fn=MD]] [[cena :: fn=NS]] costó mucho a mis padres.
+@func rr-rep-10 | Ronda
+[[Borges, el escritor argentino :: fn=Suj]], [[escribió :: fn=NV]] [[cuentos fantásticos :: fn=OD]].
+SJ: ses
++ [[Borges :: fn=NS]], [[el escritor argentino :: fn=Apos]], escribió cuentos fantásticos.
+N: «el escritor argentino» es una aposición: explica al núcleo «Borges» y va entre comas.
+@func rr-rep-11 | Ronda
+[[Compré :: fn=NV]] [[pan :: fn=OD]] [[en la panadería de la esquina :: fn=CCL]].
+SJ: st | yo
+@func rr-rep-12 | Ronda
+[[Llegaron :: fn=NV]] [[tarde :: fn=CCT]] [[a la fiesta de Julia :: fn=CCL]].
+SJ: st | ellos
+@func rr-rep-13 | Ronda
+[[Mi hermano y mi prima :: fn=Suj]] [[cantaron :: fn=NV]] [[en el acto :: fn=CCL]].
+SJ: sec
++ [[Mi :: fn=MD]] [[hermano :: fn=NS]] y [[mi :: fn=MD]] [[prima :: fn=NS]] cantaron en el acto.
+@func rr-rep-14 | Ronda
+[[Las chicas del curso de teatro :: fn=Suj]] [[ensayan :: fn=NV]] [[todos los martes :: fn=CCT]].
+SJ: ses
++ [[Las :: fn=MD]] [[chicas :: fn=NS]] [[del curso de teatro :: fn=MI]] ensayan todos los martes.
+@func rr-rep-15 | Ronda
+[[Los vecinos nuevos :: fn=Suj]] [[llegaron :: fn=NV]] [[temprano :: fn=CCT]] y [[ayudaron :: fn=NV]] [[a la abuela :: fn=OD]].
+SJ: ses
++ [[Los :: fn=MD]] [[vecinos :: fn=NS]] [[nuevos :: fn=MD]] llegaron temprano y ayudaron a la abuela.
+@func rr-rep-16 | Ronda
+[[Abrí :: fn=NV]] [[la ventana :: fn=OD]] y [[miré :: fn=NV]] [[la calle :: fn=OD]].
+SJ: st | yo
 
 #unit coo
 @props rr-coo-01 | Ronda

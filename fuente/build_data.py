@@ -102,22 +102,34 @@ def main():
             elif line[0] in '+-' and line[1] == ' ': cur['o'].append({'t': line[2:].strip(), 'ok': 1 if line[0] == '+' else 0})
             elif line.startswith('E:'): cur['e'] = line[2:].strip()
             continue
+        if line.startswith('SJ:'):
+            v = [x.strip() for x in line[3:].split('|')]
+            cur['sj'] = v[0]
+            if len(v) > 1: cur['stp'] = v[1]
+            continue
+        if line.startswith('+ ') and cur['m'] == 'func':
+            t2, p2, _ = parse_sentence(line[2:], warn)
+            if [t['t'] for t in t2] != [t['t'] for t in cur['k']]: warn('capa + con otras palabras')
+            cur['spans'] += [{'s': p['s'], 'e': p['e'], 'fn': p['fn']} for p in p2]
+            continue
         toks, props, prons = parse_sentence(line, warn)
         cur['k'] = toks
         if cur['m'] == 'func':
             cur['spans'] = [{'s': p['s'], 'e': p['e'], 'fn': p['fn']} for p in props]
-            # predicado verbal: todo lo que no es sujeto (simple si hay un solo NV, compuesto si hay más)
-            non = [p for p in cur['spans'] if p['fn'] != 'Suj']
-            if non and any(p['fn'] == 'Suj' for p in cur['spans']):  # sin sujeto: oración unimembre, sin predicado
-                nv = sum(1 for p in non if p['fn'].split('/')[0] == 'NV')
-                ps, pe = min(p['s'] for p in non), max(p['e'] for p in non)
-                for p in cur['spans']:
-                    if p['fn'] == 'Suj' and ps <= p['s'] <= pe: warns.append((cur['id'], 'sujeto dentro del predicado'))
-                cur['spans'].append({'s': ps, 'e': pe, 'fn': 'PVC' if nv >= 2 else 'PVS'})
         else:
             cur['props'] = props
             if prons: cur['prons'] = prons
             if cur['m'] == 'pron': cur['prons'] = prons
+    # predicado verbal (simple o compuesto): todo lo que no es el sujeto ni sus partes
+    SUBJ = ('Suj', 'NS', 'MD', 'MI', 'Apos')
+    for it in items:
+        if it['m'] != 'func': continue
+        if 'sj' not in it: warns.append((it['id'], 'falta SJ'))
+        if it.get('sj') in ('ninguno', None): continue
+        non = [p for p in it['spans'] if p['fn'] not in SUBJ]
+        nv = sum(1 for p in non if p['fn'].split('/')[0] == 'NV')
+        it['spans'].append({'s': min(p['s'] for p in non), 'e': max(p['e'] for p in non), 'fn': 'PVC' if nv >= 2 else 'PVS'})
+        it['spans'].sort(key=lambda p: (p['s'], -p['e']))
     # validation
     for it in items:
         if it['m'] == 'choice':

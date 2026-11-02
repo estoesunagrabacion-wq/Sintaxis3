@@ -22,6 +22,7 @@ def solve(page,it):
         page.click('.opt[data-ok="1"]')
         page.click('[data-act="finish"]')
     elif m=='func':
+        page.click(f'[data-sj="{it["sj"]}"]')
         for s in it['spans']:
             tok(page,s['s']); tok(page,s['e']); page.click(f'.opt[data-v="{s["fn"].split("/")[0]}"]')
         page.click('[data-act="check"]')
