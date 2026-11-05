@@ -297,6 +297,8 @@ details.tsec[open]{padding-bottom:6px}
 .skl{font-size:12px;opacity:.85;grid-column:2;grid-row:2}
 .skr .skb{grid-column:1;grid-row:2}
 
+.tlw{margin:8px 0 12px}.tlbar{font-size:14px;margin-bottom:4px}
+
 </style>
 </head><body><div id="app"></div>
 <script>
@@ -672,6 +674,7 @@ function renderHome(){
   const row=h('div',{class:'row',style:'margin:4px 0 14px'});
   if(cont)row.append(h('button',{class:'btn',onclick:()=>{store.tab=cont.u;store.view='practica';startItem(cont.id);}},'Seguir donde quedé: '+UNITS.find(x=>x.id===cont.u).name+' '+cont.l.replace('Ej. ','')));
   else row.append(h('button',{class:'btn',onclick:()=>setTab('rep','teoria')},'Empezar por el repaso'));
+  row.append(h('button',{class:'btn alt','data-act':'taller-all',onclick:()=>startTaller('all')},'Taller de 15 minutos'));
   row.append(h('button',{class:'btn alt','data-act':'round-all',onclick:()=>startRound('all')},'Ronda mixta'));
   const nfa=failedCount('all');
   if(nfa)row.append(h('button',{class:'btn alt','data-act':'repaso-all',onclick:()=>startRound('all',null,true)},'Repasar lo que fallé ('+nfa+')'));
@@ -688,6 +691,57 @@ function renderHome(){
   return w;
 }
 
+
+/* ---------- taller de 15 minutos ---------- */
+let TALLER=null,TFLAG=false;
+const cplx=i=>(i.props?i.props.length*12:0)+(i.k?i.k.length:0)+(i.prons?i.prons.length*6:0);
+function tallerPick(u){
+  const ok=i=>!(i.n&&/^Discutible/.test(i.n));
+  const pool=(u==='all'?ITEMS:unitItems(u)).filter(ok);
+  const rnd=mulberry(Math.floor(Math.random()*1e9)+1);
+  const an=pool.filter(i=>i.m!=='choice'&&i.m!=='simple'),ch=pool.filter(i=>i.m==='choice');
+  const order=a=>shuf(a,rnd).sort((x,y)=>(stat(x.id)&&stat(x.id).p?2:stat(x.id)?1:0)-(stat(y.id)&&stat(y.id).p?2:stat(y.id)?1:0));
+  let out=[];
+  if(u==='all'){
+    ['pis','pia','adv','coo','pro'].forEach(uu=>{const c=order(an.filter(i=>i.u===uu));if(c.length)out.push(c[0]);});
+    out=out.slice(0,4);
+  } else {
+    const s=order(an).slice(0,Math.min(8,an.length)).sort((a,b)=>cplx(a)-cplx(b));
+    const n=Math.min(4,s.length);
+    for(let k=0;k<n;k++)out.push(s[Math.min(s.length-1,Math.round(k*(s.length-1)/Math.max(1,n-1)))]);
+    out=out.filter((x,k)=>out.indexOf(x)===k);
+    for(const c of s){if(out.length>=n)break;if(!out.includes(c))out.push(c);}
+    out.sort((a,b)=>cplx(a)-cplx(b));
+  }
+  const c=order(ch.filter(i=>u==='all'||true));if(c.length)out.splice(Math.min(2,out.length),0,c[0]);
+  return out;
+}
+function startTaller(u){
+  const items=tallerPick(u);if(!items.length)return;
+  TALLER={u,ids:items.map(i=>i.id),i:0,res:{},fin:null,t0:Date.now()};
+  tallerGo();
+}
+function tallerGo(){TFLAG=true;try{startItem(TALLER.ids[TALLER.i]);}finally{TFLAG=false;}if(R)R.tl=1;}
+function tallerNext(){
+  const T=TALLER;T.res[T.ids[T.i]]=R.errs+(R.helped?1:0);
+  T.i++;
+  if(T.i<T.ids.length){tallerGo();return;}
+  T.fin=1;startRound(T.u,null,false,{n:6,taller:1});
+}
+function tallerBar(){
+  const T=TALLER;const w=h('div',{class:'tlbar'},h('b',{},'Taller de 15 minutos'),h('span',{},' · ejercicio '+(T.i+1)+' de '+T.ids.length+' y una ronda final'));
+  const bar=h('div',{class:'meter'},h('i',{style:'width:'+Math.round(100*T.i/(T.ids.length+1))+'%'}));
+  return h('div',{class:'tlw'},w,bar);
+}
+function tallerSummary(){
+  const T=TALLER,ids=T.ids,perf=ids.filter(id=>T.res[id]===0).length;
+  const mins=Math.max(1,Math.round((Date.now()-T.t0)/60000));
+  const el=h('div',{class:'fb info',style:'margin-top:14px'},h('b',{class:'t'},'Taller completo'),
+    perf+' de '+ids.length+' ejercicios sin errores · ronda final '+Q.good+' de '+Q.qs.length+' a la primera · unos '+mins+' min.');
+  const bad=ids.filter(id=>T.res[id]>0);
+  if(bad.length)el.append(h('div',{style:'margin-top:6px'},'Para repasar: '+bad.map(id=>BYID[id].l).join(', ')+'.'));
+  return el;
+}
 /* ---------- lista de práctica ---------- */
 function renderList(u){
   const w=h('div',{});
@@ -697,6 +751,7 @@ function renderList(u){
   const acts=h('div',{class:'acts'});
   if(next)acts.append(h('button',{class:'btn',onclick:()=>startItem(next.id)},'Seguir con '+next.l.replace('Ej. ','Ej. ')));
   else acts.append(h('div',{class:'muted'},'¡Completaste todos los ejercicios!'));
+  acts.append(h('button',{class:'btn','data-act':'taller',onclick:()=>startTaller(u.id)},'Taller de 15 minutos'));
   acts.append(h('button',{class:'btn alt','data-act':'round',onclick:()=>startRound(u.id)},'Ronda rápida'+(bq!=null?' (mejor '+bq+'/8)':'')));
   w.append(tbox('picara',TAL.lista[u.id]));
   w.append(acts);
@@ -724,8 +779,9 @@ function renderList(u){
 
 /* ---------- ejercicios ---------- */
 function startItem(id){
+  if(!TFLAG)TALLER=null;
   const it=BYID[id];store.cur=id;store.tab=it.u;store.view='practica';save();
-  Q=null;UNDO.length=0;R={it,errs:0,helped:false,checks:0,msg:null,done:false};
+  Q=null;UNDO.length=0;R={it,errs:0,helped:false,checks:0,msg:null,done:false,tl:TFLAG?1:0};
   if(it.m==='props'){R.stage='mark';R.marks=[];R.first=null;R.pi=0;R.ps=it.props.map(()=>null);R.badMsgs=[];}
   else if(it.m==='pron'){R.stage='pron';initPron();}
   else if(it.m==='func'){R.stage='func';R.marks=[];R.first=null;R.pending=null;R.sjOk=!it.sj;R.sjw=[];}
@@ -736,8 +792,9 @@ function renderEx(){
   const it=R.it;const card=h('div',{class:'card','data-ex':it.id});
   card.append(h('div',{class:'exhead'},h('div',{},h('h3',{},it.l),ctx()),h('div',{class:'row'},
     undoBtn(),
-    h('button',{class:'tbtn','data-noundo':'1',onclick:()=>{R=null;render();}},'← Lista'),
+    h('button',{class:'tbtn','data-noundo':'1',onclick:()=>{R=null;TALLER=null;render();}},'← Lista'),
     h('button',{class:'tbtn','data-noundo':'1',onclick:()=>startItem(it.id)},'Reiniciar'))));
+  if(TALLER&&R.tl)card.append(tallerBar());
   {const nt=noteEl();if(nt)card.append(nt);}
   const body=h('div',{});
   card.append(body);
@@ -849,7 +906,7 @@ function openTutorial(){
       draw();w.append(host,msg);return w;}},
     {m:'feliz',t:'Elige y comprueba',s:'Verde bien, rojo no es.',b:()=>h('div',{},h('p',{},'Después de marcar un tramo, la app te pregunta qué función cumple: toca la opción que creas correcta. Si fallas, te da una pista y puedes intentar otra vez.'),h('p',{},'Si te trabas, tras tres intentos aparece «Mostrame la respuesta». Cuenta como ayuda, no pasa nada.'))},
     {m:'pensando',t:'Equivocarse se puede',s:'Todo tiene vuelta atrás.',b:()=>h('div',{},h('p',{},'Si tocaste algo sin querer, usa ',h('b',{},'↶ Deshacer'),', arriba a la derecha de cada ejercicio: vuelve un paso atrás cada vez que lo toques, incluso una respuesta ya dada.'),h('p',{},'Una marca que todavía no es correcta también se quita con la «×» que tiene al lado. En el Desafío, cada Deshacer cuesta 2 puntos.'))},
-    {m:'animando',t:'Rondas y repaso',s:'Para practicar de a poco.',b:()=>h('div',{},h('p',{},h('b',{},'Ronda rápida'),': 8 preguntas de un tema. ',h('b',{},'Ronda mixta'),': 8 preguntas de todos los temas.'),h('p',{},'Lo que falles se guarda. Con «Repasar lo que fallé» vuelves solo a esas preguntas hasta dominarlas.'))},
+    {m:'animando',t:'Rondas y repaso',s:'Para practicar de a poco.',b:()=>h('div',{},h('p',{},h('b',{},'Ronda rápida'),': 8 preguntas de un tema. ',h('b',{},'Ronda mixta'),': 8 preguntas de todos los temas.'),h('p',{},h('b',{},'Taller de 15 minutos'),': cuatro análisis de oraciones, un ejercicio de elegir y una ronda final de seis preguntas, todo seguido.'),h('p',{},'Lo que falles se guarda. Con «Repasar lo que fallé» vuelves solo a esas preguntas hasta dominarlas.'))},
     {m:'asombrada',t:'Desafío con puntaje',s:'Para competir con el curso.',b:()=>h('div',{},h('p',{},'En el inicio escribes tu nombre y un código. ',h('b',{},'Mismo código, mismas 12 preguntas'),' para todos. Puntos: 10 por acierto a la primera, +2 por cada acierto seguido (hasta +8), 3 si aciertas en el segundo intento, 0 si necesitas ver la respuesta.'),h('p',{},'Al final se genera un código de resultado: se lo muestras al profesor y él arma la «Tabla del curso».'))},
     {m:'feliz',t:'Tu progreso',s:'Y listo.',b:()=>h('div',{},h('p',{},'El botón «Progreso» copia un resumen para mostrárselo al profesor, y ahí mismo puedes apagarme si prefieres estudiar sin mí.'),h('p',{},'Si abres la app desde el navegador del celular, puedes agregarla a la pantalla de inicio y usarla sin internet. ¡A darle!'))}
   ];
@@ -1553,6 +1610,7 @@ function startRound(u,seed,rep,opt){
   const s=seed||Math.floor(Math.random()*1e9)+1;
   const qs=opt&&opt.focus?genFocus(opt.focus,s,6):rep?genRepaso(u,s,8):genRound(u,s,(opt&&opt.n)||8);
   if(!qs.length)return;
+  if(!(opt&&opt.taller))TALLER=null;
   UNDO.length=0;NOTE=null;Q={focus:(opt&&opt.focus)||null,rep:!!rep,chal:(opt&&opt.code)||null,pts:0,streak:0,undos:0,u,seed:s,qs,i:0,errs:0,good:0,wrongs:[],tapWrong:[],solved:false,reveal:false,miss:false,done:false};
   R=null;
   if(u!=='all'){store.tab=u;store.view='practica';}else store.tab='inicio';
@@ -1560,7 +1618,7 @@ function startRound(u,seed,rep,opt){
 }
 function roundCard(){
   const card=h('div',{class:'card','data-ex':'round'});
-  const title=Q.chal?'Desafío':Q.focus?'Práctica enfocada':Q.rep?'Repaso de errores':Q.u==='all'?'Ronda mixta':'Ronda rápida';
+  const title=TALLER&&TALLER.fin?'Taller: ronda final':Q.chal?'Desafío':Q.focus?'Práctica enfocada':Q.rep?'Repaso de errores':Q.u==='all'?'Ronda mixta':'Ronda rápida';
   card.append(h('div',{class:'exhead'},h('h3',{},title),h('div',{class:'row'},undoBtn(),h('button',{class:'tbtn','data-noundo':'1','data-act':'leave',onclick:()=>{Q=null;render();window.scrollTo(0,0);}},'Salir'))));
   {const nt=noteEl();if(nt)card.append(nt);}
   const b=h('div',{});card.append(b);
@@ -1587,6 +1645,7 @@ function roundCard(){
     }
     const best=(store.q||{})[Q.u]||0;const left=failedCount(Q.u);
     b.append(h('div',{class:'res'},h('div',{class:'big'},Q.good===Q.qs.length?'★':'✓'),h('h3',{},Q.good+' de '+Q.qs.length+' a la primera'),h('p',{class:'muted',style:'margin:4px 0 0'},Q.rep?(left?'Te quedan '+left+' por repasar.':'¡No te quedan errores por repasar!'):(Q.focus?'Práctica de «'+SKBY[Q.focus].n+'».':'Mejor resultado en esta ronda: '+best+' de '+Q.qs.length+'.'))));
+    if(TALLER&&TALLER.fin)b.append(tallerSummary());
     b.append(h('div',{class:'row',style:'margin-top:14px'},(Q.rep&&!left)?null:h('button',{class:'btn','data-act':'again',onclick:()=>Q.focus?startFocus(Q.focus):startRound(Q.u,null,Q.rep)},Q.rep?'Seguir repasando':'Otra ronda'),h('button',{class:'btn alt',onclick:()=>{Q=null;render();window.scrollTo(0,0);}},'Volver')));
     return card;
   }
@@ -1651,6 +1710,7 @@ function renderResult(b){
   const list=unitItems(it.u),idx=list.indexOf(it);
   const nxt=list.slice(idx+1).find(i=>!stat(i.id))||list.find(i=>!stat(i.id));
   const row=h('div',{class:'row',style:'margin-top:14px'});
+  if(TALLER&&R.tl){row.append(h('button',{class:'btn','data-act':'tl-next',onclick:tallerNext},TALLER.i+1<TALLER.ids.length?'Siguiente del taller':'Ronda final del taller'));b.append(row);return;}
   if(nxt&&nxt!==it)row.append(h('button',{class:'btn','data-act':'next-ex',onclick:()=>startItem(nxt.id)},'Siguiente ejercicio'));
   row.append(h('button',{class:'btn alt',onclick:()=>{R=null;render();window.scrollTo(0,0);}},'Volver a la lista'),h('button',{class:'btn alt',onclick:()=>startItem(it.id)},'Repetir'));
   b.append(row);
@@ -1739,7 +1799,7 @@ function closeSheet(){if(overlay){overlay.remove();overlay=null;document.removeE
 load();
 try{const hsh=(location.hash||'').replace('#','');if(hsh==='inicio'||UNITS.some(u=>u.id===hsh)){store.tab=hsh;}}catch(e){}
 if(store.tab!=='inicio'&&!UNITS.some(u=>u.id===store.tab))store.tab='inicio';
-window.__sx={taliaSvg,ITEMS,start:startItem,state:()=>({R,Q,store}),setTab,startRound};
+window.__sx={taliaSvg,ITEMS,start:startItem,state:()=>({R,Q,store}),setTab,startRound,startTaller,forceFinish:()=>{R.done=true;finish();},tl:()=>TALLER&&{phase:TALLER.fin?'final':'items',ids:TALLER.ids,i:TALLER.i}};
 render();
 })();
 
