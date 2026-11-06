@@ -294,3 +294,7 @@ details.tsec[open]{padding-bottom:6px}
 .skr .skb{grid-column:1;grid-row:2}
 
 .tlw{margin:8px 0 12px}.tlbar{font-size:14px;margin-bottom:4px}
+
+.tldone{margin:4px 0 14px;padding:14px;border:2px solid #2e7d32;border-radius:10px;background:rgba(46,125,50,.08);text-align:center}
+.tldone h2{margin:4px 0 6px;font-size:1.3rem}.tldone .big{font-size:2.2rem;color:#2e7d32;line-height:1}
+.tldone p{margin:4px 0}.tlpark{margin:8px 0 14px;border-left:4px solid #c28a00}

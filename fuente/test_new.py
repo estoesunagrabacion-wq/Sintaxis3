@@ -25,7 +25,7 @@ with sync_playwright() as pw:
         assert before==after,(m,before[:200],after[:200])
         assert page.locator('[data-undo]').is_disabled(),m
     # --- desafío
-    page.evaluate("()=>{window.__sx.setTab('inicio')}");page.wait_for_timeout(100)
+    page.evaluate("()=>{window.__sx.setTab('pis','practica')}");page.wait_for_timeout(100)
     page.fill('#chnick','Ana');page.fill('#chcode','prueba1')
     page.click('[data-act="chal"]');page.wait_for_timeout(100)
     n=page.evaluate("()=>window.__sx.state().Q.qs.length");print('chal n',n)

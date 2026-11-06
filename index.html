@@ -299,6 +299,10 @@ details.tsec[open]{padding-bottom:6px}
 
 .tlw{margin:8px 0 12px}.tlbar{font-size:14px;margin-bottom:4px}
 
+.tldone{margin:4px 0 14px;padding:14px;border:2px solid #2e7d32;border-radius:10px;background:rgba(46,125,50,.08);text-align:center}
+.tldone h2{margin:4px 0 6px;font-size:1.3rem}.tldone .big{font-size:2.2rem;color:#2e7d32;line-height:1}
+.tldone p{margin:4px 0}.tlpark{margin:8px 0 14px;border-left:4px solid #c28a00}
+
 </style>
 </head><body><div id="app"></div>
 <script>
@@ -599,6 +603,7 @@ const app=q('#app');
 function setTab(tab,view){store.tab=tab;if(view)store.view=view;save();try{history.replaceState(null,'','#'+tab);}catch(e){}R=null;Q=null;render();window.scrollTo(0,0);}
 
 function render(){
+  tlPersist();
   app.innerHTML='';app.dataset.u=store.tab;
   app.append(renderTop(),h('main',{id:'main'},renderMain()));
   const t=q('#tree-slot');if(t)renderTreeTheory(t);
@@ -680,7 +685,8 @@ function renderHome(){
   if(nfa)row.append(h('button',{class:'btn alt','data-act':'repaso-all',onclick:()=>startRound('all',null,true)},'Repasar lo que fallé ('+nfa+')'));
   w.append(row);
   {const sg=suggest();const se=sg&&sugEl(sg);if(se)w.append(se);}
-  w.append(chalCard());
+  {const pk=tlCard();if(pk)w.append(pk);}
+  w.append(chalHome());
   const idx=h('div',{class:'card sheetp'},h('h3',{},'Índice'));
   const ul=h('ul',{class:'indice'});
   UNITS.forEach(u=>{const d=unitDone(u.id);ul.append(h('li',{},h('button',{class:'irow','data-tab':u.id,style:'--tc:var(--u-'+u.id+')',onclick:()=>setTab(u.id,'teoria')},
@@ -694,6 +700,32 @@ function renderHome(){
 
 /* ---------- taller de 15 minutos ---------- */
 let TALLER=null,TFLAG=false;
+const SNAPREP=(k,v)=>k==='msg'?undefined:(k==='it'&&v&&typeof v==='object'&&v.id?{__it:v.id}:v);
+function tlPersist(){
+  if(!TALLER||TALLER.over)return;
+  const live=(R&&R.tl)||(Q&&Q.tl);
+  const o={u:TALLER.u,ids:TALLER.ids,i:TALLER.i,res:TALLER.res,fin:TALLER.fin,t0:TALLER.t0,snap:(store.tl&&store.tl.snap)||null};
+  if(live)o.snap=JSON.stringify({R:R&&R.tl?R:null,Q:Q&&Q.tl?Q:null},SNAPREP);
+  else if(!R&&!Q&&false)o.snap=null;
+  store.tl=o;save();
+}
+function tlParked(){return TALLER&&!TALLER.over&&!((R&&R.tl)||(Q&&Q.tl));}
+function tlDiscard(){TALLER=null;store.tl=null;save();render();}
+function tlResume(){
+  const T=TALLER;let ok=false;
+  if(T.snap||store.tl&&store.tl.snap){
+    try{const o=JSON.parse(T.snap||store.tl.snap,(k,v)=>v&&typeof v==='object'&&v.__it?BYALL[v.__it]:v);
+      R=o.R;Q=o.Q;UNDO.length=0;NOTE=null;ok=!!(R||Q);
+      const u=R?R.it.u:(T.u==='all'?'inicio':T.u);store.tab=u;if(T.u!=='all'||R)store.view='practica';save();render();window.scrollTo(0,0);}catch(e){ok=false;}
+  }
+  if(!ok){if(T.fin)startRound(T.u,null,false,{n:6,taller:1});else tallerGo();}
+}
+function tlCard(){
+  if(!tlParked())return null;
+  const T=TALLER;
+  return h('div',{class:'card tlpark'},h('b',{},'Tenés un taller a medias'),h('p',{class:'muted',style:'margin:4px 0 8px'},T.fin?'Te falta la ronda final.':'Vas por el ejercicio '+(T.i+1)+' de '+T.ids.length+'.'),
+    h('div',{class:'row'},h('button',{class:'btn','data-act':'tl-resume',onclick:tlResume},'Retomar el taller'),h('button',{class:'btn alt',onclick:tlDiscard},'Descartar')));
+}
 const cplx=i=>(i.props?i.props.length*12:0)+(i.k?i.k.length:0)+(i.prons?i.prons.length*6:0);
 function tallerPick(u){
   const ok=i=>!(i.n&&/^Discutible/.test(i.n));
@@ -718,7 +750,7 @@ function tallerPick(u){
 }
 function startTaller(u){
   const items=tallerPick(u);if(!items.length)return;
-  TALLER={u,ids:items.map(i=>i.id),i:0,res:{},fin:null,t0:Date.now()};
+  TALLER={u,ids:items.map(i=>i.id),i:0,res:{},fin:null,t0:Date.now()};store.tl=null;
   tallerGo();
 }
 function tallerGo(){TFLAG=true;try{startItem(TALLER.ids[TALLER.i]);}finally{TFLAG=false;}if(R)R.tl=1;}
@@ -732,6 +764,16 @@ function tallerBar(){
   const T=TALLER;const w=h('div',{class:'tlbar'},h('b',{},'Taller de 15 minutos'),h('span',{},' · ejercicio '+(T.i+1)+' de '+T.ids.length+' y una ronda final'));
   const bar=h('div',{class:'meter'},h('i',{style:'width:'+Math.round(100*T.i/(T.ids.length+1))+'%'}));
   return h('div',{class:'tlw'},w,bar);
+}
+function tallerDone(){
+  const T=TALLER,ids=T.ids,perf=ids.filter(id=>T.res[id]===0).length;
+  const mins=Math.max(1,Math.round((Date.now()-T.t0)/60000));
+  const el=h('div',{class:'tldone',role:'status'},h('div',{class:'big'},'✓'),h('h2',{},'¡Terminaste el taller de 15 minutos!'),
+    h('p',{},perf+' de '+ids.length+' ejercicios sin errores · ronda final: '+Q.good+' de '+Q.qs.length+' a la primera · unos '+mins+' min.'));
+  const bad=ids.filter(id=>T.res[id]>0);
+  el.append(h('p',{class:'muted'},bad.length?'Para repasar: '+bad.map(id=>BYID[id].l).join(', ')+'.':'No te quedó nada para repasar. ¡Muy bien!'));
+  const sp=tbox(perf===ids.length?'animando':'feliz',perf===ids.length?'¡Taller redondito, mi cielo! Ya puedes descansar la cabeza.':'¡Lo lograste! Lo que falló ya quedó anotado para repasar.');if(sp)el.append(sp);
+  return el;
 }
 function tallerSummary(){
   const T=TALLER,ids=T.ids,perf=ids.filter(id=>T.res[id]===0).length;
@@ -754,7 +796,9 @@ function renderList(u){
   acts.append(h('button',{class:'btn','data-act':'taller',onclick:()=>startTaller(u.id)},'Taller de 15 minutos'));
   acts.append(h('button',{class:'btn alt','data-act':'round',onclick:()=>startRound(u.id)},'Ronda rápida'+(bq!=null?' (mejor '+bq+'/8)':'')));
   w.append(tbox('picara',TAL.lista[u.id]));
+  {const pk=tlCard();if(pk)w.append(pk);}
   w.append(acts);
+  w.append(chalCard(u));
   const nf=failedCount(u.id),errItems=list.filter(i=>stat(i.id)&&!stat(i.id).p);
   if(nf||errItems.length){
     const rv=h('div',{class:'acts one'});
@@ -779,7 +823,6 @@ function renderList(u){
 
 /* ---------- ejercicios ---------- */
 function startItem(id){
-  if(!TFLAG)TALLER=null;
   const it=BYID[id];store.cur=id;store.tab=it.u;store.view='practica';save();
   Q=null;UNDO.length=0;R={it,errs:0,helped:false,checks:0,msg:null,done:false,tl:TFLAG?1:0};
   if(it.m==='props'){R.stage='mark';R.marks=[];R.first=null;R.pi=0;R.ps=it.props.map(()=>null);R.badMsgs=[];}
@@ -792,7 +835,7 @@ function renderEx(){
   const it=R.it;const card=h('div',{class:'card','data-ex':it.id});
   card.append(h('div',{class:'exhead'},h('div',{},h('h3',{},it.l),ctx()),h('div',{class:'row'},
     undoBtn(),
-    h('button',{class:'tbtn','data-noundo':'1',onclick:()=>{R=null;TALLER=null;render();}},'← Lista'),
+    h('button',{class:'tbtn','data-noundo':'1',onclick:()=>{R=null;render();}},'← Lista'),
     h('button',{class:'tbtn','data-noundo':'1',onclick:()=>startItem(it.id)},'Reiniciar'))));
   if(TALLER&&R.tl)card.append(tallerBar());
   {const nt=noteEl();if(nt)card.append(nt);}
@@ -806,7 +849,7 @@ function renderEx(){
   else if(R.stage==='pron')renderPron(body);
   return card;
 }
-function rerender(){const old=q('[data-ex]');if(!old){render();return;}const y=window.scrollY;const nu=renderEx();old.replaceWith(nu);window.scrollTo(0,y);}
+function rerender(){tlPersist();const old=q('[data-ex]');if(!old){render();return;}const y=window.scrollY;const nu=renderEx();old.replaceWith(nu);window.scrollTo(0,y);}
 /* ---------- deshacer ---------- */
 let UNDO=[];
 function snapState(){
@@ -849,23 +892,29 @@ function cleanCode(s){return String(s||'').replace(/[|\n]/g,' ').trim().slice(0,
 function chalScore(){return Math.max(0,(Q.pts||0)-2*(Q.undos||0));}
 function chalChk(nick,code,sc){return (hash(nick.toLowerCase()+'|'+code.toLowerCase()+'|'+sc+'|sx3')%46656).toString(36).toUpperCase().padStart(3,'0');}
 function chalCodeStr(nick,code,sc){return nick+' | '+code+' | '+sc+' | '+chalChk(nick,code,sc);}
-function startChal(){
+function chalKey(code,u){return cleanCode(code)+' '+UNITS.find(x=>x.id===u).name.toLowerCase();}
+function startChal(u){
   const code=cleanCode(store.chcode),nick=cleanNick(store.nick);
   store.nick=nick;store.chcode=code;save();
-  startRound('all',hash(code.toLowerCase()+'|v'+APPV)+1,false,{n:12,code});
+  const key=chalKey(code,u);
+  startRound(u,hash(key.toLowerCase()+'|v'+APPV)+1,false,{n:12,code:key});
 }
-function chalCard(){
+function chalHome(){
+  return h('div',{class:'card chal'},h('h3',{},'Desafíos con puntaje'),h('p',{class:'muted',style:'margin:0 0 10px'},'Cada tema tiene su propio desafío de 12 preguntas: entrá a un tema y buscalo ahí. Todos los que usen el mismo código reciben las mismas preguntas.'),
+    h('div',{class:'row'},h('button',{class:'btn alt',onclick:openTabla},'Tabla del curso')));
+}
+function chalCard(u){
   const c=h('div',{class:'card chal'});
   const code=h('input',{type:'text',id:'chcode',maxlength:'24',value:store.chcode||todayCode(),'aria-label':'Código del desafío',autocomplete:'off'});
   const nick=h('input',{type:'text',id:'chnick',maxlength:'16',value:store.nick||'',placeholder:'Tu nombre o apodo','aria-label':'Tu nombre',autocomplete:'off'});
   code.oninput=()=>{store.chcode=code.value;save();upd();};nick.oninput=()=>{store.nick=nick.value;save();};
   const best=h('p',{class:'muted',style:'margin:6px 0 0'});
-  const upd=()=>{const b=(store.ch||{})[cleanCode(code.value)];best.textContent=b?'Tu mejor puntaje con este código: '+b.best+' puntos.':'';};
+  const upd=()=>{const b=(store.ch||{})[chalKey(code.value,u.id)];best.textContent=b?'Tu mejor puntaje con este código: '+b.best+' puntos.':'';};
   upd();
-  c.append(h('h3',{},'Desafío con puntaje'),
-    h('p',{class:'muted',style:'margin:0 0 10px'},'Todos los que escriban el mismo código reciben las mismas 12 preguntas. Al final se obtiene un código de resultado para mostrárselo al profesor.'),
+  c.append(h('h3',{},'Desafío de '+u.name.toLowerCase()),
+    h('p',{class:'muted',style:'margin:0 0 10px'},'Todos los que escriban el mismo código reciben las mismas 12 preguntas de este tema. Al final se obtiene un código de resultado para mostrárselo al profesor.'),
     h('label',{class:'fl'},'Tu nombre o apodo',nick),h('label',{class:'fl'},'Código del desafío (por defecto, la fecha de hoy)',code),best,
-    h('div',{class:'row',style:'margin-top:10px'},h('button',{class:'btn','data-act':'chal',onclick:startChal},'Empezar el desafío'),h('button',{class:'btn alt',onclick:openTabla},'Tabla del curso')));
+    h('div',{class:'row',style:'margin-top:10px'},h('button',{class:'btn','data-act':'chal',onclick:()=>startChal(u.id)},'Empezar el desafío'),h('button',{class:'btn alt',onclick:openTabla},'Tabla del curso')));
   return c;
 }
 function openTabla(){
@@ -1610,15 +1659,14 @@ function startRound(u,seed,rep,opt){
   const s=seed||Math.floor(Math.random()*1e9)+1;
   const qs=opt&&opt.focus?genFocus(opt.focus,s,6):rep?genRepaso(u,s,8):genRound(u,s,(opt&&opt.n)||8);
   if(!qs.length)return;
-  if(!(opt&&opt.taller))TALLER=null;
-  UNDO.length=0;NOTE=null;Q={focus:(opt&&opt.focus)||null,rep:!!rep,chal:(opt&&opt.code)||null,pts:0,streak:0,undos:0,u,seed:s,qs,i:0,errs:0,good:0,wrongs:[],tapWrong:[],solved:false,reveal:false,miss:false,done:false};
+  UNDO.length=0;NOTE=null;Q={focus:(opt&&opt.focus)||null,rep:!!rep,tl:(opt&&opt.taller)?1:0,chal:(opt&&opt.code)||null,pts:0,streak:0,undos:0,u,seed:s,qs,i:0,errs:0,good:0,wrongs:[],tapWrong:[],solved:false,reveal:false,miss:false,done:false};
   R=null;
   if(u!=='all'){store.tab=u;store.view='practica';}else store.tab='inicio';
   save();render();window.scrollTo(0,0);
 }
 function roundCard(){
   const card=h('div',{class:'card','data-ex':'round'});
-  const title=TALLER&&TALLER.fin?'Taller: ronda final':Q.chal?'Desafío':Q.focus?'Práctica enfocada':Q.rep?'Repaso de errores':Q.u==='all'?'Ronda mixta':'Ronda rápida';
+  const title=TALLER&&Q.tl?(Q.done?'Taller completo':'Taller: ronda final'):Q.chal?'Desafío':Q.focus?'Práctica enfocada':Q.rep?'Repaso de errores':Q.u==='all'?'Ronda mixta':'Ronda rápida';
   card.append(h('div',{class:'exhead'},h('h3',{},title),h('div',{class:'row'},undoBtn(),h('button',{class:'tbtn','data-noundo':'1','data-act':'leave',onclick:()=>{Q=null;render();window.scrollTo(0,0);}},'Salir'))));
   {const nt=noteEl();if(nt)card.append(nt);}
   const b=h('div',{});card.append(b);
@@ -1626,7 +1674,7 @@ function roundCard(){
     const n=Q.good,tot=Q.qs.length;const lf=failedCount(Q.u);
     const k=Q.chal?(chalScore()>=150?'rondaTop':chalScore()>=90?'rondaMid':'rondaLow'):Q.rep?(lf?'repaso':'repasoOk'):(n===tot?'rondaTop':n>=tot-2?'rondaTop':n>=tot/2?'rondaMid':'rondaLow');
     const sp=tbox(n===tot?'animando':n>=tot/2?'feliz':'pensando',tpick(k==='rondaTop'&&n<tot?'rondaMid':k));
-    if(sp)b.append(sp);
+    if(sp&&!(TALLER&&Q.tl))b.append(sp);
     const sg=suggest();if(sg&&!Q.focus){const se=sugEl(sg);if(se)b.append(se);}
   } else if(Q.i===0&&!Q.solved&&!Q.miss){
     if(!Q.say)Q.say=Q.focus?'Práctica corta de «'+SKBY[Q.focus].n+'»: seis preguntas solo de esto.':tpick(Q.chal?'chal':Q.rep?'repaso':'ronda');
@@ -1644,8 +1692,8 @@ function roundCard(){
       return card;
     }
     const best=(store.q||{})[Q.u]||0;const left=failedCount(Q.u);
-    b.append(h('div',{class:'res'},h('div',{class:'big'},Q.good===Q.qs.length?'★':'✓'),h('h3',{},Q.good+' de '+Q.qs.length+' a la primera'),h('p',{class:'muted',style:'margin:4px 0 0'},Q.rep?(left?'Te quedan '+left+' por repasar.':'¡No te quedan errores por repasar!'):(Q.focus?'Práctica de «'+SKBY[Q.focus].n+'».':'Mejor resultado en esta ronda: '+best+' de '+Q.qs.length+'.'))));
-    if(TALLER&&TALLER.fin)b.append(tallerSummary());
+    if(TALLER&&Q.tl)b.append(tallerDone());
+    else b.append(h('div',{class:'res'},h('div',{class:'big'},Q.good===Q.qs.length?'★':'✓'),h('h3',{},Q.good+' de '+Q.qs.length+' a la primera'),h('p',{class:'muted',style:'margin:4px 0 0'},Q.rep?(left?'Te quedan '+left+' por repasar.':'¡No te quedan errores por repasar!'):(Q.focus?'Práctica de «'+SKBY[Q.focus].n+'».':'Mejor resultado en esta ronda: '+best+' de '+Q.qs.length+'.'))));
     b.append(h('div',{class:'row',style:'margin-top:14px'},(Q.rep&&!left)?null:h('button',{class:'btn','data-act':'again',onclick:()=>Q.focus?startFocus(Q.focus):startRound(Q.u,null,Q.rep)},Q.rep?'Seguir repasando':'Otra ronda'),h('button',{class:'btn alt',onclick:()=>{Q=null;render();window.scrollTo(0,0);}},'Volver')));
     return card;
   }
@@ -1679,11 +1727,11 @@ function roundAnswer(ok,k){
 }
 function roundNext(){
   if(Q.i+1<Q.qs.length){Q.i++;Q.wrongs=[];Q.tapWrong=[];Q.solved=false;Q.reveal=false;Q.miss=false;Q.msg=null;}
-  else{Q.done=true;store.q=store.q||{};if(Q.chal){store.ch=store.ch||{};const sc=chalScore(),o=store.ch[Q.chal];if(!o||o.best<sc)store.ch[Q.chal]={best:sc};}else if(!Q.rep&&!Q.focus&&(store.q[Q.u]||0)<Q.good)store.q[Q.u]=Q.good;save();}
+  else{Q.done=true;if(TALLER&&Q.tl){TALLER.over=1;store.tl=null;}store.q=store.q||{};if(Q.chal){store.ch=store.ch||{};const sc=chalScore(),o=store.ch[Q.chal];if(!o||o.best<sc)store.ch[Q.chal]={best:sc};}else if(!Q.rep&&!Q.focus&&(store.q[Q.u]||0)<Q.good)store.q[Q.u]=Q.good;save();}
   rerenderRound();
   window.scrollTo(0,0);
 }
-function rerenderRound(){const old=q('[data-ex]');const y=window.scrollY;if(old){old.replaceWith(roundCard());window.scrollTo(0,y);}else render();}
+function rerenderRound(){tlPersist();const old=q('[data-ex]');const y=window.scrollY;if(old){old.replaceWith(roundCard());window.scrollTo(0,y);}else render();}
 
 /* --- fin del ejercicio --- */
 function finish(){
@@ -1796,7 +1844,7 @@ function escClose(e){if(e.key==='Escape')closeSheet();}
 function closeSheet(){if(overlay){overlay.remove();overlay=null;document.removeEventListener('keydown',escClose);}}
 
 /* ---------- arranque ---------- */
-load();
+load();if(store.tl&&store.tl.ids){TALLER=Object.assign({},store.tl);}
 try{const hsh=(location.hash||'').replace('#','');if(hsh==='inicio'||UNITS.some(u=>u.id===hsh)){store.tab=hsh;}}catch(e){}
 if(store.tab!=='inicio'&&!UNITS.some(u=>u.id===store.tab))store.tab='inicio';
 window.__sx={taliaSvg,ITEMS,start:startItem,state:()=>({R,Q,store}),setTab,startRound,startTaller,forceFinish:()=>{R.done=true;finish();},tl:()=>TALLER&&{phase:TALLER.fin?'final':'items',ids:TALLER.ids,i:TALLER.i}};
