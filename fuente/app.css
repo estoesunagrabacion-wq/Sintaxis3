@@ -231,7 +231,7 @@ details.tsec[open]{padding-bottom:6px}
 .acts.one{grid-template-columns:1fr;margin-top:8px}
 .chip.done.err{background:var(--warn-bg);border-color:var(--warn);color:var(--warn)}
 
-/* ---------- TalIA ---------- */
+/* ---------- ThalIA ---------- */
 .tal{display:flex;gap:12px;align-items:flex-start;margin:0 0 14px}
 .tal .tav{flex:none;line-height:0}
 .tal .tb{position:relative;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:4px 12px 12px 12px;padding:8px 12px;min-width:0}

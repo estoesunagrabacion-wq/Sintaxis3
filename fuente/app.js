@@ -481,7 +481,7 @@ function openTutorial(){
   let i=0;
   const demoIt=BYID['rep-1c'];
   const TU=[
-    {m:'feliz',t:'Hola, soy TalIA',s:'Te enseño a usar esto en dos minutos.',b:()=>h('div',{},h('p',{},'Esta aplicación te ayuda a estudiar en casa lo que vemos en clase. Cada ejercicio se corrige al instante, y tu avance se guarda en este aparato, sin cuentas ni contraseñas.'))},
+    {m:'feliz',t:'Hola, soy ThalIA',s:'Te enseño a usar esto en dos minutos.',b:()=>h('div',{},h('p',{},'Esta aplicación te ayuda a estudiar en casa lo que vemos en clase. Cada ejercicio se corrige al instante, y tu avance se guarda en este aparato, sin cuentas ni contraseñas.'))},
     {m:'animando',t:'Cada tema, una pestaña',s:'Arriba están todas.',b:()=>h('div',{},h('p',{},'Repaso, Coordinadas, Adjetivas, Sustantivas, Pronombres y Adverbiales. En cada una hay dos vistas: ',h('b',{},'Teoría'),' (el resumen del cuadernillo) y ',h('b',{},'Práctica'),' (los ejercicios).'),h('p',{},'El botón «Teoría» de la barra de arriba abre ese resumen en cualquier momento, incluso en medio de un ejercicio.'))},
     {m:'picara',t:'Marca lo que te piden',s:'Pruébalo aquí mismo.',b:()=>{
       const w=h('div',{});const a=demoIt.k.findIndex(t=>t.t==='es'),z=demoIt.k.findIndex(t=>t.t==='simpático');
@@ -620,7 +620,7 @@ function skMap(){
   return w;
 }
 
-/* ---------- TalIA: guía y maestra de ceremonias ---------- */
+/* ---------- ThalIA: guía y maestra de ceremonias ---------- */
 function taliaSvg(mood,px){
   const eye=(cx,k)=>{ // k: open | happy | wide | wink
     if(k==='happy'||k==='wink')return '<path class="lash" d="M'+(cx-4.6)+' 41 Q'+cx+' 35.5 '+(cx+4.6)+' 41"/>';
@@ -638,7 +638,7 @@ function taliaSvg(mood,px){
     picara:{l:eye(32,'o'),r:eye(48,'wink'),b:brow(32,0,0)+brow(48,-2.5,1),m:'<path class="lip" d="M33 52 Q38 50 41 51 Q46 49 48.5 47.5 Q47.5 54.6 41 55 Q36 55 33 52Z"/>'},
     animando:{l:eye(32,'o'),r:eye(48,'o'),b:brow(32,-2,0)+brow(48,-2,0),m:'<path class="lip" d="M31.5 50 Q40 47.5 48.5 50 Q46 59 40 59 Q34 59 31.5 50Z"/><path class="teeth" d="M33.6 50.6 Q40 49 46.4 50.6 Q44.6 54.4 40 54.4 Q35.4 54.4 33.6 50.6Z"/>'}
   }[mood]||{l:'',r:'',b:'',m:''};
-  return '<svg class="tface" viewBox="6 4 68 76" width="'+px+'" height="'+(px*76/68)+'" role="img" aria-label="TalIA">'
+  return '<svg class="tface" viewBox="6 4 68 76" width="'+px+'" height="'+(px*76/68)+'" role="img" aria-label="ThalIA">'
    +'<path class="hair" d="M40 5 C17 5 9 23 11 43 C12 57 8 66 5 77 L75 77 C72 66 68 57 69 43 C71 23 63 5 40 5Z"/>'
    +'<path class="neck" d="M33 54 L33 66 Q40 71 47 66 L47 54Z"/>'
    +'<path class="dress" d="M10 80 C11 68 25 63 33 63 Q40 70 47 63 C55 63 69 68 70 80Z"/>'
@@ -655,19 +655,19 @@ function taliaSvg(mood,px){
    +'<path class="star" d="M60 60 l1.6 3.4 3.6.4-2.7 2.4.8 3.6L60 67.9 56.8 69.8l.8-3.6-2.7-2.4 3.6-.4z"/></svg>';
 }
 const TAL={
-  bienvenida:['¡Qué onda, guey! Soy TalIA, y hoy la sintaxis se va a poner bien chingona.','¡Órale, bienvenido, bienvenida! Soy TalIA: la IA con mayúsculas y mucho drama. Vamos a darle a esta chamba.','Pásale, no te quedes en la puerta. Hoy el villano es el verbo, pero ya sabemos quién es su sujeto.'],
+  bienvenida:['¡Órale! «María la del barrio» empezó desde abajo y llegó lejos; tú empiezas por un ejercicio.','¡Qué onda, guey! Soy ThalIA, y hoy la sintaxis se va a poner bien chingona.','¡Órale, bienvenido, bienvenida! Soy ThalIA: la IA con mayúsculas y mucho drama. Vamos a darle a esta chamba.','Pásale, no te quedes en la puerta. Hoy el villano es el verbo, pero ya sabemos quién es su sujeto.'],
   vuelta:['¡Regresaste, guey! Sabía que no ibas a dejar la novela en suspenso.','Capítulo nuevo. Retomamos donde nos quedamos, ahorita mismo.','¡Qué gusto verte! Te estaba esperando tras bambalinas.'],
   lista:{rep:'Repaso: el elenco de siempre. Si esto ya te lo sabes, lo demás es pura telenovela.',coo:'Coordinadas: dos proposiciones, cada una con su protagonista. ¡Ojo con los verbos que comparten sujeto, que son impostores, no manches!',pia:'Las adjetivas son las actrices de reparto: no tienen vida propia, siempre andan pegadas a un sustantivo.',pis:'Las sustantivas hacen cinco papeles distintos. Prueba con «eso» y fíjate si entra en escena.',pro:'Los nexos y los pronombres son los maestros de ceremonias, como yo. Búscalos, neta.',adv:'Las adverbiales cuentan cuándo, dónde, cómo y por qué. Son las chismosas de la novela.'},
-  ok:['¡Órale, qué chingón! Aplausos.','¡Eso, guey! Ni el guionista lo habría hecho mejor.','Perfecto. Te lo aplaudo bajito para no despertar al jurado.','¡Bien jugado, neta!','Impecable. Lo anoto en el libro de oro.'],
-  mal:['Ay, giro inesperado. Pero tranqui, se arregla.','Todavía no, guey: el telón no ha caído, inténtalo otra vez.','Tropiezo en escena. Hasta las grandes estrellas los tienen.','Ni modo, la mejor escena es la que se repite.','Plot twist, pero no el que buscábamos. Relee la consigna.'],
-  reveal:['No pasa nada, guey: te enseño la escena y la repasamos.','La respuesta andaba tras bambalinas; ahora sale a escena.'],
-  finOk:['¡Final de capítulo sin errores! Eso merece una ovación, qué padre.','Cero errores. Me emociono, y eso que soy un programa.','Perfecto de principio a fin, no manches. Que suene la música.'],
+  ok:['¡Arrasando! Como el hit, pero con sujeto y predicado.','Eso fue puro «Amor a la mexicana»: con todo el corazón y bien analizado.','Esa respuesta es «Piel morena»: con mucho estilo, mi cielo.','¡Órale, qué chingón! Aplausos.','¡Eso, guey! Ni el guionista lo habría hecho mejor.','Perfecto. Te lo aplaudo bajito para no despertar al jurado.','¡Bien jugado, neta!','Impecable. Lo anoto en el libro de oro.'],
+  mal:['Te quedaste «Con la duda»; relee la consigna y se despeja.','Entre el mar y una estrella hay una respuesta; búscala otra vez, guey.','Ay, giro inesperado. Pero tranqui, se arregla.','Todavía no, guey: el telón no ha caído, inténtalo otra vez.','Tropiezo en escena. Hasta las grandes estrellas los tienen.','Ni modo, la mejor escena es la que se repite.','Plot twist, pero no el que buscábamos. Relee la consigna.'],
+  reveal:['Aquí va la respuesta: a veces hay que verla «Desde esa noche»… digo, desde otro ángulo.','No pasa nada, guey: te enseño la escena y la repasamos.','La respuesta andaba tras bambalinas; ahora sale a escena.'],
+  finOk:['¡Sin errores! Para mí, eso es «Arrasando» a lo grande.','¡Final de capítulo sin errores! Eso merece una ovación, qué padre.','Cero errores. Me emociono, y eso que soy un programa.','Perfecto de principio a fin, no manches. Que suene la música.'],
   finErr:['Capítulo cerrado. Los errores son el drama que hace buena la historia: repásalos y quedas de estrella.','Quedaron unas escenas flojitas; dale a «Repetir» y las pulimos.'],
   ronda:['Ronda en vivo: ocho preguntas, sin ensayo. ¡Luces, cámara y a darle!','Ocho escenas, una toma cada una. Te tengo confianza, guey.','Atención, atención: arranca la ronda. Respira y lee bien las consignas.'],
   repaso:['Repaso de errores: la parte favorita de toda buena novela, el flashback.','Volvemos a las escenas que costaron. Esta vez, con final feliz.'],
-  rondaTop:['¡Ocho de ocho! Qué chingón, alfombra roja para ti.','Casi perfecta; el público de pie.'],
+  rondaTop:['¡Número uno en las listas! Ese puntaje merece una gira.','¡Ocho de ocho! Qué chingón, alfombra roja para ti.','Casi perfecta; el público de pie.'],
   rondaMid:['Buena chamba. Una vuelta más y el estreno es un éxito.','El guion va agarrando forma. Síguele así.'],
-  rondaLow:['Le echaste ganas y eso también es actuar. Repasa lo que falló y volvemos a filmar.','La primera toma casi nunca es la buena. Repaso de errores y otra ronda.'],
+  rondaLow:['Hay noches de «Lunada» y hay noches de tarea; ya mañana te sale mejor.','Le echaste ganas y eso también es actuar. Repasa lo que falló y volvemos a filmar.','La primera toma casi nunca es la buena. Repaso de errores y otra ronda.'],
   chal:['Desafío en marcha: doce preguntas, mismas para todos. ¡A ganarle al curso!'],
   repasoOk:['¡Sin errores pendientes! El elenco está completo, guey.']
 };
@@ -676,7 +676,7 @@ function tpick(k){const a=TAL[k];if(!a)return '';let i=Math.floor(Math.random()*
 function taliaOn(){return store.tal!==false;}
 function tbox(mood,text,mini){
   if(!taliaOn()||!text)return null;
-  return h('div',{class:'tal'+(mini?' mini':''),'data-tal':mood},h('span',{class:'tav',html:taliaSvg(mood,mini?30:62)}),h('div',{class:'tb'},h('b',{class:'tname'},'Tal',h('span',{class:'ia'},'IA')),h('span',{class:'tt'},text)));
+  return h('div',{class:'tal'+(mini?' mini':''),'data-tal':mood},h('span',{class:'tav',html:taliaSvg(mood,mini?30:62)}),h('div',{class:'tb'},h('b',{class:'tname'},'Thal',h('span',{class:'ia'},'IA')),h('span',{class:'tt'},text)));
 }
 
 function fb(kind,title,text){
@@ -1359,7 +1359,7 @@ function openSheet(which){
         const done=()=>{msg.textContent='Copiado.';};
         try{navigator.clipboard.writeText(t).then(done,()=>{ta.select();msg.textContent='Seleccionado: copialo con el menú.';});}catch(e){ta.select();msg.textContent='Seleccionado: copialo con el menú.';}
       }},'Copiar resumen'),msg));
-      body.append(h('label',{class:'tgl'},h('input',{type:'checkbox',checked:taliaOn()?true:null,onchange:e=>{store.tal=e.target.checked;save();render();}}),' TalIA me acompaña (su cara y sus comentarios)'));
+      body.append(h('label',{class:'tgl'},h('input',{type:'checkbox',checked:taliaOn()?true:null,onchange:e=>{store.tal=e.target.checked;save();render();}}),' ThalIA me acompaña (su cara y sus comentarios)'));
       const rs=h('div',{class:'row',style:'margin-top:16px'});
       const btn=h('button',{class:'btn alt',onclick:()=>{
         if(!btn.dataset.sure){btn.dataset.sure='1';btn.textContent='Tocá de nuevo para borrar todo mi avance';return;}
