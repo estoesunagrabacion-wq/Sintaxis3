@@ -303,6 +303,20 @@ details.tsec[open]{padding-bottom:6px}
 .tldone h2{margin:4px 0 6px;font-size:1.3rem}.tldone .big{font-size:2.2rem;color:#2e7d32;line-height:1}
 .tldone p{margin:4px 0}.tlpark{margin:8px 0 14px;border-left:4px solid #c28a00}
 
+/* ---------- juego ---------- */
+.game .grow{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.grk{font-family:Caveat,cursive;font-size:1.9rem;line-height:1.1;color:var(--ink)}
+.gst{display:flex;flex-direction:column;align-items:center;min-width:70px}.gst b{font-size:1.6rem;line-height:1;font-variant-numeric:tabular-nums}.gst span{font-size:.75rem;color:var(--muted)}
+.gbanner{margin:8px 0 12px;padding:12px;border:2px solid var(--ink);border-radius:10px;background:var(--surface2);text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
+.gbanner .gt{font-weight:700}.gbanner .gr{font-family:Caveat,cursive;font-size:2rem;line-height:1}.gbanner p{margin:0}
+.album{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin:6px 0 14px}
+.figu{border:2px solid var(--ink);border-radius:8px;background:var(--surface);overflow:hidden;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 6px 8px;min-width:0}
+.figu .fn{align-self:stretch;background:var(--fc);color:#fff;font-size:.75rem;font-weight:700;padding:2px 0;margin:0 -6px}
+.figu .fg{font-family:Literata,Georgia,serif;font-weight:700;font-size:1.5rem;margin:10px 0 6px;min-height:2rem;overflow-wrap:anywhere}
+.figu .fnm{font-size:.82rem;font-weight:700;line-height:1.2}.figu .fu{font-size:.72rem;color:var(--muted);margin-top:4px}
+.figu.locked{border-style:dashed;opacity:.65}.figu.locked .fn{background:var(--muted)}
+.figu.sm{width:140px}
+
 </style>
 </head><body><div id="app"></div>
 <script>
@@ -686,6 +700,8 @@ function renderHome(){
   w.append(row);
   {const sg=suggest();const se=sg&&sugEl(sg);if(se)w.append(se);}
   {const pk=tlCard();if(pk)w.append(pk);}
+  {const ge=gEl();if(ge)w.append(ge);}
+  {const gc=gameCard();if(gc)w.append(gc);}
   w.append(chalHome());
   const idx=h('div',{class:'card sheetp'},h('h3',{},'Índice'));
   const ul=h('ul',{class:'indice'});
@@ -838,6 +854,7 @@ function renderEx(){
     h('button',{class:'tbtn','data-noundo':'1',onclick:()=>{R=null;render();}},'← Lista'),
     h('button',{class:'tbtn','data-noundo':'1',onclick:()=>startItem(it.id)},'Reiniciar'))));
   if(TALLER&&R.tl)card.append(tallerBar());
+  {const ge=gEl();if(ge)card.append(ge);}
   {const nt=noteEl();if(nt)card.append(nt);}
   const body=h('div',{});
   card.append(body);
@@ -853,13 +870,13 @@ function rerender(){tlPersist();const old=q('[data-ex]');if(!old){render();retur
 /* ---------- deshacer ---------- */
 let UNDO=[];
 function snapState(){
-  return JSON.stringify({R,Q,p:store.p,f:store.f,q:store.q,sk:store.sk,fe:store.fe,cur:store.cur},(k,v)=>k==='msg'?undefined:(k==='it'&&v&&typeof v==='object'&&v.id?{__it:v.id}:v));
+  return JSON.stringify({R,Q,p:store.p,f:store.f,q:store.q,sk:store.sk,fe:store.fe,g:store.g,cur:store.cur},(k,v)=>k==='msg'?undefined:(k==='it'&&v&&typeof v==='object'&&v.id?{__it:v.id}:v));
 }
 function undoLast(){
   const s=UNDO.pop();if(!s)return;
   const prevU=Q&&Q.chal?(Q.undos||0):0;
   const o=JSON.parse(s,(k,v)=>v&&typeof v==='object'&&v.__it?BYALL[v.__it]:v);
-  R=o.R;Q=o.Q;store.p=o.p||{};store.f=o.f||{};store.q=o.q||{};store.sk=o.sk||{};store.fe=o.fe||{};store.cur=o.cur;NOTE=null;
+  R=o.R;Q=o.Q;store.p=o.p||{};store.f=o.f||{};store.q=o.q||{};store.sk=o.sk||{};store.fe=o.fe||{};if(o.g)store.g=o.g;store.cur=o.cur;NOTE=null;GQ=[];
   if(Q&&Q.chal)Q.undos=prevU+1;
   save();const y=window.scrollY;render();window.scrollTo(0,y);
 }
@@ -956,7 +973,7 @@ function openTutorial(){
       draw();w.append(host,msg);return w;}},
     {m:'feliz',t:'Elige y comprueba',s:'Verde bien, rojo no es.',b:()=>h('div',{},h('p',{},'Después de marcar un tramo, la app te pregunta qué función cumple: toca la opción que creas correcta. Si fallas, te da una pista y puedes intentar otra vez.'),h('p',{},'Si te trabas, tras tres intentos aparece «Mostrame la respuesta». Cuenta como ayuda, no pasa nada.'))},
     {m:'pensando',t:'Equivocarse se puede',s:'Todo tiene vuelta atrás.',b:()=>h('div',{},h('p',{},'Si tocaste algo sin querer, usa ',h('b',{},'↶ Deshacer'),', arriba a la derecha de cada ejercicio: vuelve un paso atrás cada vez que lo toques, incluso una respuesta ya dada.'),h('p',{},'Una marca que todavía no es correcta también se quita con la «×» que tiene al lado. En el Desafío, cada Deshacer cuesta 2 puntos.'))},
-    {m:'animando',t:'Rondas y repaso',s:'Para practicar de a poco.',b:()=>h('div',{},h('p',{},h('b',{},'Ronda rápida'),': 8 preguntas de un tema. ',h('b',{},'Ronda mixta'),': 8 preguntas de todos los temas.'),h('p',{},h('b',{},'Taller de 15 minutos'),': cuatro análisis de oraciones, un ejercicio de elegir y una ronda final de seis preguntas, todo seguido.'),h('p',{},'Lo que falles se guarda. Con «Repasar lo que fallé» vuelves solo a esas preguntas hasta dominarlas.'))},
+    {m:'animando',t:'Rondas y repaso',s:'Para practicar de a poco.',b:()=>h('div',{},h('p',{},h('b',{},'Ronda rápida'),': 8 preguntas de un tema. ',h('b',{},'Ronda mixta'),': 8 preguntas de todos los temas.'),h('p',{},h('b',{},'Fama, racha y álbum'),': cada acierto suma fama y te hace subir de rango; practicar días seguidos arma tu racha; y cada habilidad que dominás te da una figurita. Se puede apagar en Progreso.'),h('p',{},h('b',{},'Taller de 15 minutos'),': cuatro análisis de oraciones, un ejercicio de elegir y una ronda final de seis preguntas, todo seguido.'),h('p',{},'Lo que falles se guarda. Con «Repasar lo que fallé» vuelves solo a esas preguntas hasta dominarlas.'))},
     {m:'asombrada',t:'Desafío con puntaje',s:'Para competir con el curso.',b:()=>h('div',{},h('p',{},'En cada tema escribes tu nombre y un código. ',h('b',{},'Mismo código, mismas 20 preguntas'),' para todos. Puntos: 10 por acierto a la primera, +2 por cada acierto seguido (hasta +8), 3 si aciertas en el segundo intento, 0 si necesitas ver la respuesta.'),h('p',{},'Al final se genera un código de resultado: se lo muestras al profesor y él arma la «Tabla del curso».'))},
     {m:'feliz',t:'Tu progreso',s:'Y listo.',b:()=>h('div',{},h('p',{},'El botón «Progreso» copia un resumen para mostrárselo al profesor, y ahí mismo puedes apagarme si prefieres estudiar sin mí.'),h('p',{},'Si abres la app desde el navegador del celular, puedes agregarla a la pantalla de inicio y usarla sin internet. ¡A darle!'))}
   ];
@@ -1017,6 +1034,7 @@ function track(s,ok,it){
   if(it&&it.n&&/^Discutible/.test(it.n))return;
   store.sk=store.sk||{};const o=store.sk[s]||(store.sk[s]={a:0,c:0,r:[],t:0,w:0});
   o.a++;if(ok)o.c++;o.r.push(ok?1:0);if(o.r.length>8)o.r.shift();o.t=Date.now();
+  gXP(ok?3:0);markDay();gSkill(s,o);
   if(!ok&&it&&it.id){store.fe=store.fe||{};store.fe[it.id]=(store.fe[it.id]||0)+1;}
   const ss=SES[s]||(SES[s]={miss:0});
   if(ok){ss.miss=0;if(o.w&&skLevel(o)==='firme'&&!ss.cele){o.w=0;ss.cele=1;NOTE={k:'ok',s};}}
@@ -1079,6 +1097,83 @@ function skMap(){
     w.append(h('div',{class:'skr'},h('div',{class:'skn'},s.n),h('div',{class:'skb lv-'+lv.replace(/ /g,'')},h('i',{style:'width:'+(o.a<3?10:Math.max(8,r))+'%'})),h('div',{class:'skl'},lv+' · '+o.c+'/'+o.a)));});
   return w;
 }
+
+/* ---------- juego: fama, rangos, racha y álbum ---------- */
+const RANKS=[{n:'Extra',x:0},{n:'Actor o actriz de reparto',x:100},{n:'Protagonista',x:350},{n:'Estrella',x:800},{n:'Leyenda',x:1600}];
+const FIG={1:'S',2:'MD',3:'PV',4:'OD',5:'OI',6:'PS',7:'CAg',8:'CC',9:'se',10:'y',11:'1·2',12:'pero',13:'que',14:'fn',15:'( , )',16:'PIS',17:'si',18:'de que',19:'lo/le',20:'nos',21:'se',22:'cuando',23:'tan…que',24:'aunque',25:'si…',26:'nexo',27:'¿?',28:'[ ]'};
+let GQ=[];
+function gameOn(){return store.game!==false;}
+function G(){return store.g||(store.g={xp:0,days:[],gr:{},alb:{}});}
+function dayKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function weekKey(d){const m=new Date(d);m.setDate(m.getDate()-((m.getDay()+6)%7));return dayKey(m);}
+function rankIdx(x){let r=0;RANKS.forEach((k,i)=>{if(x>=k.x)r=i;});return r;}
+function markDay(){const g=G(),k=dayKey(new Date());if(!g.days.includes(k)){g.days.push(k);if(g.days.length>60)g.days.shift();}}
+function streak(){
+  const g=G(),set=new Set(g.days),gr={};let d=new Date(),n=0;
+  if(!set.has(dayKey(d)))d.setDate(d.getDate()-1);
+  for(let guard=0;guard<400;guard++){
+    if(set.has(dayKey(d))){n++;d.setDate(d.getDate()-1);continue;}
+    const prev=new Date(d);prev.setDate(prev.getDate()-1);const wk=weekKey(d);
+    if(n>0&&!gr[wk]&&set.has(dayKey(prev))){gr[wk]=1;d=prev;continue;}
+    break;
+  }
+  return n;
+}
+function gXP(n){
+  if(!n)return;const g=G(),before=rankIdx(g.xp);g.xp+=n;markDay();
+  const after=rankIdx(g.xp);if(after>before&&gameOn())GQ.push({k:'rank',r:after});
+}
+function gSkill(s,o){
+  const g=G();if(g.alb[s]||!o||skLevel(o)!=='firme')return;
+  g.alb[s]=dayKey(new Date());if(gameOn())GQ.push({k:'fig',s});
+}
+function gBackfill(){const g=G();SK.forEach(s=>{const o=store.sk&&store.sk[s.id];if(o&&!g.alb[s.id]&&skLevel(o)==='firme')g.alb[s.id]=dayKey(new Date());});}
+function figEl(s,small){
+  const k=SKBY[s],got=G().alb[s];
+  const u=UNITS.find(x=>x.id===k.u);
+  return h('div',{class:'figu'+(got?'':' locked')+(small?' sm':''),style:'--fc:var(--u-'+k.u+')'},
+    h('div',{class:'fn'},'N.º '+s),h('div',{class:'fg'},got?FIG[s]:'?'),h('div',{class:'fnm'},k.n),
+    small?null:h('div',{class:'fu'},got?u.name:'Se consigue cuando esta habilidad queda «firme»'));
+}
+function gEl(){
+  if(!GQ.length||!gameOn())return null;
+  const e=GQ[0];let el;
+  const ok=h('button',{class:'btn alt','data-noundo':'1','data-act':'g-ok',onclick:()=>{GQ.shift();refreshAny();}},'¡Genial!');
+  if(e.k==='rank'){
+    el=h('div',{class:'gbanner',role:'status'},h('div',{class:'gt'},'¡Subiste de rango!'),h('div',{class:'gr'},RANKS[e.r].n),
+      h('p',{},taliaOn()?'ThalIA: «¡Tu nombre ya va en letras más grandes en el cartel!»':'Seguí sumando fama para el próximo rango.'),ok);
+  } else {
+    el=h('div',{class:'gbanner',role:'status'},h('div',{class:'gt'},'¡Figurita nueva para tu álbum!'),figEl(e.s,true),
+      h('p',{},'Ya tenés «'+SKBY[e.s].n+'» firme.'),h('div',{class:'row'},ok,h('button',{class:'btn alt','data-noundo':'1',onclick:()=>{GQ.shift();openAlbum();}},'Ver mi álbum')));
+  }
+  return el;
+}
+function refreshAny(){if(Q)rerenderRound();else if(R)rerender();else render();}
+function gameCard(){
+  if(!gameOn())return null;
+  const g=G(),ri=rankIdx(g.xp),nx=RANKS[ri+1],st=streak(),today=g.days.includes(dayKey(new Date()));
+  const nfig=Object.keys(g.alb).length;
+  const pct=nx?Math.round(100*(g.xp-RANKS[ri].x)/(nx.x-RANKS[ri].x)):100;
+  return h('div',{class:'card game'},
+    h('div',{class:'grow'},h('div',{},h('div',{class:'muted',style:'font-size:.85rem'},'Tu rango'),h('div',{class:'grk'},RANKS[ri].n)),
+      h('div',{class:'gst'},h('b',{},String(st)),h('span',{},st===1?'día de racha':'días de racha'))),
+    h('div',{class:'meter'},h('i',{style:'width:'+pct+'%'})),
+    h('p',{class:'muted',style:'margin:4px 0 8px;font-size:.9rem'},'Fama: '+g.xp+(nx?' · te faltan '+(nx.x-g.xp)+' para «'+nx.n+'»':' · ¡llegaste al rango más alto!')+(st&&!today?' · practicá hoy para no perder la racha':'')),
+    h('div',{class:'row'},h('button',{class:'btn alt','data-act':'album',onclick:openAlbum},'Mi álbum ('+nfig+' de 28)')));
+}
+function openAlbum(){
+  openPanel('Mi álbum de figuritas',body=>{
+    const n=Object.keys(G().alb).length;
+    body.append(h('p',{class:'muted'},'Tenés '+n+' de 28. Cada figurita se consigue cuando una habilidad queda «firme» en tu mapa de Progreso: aciertos a la primera en casi todos los intentos recientes.'));
+    UNITS.forEach(u=>{
+      const ss=SK.filter(s=>s.u===u.id);if(!ss.length)return;
+      body.append(h('h4',{},u.name));
+      const gr=h('div',{class:'album'});ss.forEach(s=>gr.append(figEl(s.id)));body.append(gr);
+    });
+    body.append(h('p',{class:'muted',style:'font-size:.85rem'},'«Tipo de proposición» y «Delimitar proposiciones» están en Coordinadas, aunque se practican en todos los temas.'));
+  });
+}
+function gSummary(){const g=G();return 'Juego: fama '+g.xp+' ('+RANKS[rankIdx(g.xp)].n+') · racha '+streak()+' días · álbum '+Object.keys(g.alb).length+'/28\n';}
 
 /* ---------- ThalIA: guía y maestra de ceremonias ---------- */
 function taliaSvg(mood,px){
@@ -1669,6 +1764,7 @@ function roundCard(){
   const card=h('div',{class:'card','data-ex':'round'});
   const title=TALLER&&Q.tl?(Q.done?'Taller completo':'Taller: ronda final'):Q.chal?'Desafío':Q.focus?'Práctica enfocada':Q.rep?'Repaso de errores':Q.u==='all'?'Ronda mixta':'Ronda rápida';
   card.append(h('div',{class:'exhead'},h('h3',{},title),h('div',{class:'row'},undoBtn(),h('button',{class:'tbtn','data-noundo':'1','data-act':'leave',onclick:()=>{Q=null;render();window.scrollTo(0,0);}},'Salir'))));
+  {const ge=gEl();if(ge)card.append(ge);}
   {const nt=noteEl();if(nt)card.append(nt);}
   const b=h('div',{});card.append(b);
   if(Q.done){
@@ -1728,7 +1824,7 @@ function roundAnswer(ok,k){
 }
 function roundNext(){
   if(Q.i+1<Q.qs.length){Q.i++;Q.wrongs=[];Q.tapWrong=[];Q.solved=false;Q.reveal=false;Q.miss=false;Q.msg=null;}
-  else{Q.done=true;if(TALLER&&Q.tl){TALLER.over=1;store.tl=null;}store.q=store.q||{};if(Q.chal){store.ch=store.ch||{};const sc=chalScore(),o=store.ch[Q.chal];if(!o||o.best<sc)store.ch[Q.chal]={best:sc};}else if(!Q.rep&&!Q.focus&&(store.q[Q.u]||0)<Q.good)store.q[Q.u]=Q.good;save();}
+  else{Q.done=true;gXP(Q.chal?10:Q.tl?25:5);if(TALLER&&Q.tl){TALLER.over=1;store.tl=null;}store.q=store.q||{};if(Q.chal){store.ch=store.ch||{};const sc=chalScore(),o=store.ch[Q.chal];if(!o||o.best<sc)store.ch[Q.chal]={best:sc};}else if(!Q.rep&&!Q.focus&&(store.q[Q.u]||0)<Q.good)store.q[Q.u]=Q.good;save();}
   rerenderRound();
   window.scrollTo(0,0);
 }
@@ -1740,6 +1836,7 @@ function finish(){
   const perfect=R.errs===0&&!R.helped;
   const prev=store.p[R.it.id];
   store.p[R.it.id]={d:1,p:perfect?1:(prev&&prev.p?1:0),e:R.errs};
+  gXP(perfect?10:5);
   save();
   rerender();
   const t=q('.tabs');if(t){const n=q('.tab[aria-selected="true"] .n',t);if(n)n.textContent=unitDone(R.it.u).join('/');}
@@ -1811,6 +1908,7 @@ function openSheet(which){
       let t='Sintaxis, tercer año — progreso\n'+done+' de '+tot+' ejercicios hechos ('+star+' sin errores)\n';
       UNITS.forEach(u=>{const d=unitDone(u.id);t+=u.name+': '+d[0]+'/'+d[1]+'\n';});
       t+=skSummary();
+      t+=gSummary();
       body.append(h('h3',{},'Progreso'),h('p',{class:'muted'},'Se guarda sólo en este dispositivo. Si querés mostrárselo al profesor, copiá este resumen.'));
       body.append(skMap());
       const ta=h('textarea',{class:'cp',readonly:true},t);body.append(ta);
@@ -1820,6 +1918,7 @@ function openSheet(which){
         try{navigator.clipboard.writeText(t).then(done,()=>{ta.select();msg.textContent='Seleccionado: copialo con el menú.';});}catch(e){ta.select();msg.textContent='Seleccionado: copialo con el menú.';}
       }},'Copiar resumen'),msg));
       body.append(h('label',{class:'tgl'},h('input',{type:'checkbox',checked:taliaOn()?true:null,onchange:e=>{store.tal=e.target.checked;save();render();}}),' ThalIA me acompaña (su cara y sus comentarios)'));
+      body.append(h('label',{class:'tgl'},h('input',{type:'checkbox',checked:gameOn()?true:null,onchange:e=>{store.game=e.target.checked;save();render();}}),' Mostrar fama, racha y álbum de figuritas'));
       const rs=h('div',{class:'row',style:'margin-top:16px'});
       const btn=h('button',{class:'btn alt',onclick:()=>{
         if(!btn.dataset.sure){btn.dataset.sure='1';btn.textContent='Tocá de nuevo para borrar todo mi avance';return;}
@@ -1845,7 +1944,7 @@ function escClose(e){if(e.key==='Escape')closeSheet();}
 function closeSheet(){if(overlay){overlay.remove();overlay=null;document.removeEventListener('keydown',escClose);}}
 
 /* ---------- arranque ---------- */
-load();if(store.tl&&store.tl.ids){TALLER=Object.assign({},store.tl);}
+load();try{gBackfill();}catch(e){}if(store.tl&&store.tl.ids){TALLER=Object.assign({},store.tl);}
 try{const hsh=(location.hash||'').replace('#','');if(hsh==='inicio'||UNITS.some(u=>u.id===hsh)){store.tab=hsh;}}catch(e){}
 if(store.tab!=='inicio'&&!UNITS.some(u=>u.id===store.tab))store.tab='inicio';
 window.__sx={taliaSvg,ITEMS,start:startItem,state:()=>({R,Q,store}),setTab,startRound,startTaller,forceFinish:()=>{R.done=true;finish();},tl:()=>TALLER&&{phase:TALLER.fin?'final':'items',ids:TALLER.ids,i:TALLER.i}};

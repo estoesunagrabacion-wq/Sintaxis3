@@ -298,3 +298,17 @@ details.tsec[open]{padding-bottom:6px}
 .tldone{margin:4px 0 14px;padding:14px;border:2px solid #2e7d32;border-radius:10px;background:rgba(46,125,50,.08);text-align:center}
 .tldone h2{margin:4px 0 6px;font-size:1.3rem}.tldone .big{font-size:2.2rem;color:#2e7d32;line-height:1}
 .tldone p{margin:4px 0}.tlpark{margin:8px 0 14px;border-left:4px solid #c28a00}
+
+/* ---------- juego ---------- */
+.game .grow{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.grk{font-family:Caveat,cursive;font-size:1.9rem;line-height:1.1;color:var(--ink)}
+.gst{display:flex;flex-direction:column;align-items:center;min-width:70px}.gst b{font-size:1.6rem;line-height:1;font-variant-numeric:tabular-nums}.gst span{font-size:.75rem;color:var(--muted)}
+.gbanner{margin:8px 0 12px;padding:12px;border:2px solid var(--ink);border-radius:10px;background:var(--surface2);text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
+.gbanner .gt{font-weight:700}.gbanner .gr{font-family:Caveat,cursive;font-size:2rem;line-height:1}.gbanner p{margin:0}
+.album{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin:6px 0 14px}
+.figu{border:2px solid var(--ink);border-radius:8px;background:var(--surface);overflow:hidden;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 6px 8px;min-width:0}
+.figu .fn{align-self:stretch;background:var(--fc);color:#fff;font-size:.75rem;font-weight:700;padding:2px 0;margin:0 -6px}
+.figu .fg{font-family:Literata,Georgia,serif;font-weight:700;font-size:1.5rem;margin:10px 0 6px;min-height:2rem;overflow-wrap:anywhere}
+.figu .fnm{font-size:.82rem;font-weight:700;line-height:1.2}.figu .fu{font-size:.72rem;color:var(--muted);margin-top:4px}
+.figu.locked{border-style:dashed;opacity:.65}.figu.locked .fn{background:var(--muted)}
+.figu.sm{width:140px}
