@@ -40,7 +40,7 @@ with sync_playwright() as pw:
         else: page.click(f'.sent .w[data-i="{x["ans"][0]}"]')
         page.click('[data-act="rnext"]')
     r=page.evaluate("()=>{const q=window.__sx.state().Q;return [q.done,q.good,q.pts,q.undos]}");print(r)
-    assert r[0] and r[1]==12 and r[3]==1,r
+    assert r[0] and r[1]==20 and r[3]==1,r
     code=page.locator('textarea.cp').input_value();print(code)
     # mismo código => mismas preguntas
     page.click('text=Volver')

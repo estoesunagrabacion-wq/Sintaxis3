@@ -434,14 +434,15 @@ function chalScore(){return Math.max(0,(Q.pts||0)-2*(Q.undos||0));}
 function chalChk(nick,code,sc){return (hash(nick.toLowerCase()+'|'+code.toLowerCase()+'|'+sc+'|sx3')%46656).toString(36).toUpperCase().padStart(3,'0');}
 function chalCodeStr(nick,code,sc){return nick+' | '+code+' | '+sc+' | '+chalChk(nick,code,sc);}
 function chalKey(code,u){return cleanCode(code)+' '+UNITS.find(x=>x.id===u).name.toLowerCase();}
+const CHN=20;
 function startChal(u){
   const code=cleanCode(store.chcode),nick=cleanNick(store.nick);
   store.nick=nick;store.chcode=code;save();
   const key=chalKey(code,u);
-  startRound(u,hash(key.toLowerCase()+'|v'+APPV)+1,false,{n:12,code:key});
+  startRound(u,hash(key.toLowerCase()+'|v'+APPV)+1,false,{n:CHN,code:key});
 }
 function chalHome(){
-  return h('div',{class:'card chal'},h('h3',{},'Desafíos con puntaje'),h('p',{class:'muted',style:'margin:0 0 10px'},'Cada tema tiene su propio desafío de 12 preguntas: entrá a un tema y buscalo ahí. Todos los que usen el mismo código reciben las mismas preguntas.'),
+  return h('div',{class:'card chal'},h('h3',{},'Desafíos con puntaje'),h('p',{class:'muted',style:'margin:0 0 10px'},'Cada tema tiene su propio desafío de 20 preguntas: entrá a un tema y buscalo ahí. Todos los que usen el mismo código reciben las mismas preguntas.'),
     h('div',{class:'row'},h('button',{class:'btn alt',onclick:openTabla},'Tabla del curso')));
 }
 function chalCard(u){
@@ -453,7 +454,7 @@ function chalCard(u){
   const upd=()=>{const b=(store.ch||{})[chalKey(code.value,u.id)];best.textContent=b?'Tu mejor puntaje con este código: '+b.best+' puntos.':'';};
   upd();
   c.append(h('h3',{},'Desafío de '+u.name.toLowerCase()),
-    h('p',{class:'muted',style:'margin:0 0 10px'},'Todos los que escriban el mismo código reciben las mismas 12 preguntas de este tema. Al final se obtiene un código de resultado para mostrárselo al profesor.'),
+    h('p',{class:'muted',style:'margin:0 0 10px'},'Todos los que escriban el mismo código reciben las mismas 20 preguntas de este tema. Al final se obtiene un código de resultado para mostrárselo al profesor.'),
     h('label',{class:'fl'},'Tu nombre o apodo',nick),h('label',{class:'fl'},'Código del desafío (por defecto, la fecha de hoy)',code),best,
     h('div',{class:'row',style:'margin-top:10px'},h('button',{class:'btn','data-act':'chal',onclick:()=>startChal(u.id)},'Empezar el desafío'),h('button',{class:'btn alt',onclick:openTabla},'Tabla del curso')));
   return c;
@@ -497,7 +498,7 @@ function openTutorial(){
     {m:'feliz',t:'Elige y comprueba',s:'Verde bien, rojo no es.',b:()=>h('div',{},h('p',{},'Después de marcar un tramo, la app te pregunta qué función cumple: toca la opción que creas correcta. Si fallas, te da una pista y puedes intentar otra vez.'),h('p',{},'Si te trabas, tras tres intentos aparece «Mostrame la respuesta». Cuenta como ayuda, no pasa nada.'))},
     {m:'pensando',t:'Equivocarse se puede',s:'Todo tiene vuelta atrás.',b:()=>h('div',{},h('p',{},'Si tocaste algo sin querer, usa ',h('b',{},'↶ Deshacer'),', arriba a la derecha de cada ejercicio: vuelve un paso atrás cada vez que lo toques, incluso una respuesta ya dada.'),h('p',{},'Una marca que todavía no es correcta también se quita con la «×» que tiene al lado. En el Desafío, cada Deshacer cuesta 2 puntos.'))},
     {m:'animando',t:'Rondas y repaso',s:'Para practicar de a poco.',b:()=>h('div',{},h('p',{},h('b',{},'Ronda rápida'),': 8 preguntas de un tema. ',h('b',{},'Ronda mixta'),': 8 preguntas de todos los temas.'),h('p',{},h('b',{},'Taller de 15 minutos'),': cuatro análisis de oraciones, un ejercicio de elegir y una ronda final de seis preguntas, todo seguido.'),h('p',{},'Lo que falles se guarda. Con «Repasar lo que fallé» vuelves solo a esas preguntas hasta dominarlas.'))},
-    {m:'asombrada',t:'Desafío con puntaje',s:'Para competir con el curso.',b:()=>h('div',{},h('p',{},'En el inicio escribes tu nombre y un código. ',h('b',{},'Mismo código, mismas 12 preguntas'),' para todos. Puntos: 10 por acierto a la primera, +2 por cada acierto seguido (hasta +8), 3 si aciertas en el segundo intento, 0 si necesitas ver la respuesta.'),h('p',{},'Al final se genera un código de resultado: se lo muestras al profesor y él arma la «Tabla del curso».'))},
+    {m:'asombrada',t:'Desafío con puntaje',s:'Para competir con el curso.',b:()=>h('div',{},h('p',{},'En cada tema escribes tu nombre y un código. ',h('b',{},'Mismo código, mismas 20 preguntas'),' para todos. Puntos: 10 por acierto a la primera, +2 por cada acierto seguido (hasta +8), 3 si aciertas en el segundo intento, 0 si necesitas ver la respuesta.'),h('p',{},'Al final se genera un código de resultado: se lo muestras al profesor y él arma la «Tabla del curso».'))},
     {m:'feliz',t:'Tu progreso',s:'Y listo.',b:()=>h('div',{},h('p',{},'El botón «Progreso» copia un resumen para mostrárselo al profesor, y ahí mismo puedes apagarme si prefieres estudiar sin mí.'),h('p',{},'Si abres la app desde el navegador del celular, puedes agregarla a la pantalla de inicio y usarla sin internet. ¡A darle!'))}
   ];
   openPanel('Cómo se usa',body=>{
@@ -668,7 +669,7 @@ const TAL={
   rondaTop:['¡Número uno en las listas! Ese puntaje merece una gira.','¡Ocho de ocho! Qué chingón, alfombra roja para ti.','Casi perfecta; el público de pie.'],
   rondaMid:['Buena chamba. Una vuelta más y el estreno es un éxito.','El guion va agarrando forma. Síguele así.'],
   rondaLow:['Hay noches de «Lunada» y hay noches de tarea; ya mañana te sale mejor.','Le echaste ganas y eso también es actuar. Repasa lo que falló y volvemos a filmar.','La primera toma casi nunca es la buena. Repaso de errores y otra ronda.'],
-  chal:['Desafío en marcha: doce preguntas, mismas para todos. ¡A ganarle al curso!'],
+  chal:['Desafío en marcha: veinte preguntas, mismas para todos. ¡A ganarle al curso!'],
   repasoOk:['¡Sin errores pendientes! El elenco está completo, guey.']
 };
 let _tl={};
@@ -1115,6 +1116,7 @@ function propCt(p){return p.nexo&&p.nexo.ct?p.nexo.ct:(p.ct==='yux'?'yux':null);
 function genCands(u){
   const pool=ALL.filter(i=>i.r&&(u==='all'||i.u===u));
   const C={tipo:[],vf:[],nexo:[],ante:[],esp:[],nfun:[],pf:[],pcls:[],advs:[],ctype:[],cuenta:[],comp:[],se:[],fn:[],sj:[],ns:[],mod:[],pv:[]};
+  ALL.filter(i=>(u==='all'||i.u===u)&&!(i.n&&/^Discutible/.test(i.n))).forEach(it=>(it.prons||[]).forEach(pn=>{if(String(pn.p).indexOf('/')<0)C.se.push({it,pn});}));
   pool.forEach(it=>{
     (it.props||[]).forEach(p=>{
       if(u!=='all'&&p.t!==TYPE_OF[u])return;
@@ -1128,7 +1130,6 @@ function genCands(u){
     });
     if(it.u==='coo'&&it.props&&it.props.length>=2&&(u==='coo'||u==='all'))C.cuenta.push({it});
     if(it.u==='coo'&&(u==='coo'||u==='all')&&(it.m==='simple'||(it.props||[]).length>=2))C.comp.push({it});
-    (it.prons||[]).forEach(pn=>{if(String(pn.p).indexOf('/')<0)C.se.push({it,pn});});
     if(it.m==='func')(it.spans||[]).forEach(sp=>{if(String(sp.fn).indexOf('/')<0&&!['PVS','PVC','NS','MD','MI','Apos'].includes(sp.fn))C.fn.push({it,sp});});
     if(it.m==='func'&&(it.spans||[]).some(s=>s.fn==='PVS'||s.fn==='PVC'))C.pv.push({it});
     if(it.m==='func'&&it.sj){C.sj.push({it});const ns=(it.spans||[]).filter(s=>s.fn==='NS');if(ns.length===1)C.ns.push({it,sp:ns[0]});const ap=(it.spans||[]).filter(s=>s.fn==='MI'||s.fn==='Apos');ap.forEach(sp=>C.mod.push({it,sp}));}
@@ -1189,7 +1190,7 @@ function genRound(u,seed,n){
     let alive=kinds.slice(),i=0,guard=0;
     while(qs.length<n&&alive.length&&guard++<400){
       const k=alive[i%alive.length];
-      const idx=C[k].findIndex(x=>!qs.some(q=>q.it===x.it&&(strict||q.kind===k)));
+      const idx=C[k].findIndex(x=>!qs.some(q=>strict?q.it===x.it:(q.key===keyOf(k,x)||(q.it===x.it&&q.kind===k&&k!=='se'))));
       if(idx<0){alive.splice(alive.indexOf(k),1);continue;}
       const c=C[k].splice(idx,1)[0];const bq=buildQ(k,c,rnd);bq.key=keyOf(k,c);qs.push(bq);i++;
     }
@@ -1213,7 +1214,7 @@ function roundCard(){
   const b=h('div',{});card.append(b);
   if(Q.done){
     const n=Q.good,tot=Q.qs.length;const lf=failedCount(Q.u);
-    const k=Q.chal?(chalScore()>=150?'rondaTop':chalScore()>=90?'rondaMid':'rondaLow'):Q.rep?(lf?'repaso':'repasoOk'):(n===tot?'rondaTop':n>=tot-2?'rondaTop':n>=tot/2?'rondaMid':'rondaLow');
+    const k=Q.chal?(chalScore()>=250?'rondaTop':chalScore()>=150?'rondaMid':'rondaLow'):Q.rep?(lf?'repaso':'repasoOk'):(n===tot?'rondaTop':n>=tot-2?'rondaTop':n>=tot/2?'rondaMid':'rondaLow');
     const sp=tbox(n===tot?'animando':n>=tot/2?'feliz':'pensando',tpick(k==='rondaTop'&&n<tot?'rondaMid':k));
     if(sp&&!(TALLER&&Q.tl))b.append(sp);
     const sg=suggest();if(sg&&!Q.focus){const se=sugEl(sg);if(se)b.append(se);}
